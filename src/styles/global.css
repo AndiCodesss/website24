@@ -145,7 +145,7 @@ p {
 }
 
 .contact-email {
-    font-size: 3rem; /* Increased font size */
+    font-size: 2.8rem; /* Slightly reduced font size */
     font-weight: bold;
     color: var(--accent); /* Use accent color */
     text-align: center;
@@ -274,7 +274,7 @@ hr {
   h1 { font-size: 2.2em; }
   h2 { font-size: 1.8em; }
   .contact-email {
-      font-size: 2rem; /* Adjust mobile email size */
+      font-size: 1.8rem; /* Adjust mobile email size */
       overflow-wrap: break-word; /* Also apply here */
   }
   .story {
@@ -317,8 +317,8 @@ hr {
 }
 
 body.konami-effect {
-    /* Run animation once for 10 seconds */
-    animation: colorExplosion 10s linear 1;
+    /* Run fast animation for 13 iterations (~10.4s) */
+    animation: colorExplosion 0.8s linear 13;
     filter: hue-rotate(0deg) contrast(1.2);
 }
 
