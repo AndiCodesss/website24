@@ -131,12 +131,12 @@ p {
 }
 
 .story {
-    background-color: var(--bg-primary); /* White background */
-    padding: 2rem; /* Increased padding */
-    border-radius: 12px; /* More rounded corners */
-    box-shadow: var(--box-shadow); /* Use refined shadow */
+    /* background-color: var(--bg-primary); Remove background */
+    /* padding: 2rem; Remove padding */
+    /* border-radius: 12px; Remove radius */
+    /* box-shadow: var(--box-shadow); Remove shadow */
     margin-top: 2.5rem;
-    border: 1px solid var(--border-color); /* Add subtle border */
+    /* border: 1px solid var(--border-color); Remove border */
 }
 
 .story h2 {
