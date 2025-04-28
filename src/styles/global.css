@@ -150,7 +150,7 @@ p {
     color: var(--accent); /* Use accent color */
     text-align: center;
     margin: 3rem 0; /* Removed auto horizontal margin, added vertical */
-    word-break: break-all;
+    overflow-wrap: break-word; /* Allow breaking only between words if needed */
 }
 
 footer {
@@ -275,6 +275,7 @@ hr {
   h2 { font-size: 1.8em; }
   .contact-email {
       font-size: 2rem; /* Adjust mobile email size */
+      overflow-wrap: break-word; /* Also apply here */
   }
   .story {
       padding: 1.5rem;
@@ -316,7 +317,8 @@ hr {
 }
 
 body.konami-effect {
-    animation: colorExplosion 0.8s linear 4;
+    /* Run animation once for 10 seconds */
+    animation: colorExplosion 10s linear 1;
     filter: hue-rotate(0deg) contrast(1.2);
 }
 
