@@ -29,6 +29,9 @@ const { title } = Astro.props;
     <!-- Konami Code Image -->
     <img src="/konami-pic.jpg" alt="Konami Code Surprise!" class="konami-image" id="konamiImage" />
 
+    <!-- Konami Code Audio -->
+    <audio src="/konami-sound.mp3" id="konamiAudio" preload="auto"></audio>
+
     <script>
         const konamiCode = [
             'ArrowUp', 'ArrowUp',
@@ -64,9 +67,16 @@ const { title } = Astro.props;
         function activateKonami() {
             console.log("Konami Activated! Niceeee!");
             document.body.classList.add('konami-effect');
+
             const img = document.getElementById('konamiImage');
             if (img) {
                 img.classList.add('show');
+            }
+
+            const audio = document.getElementById('konamiAudio');
+            if (audio) {
+                audio.currentTime = 0; // Rewind to start
+                audio.play();
             }
 
             // Hide after a few seconds
@@ -75,7 +85,11 @@ const { title } = Astro.props;
                 if (img) {
                     img.classList.remove('show');
                 }
-            }, 10000); // Show for 10 seconds
+                if (audio) {
+                    audio.pause(); // Stop the audio
+                    audio.currentTime = 0; // Rewind
+                }
+            }, 10000); // Duration matches visual effect
         }
     </script>
 </body>
