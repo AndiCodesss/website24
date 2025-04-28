@@ -5,16 +5,18 @@
  */
 
 :root {
-  --accent: #007bff; /* Updated accent to match link color */
-  --accent-dark: #0056b3; /* Darker blue */
-  --black: 15, 18, 25;
-  --gray: 96, 115, 159;
-  --gray-light: 229, 233, 240;
-  --gray-dark: 34, 41, 57;
-  --gray-gradient: rgba(var(--gray-light), 50%), #fff;
-  --box-shadow:
-    0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-    0 16px 32px rgba(var(--gray), 33%);
+  --font-primary: 'Poppins', sans-serif; /* Added Poppins */
+  --accent: #0056b3; /* Slightly darker blue */
+  --accent-light: #e6f0ff; /* Light blue for backgrounds/accents */
+  --accent-dark: #003d80; /* Even darker blue for hover */
+  --text-primary: #333; /* Darker grey for main text */
+  --text-secondary: #555; /* Slightly lighter grey */
+  --bg-primary: #ffffff; /* White background */
+  --bg-secondary: #f7f7f7; /* Very light grey for subtle contrast */
+  --border-color: #e0e0e0; /* Lighter border color */
+  --shadow-color: rgba(0, 0, 0, 0.08); /* Softer shadow */
+
+  --box-shadow: 0 4px 12px var(--shadow-color); /* Refined shadow */
 }
 
 @font-face {
@@ -33,189 +35,251 @@
 }
 
 body {
-    font-family: "Atkinson", sans-serif; /* Use Atkinson font */
+    font-family: var(--font-primary); /* Use Poppins */
     margin: 0;
     padding: 0;
-    background-color: #f8f9fa; /* Light grey background */
-    color: #343a40; /* Dark grey text */
+    background-color: var(--bg-secondary); /* Use light grey bg */
+    color: var(--text-primary); /* Use darker text color */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    font-size: 18px; /* Base font size from original */
-    line-height: 1.7; /* Base line height from original */
+    font-size: 17px; /* Slightly smaller base font */
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased; /* Smoother fonts */
+    -moz-osx-font-smoothing: grayscale;
 }
 
 nav {
-    background-color: #e9ecef; /* Slightly darker grey for nav */
+    background-color: var(--bg-primary); /* White nav background */
     padding: 1rem 2rem;
-    border-bottom: 1px solid #dee2e6; /* Subtle border */
+    border-bottom: 1px solid var(--border-color); /* Use lighter border */
     text-align: center;
+    box-shadow: 0 2px 5px var(--shadow-color); /* Add subtle shadow to nav */
+    position: sticky; /* Keep nav sticky */
+    top: 0;
+    z-index: 10;
 }
 
 nav a {
-    margin: 0 1rem;
+    margin: 0 1.5rem; /* Increased spacing */
     text-decoration: none;
-    color: var(--accent); /* Use accent color */
-    font-weight: bold;
+    color: var(--accent);
+    font-weight: bold; /* Keep bold */
     font-size: 1.1rem;
+    padding: 0.5rem 0; /* Add padding for better click area */
+    position: relative;
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+nav a::after { /* Underline effect on hover */
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent-dark);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
 }
 
 nav a:hover, nav a:focus {
-    text-decoration: underline;
     color: var(--accent-dark); /* Darker on hover */
+    text-decoration: none; /* Remove default underline */
 }
+
+nav a:hover::after { /* Animate underline */
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
 
 main {
     flex-grow: 1;
-    padding: 2rem;
-    max-width: 800px; /* Limit content width */
-    margin: 0 auto; /* Center content */
+    padding: 3rem 2rem; /* Increased padding */
+    max-width: 800px;
+    margin: 1rem auto; /* Add margin top/bottom */
 }
 
-/* Keep general heading styles */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0 0 0.5rem 0;
-  color: rgb(var(--black));
-  line-height: 1.2;
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    margin: 0 0 1rem 0; /* Adjusted margin */
+    line-height: 1.3;
+    font-weight: 700; /* Use bold Poppins */
 }
 
-/* Specific overrides for clean look */
 h1, h2 {
     text-align: center;
-    margin-bottom: 1.5rem;
-    color: #212529; /* Slightly darker heading color */
+    margin-bottom: 2rem; /* Increased bottom margin */
 }
 
-h1 { font-size: 2.5em; } /* Adjust sizes for clean look */
-h2 { font-size: 2em; }
-h3 { font-size: 1.75em; }
+h1 { font-size: 2.8em; letter-spacing: -1px; } /* Fine-tune sizes */
+h2 { font-size: 2.2em; letter-spacing: -0.5px; }
+h3 { font-size: 1.8em; }
 h4 { font-size: 1.5em; }
 h5 { font-size: 1.25em; }
 h6 { font-size: 1em; }
 
 
 p {
-    line-height: 1.6;
-    margin-bottom: 1rem;
+    line-height: 1.7; /* Slightly increased line-height */
+    margin-bottom: 1.5rem; /* Increased paragraph spacing */
+    color: var(--text-secondary); /* Use secondary text color */
 }
 
 .story {
-    background-color: #ffffff; /* White background for story */
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin-top: 2rem;
+    background-color: var(--bg-primary); /* White background */
+    padding: 2rem; /* Increased padding */
+    border-radius: 12px; /* More rounded corners */
+    box-shadow: var(--box-shadow); /* Use refined shadow */
+    margin-top: 2.5rem;
+    border: 1px solid var(--border-color); /* Add subtle border */
+}
+
+.story h2 {
+    margin-top: 0;
+    color: var(--accent); /* Use accent color for story heading */
 }
 
 .contact-email {
-    font-size: 2.5rem; /* Big email */
+    font-size: 2.2rem; /* Slightly smaller but still big */
     font-weight: bold;
-    color: #dc3545; /* A distinct color for the email */
+    color: var(--accent); /* Use accent color */
     text-align: center;
-    margin-top: 3rem;
-    word-break: break-all; /* Prevent overflow on small screens */
+    margin: 3rem auto; /* Center horizontally */
+    padding: 1.5rem; /* Add padding */
+    background-color: var(--accent-light); /* Use light accent bg */
+    border-radius: 8px;
+    word-break: break-all;
+    max-width: 90%; /* Prevent taking full width */
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); /* Inner shadow */
 }
 
 footer {
-    background-color: #e9ecef;
-    padding: 1rem 2rem;
+    background-color: var(--bg-primary); /* Match nav background */
+    padding: 1.5rem 2rem; /* Increased padding */
     text-align: center;
     font-size: 0.9rem;
-    color: #6c757d; /* Lighter grey for footer text */
-    border-top: 1px solid #dee2e6;
-    margin-top: auto; /* Push footer to bottom */
+    color: var(--text-secondary); /* Use secondary text color */
+    border-top: 1px solid var(--border-color); /* Use lighter border */
+    margin-top: auto;
 }
 
 
-strong,
-b {
-  font-weight: 700;
+strong, b {
+    font-weight: 700;
+    color: var(--text-primary); /* Ensure strong text uses primary color */
 }
 
-/* Keep general link style, nav styles override */
 a {
   color: var(--accent);
+  text-decoration: none; /* Remove default underline */
+  transition: color 0.3s ease;
 }
 a:hover {
   color: var(--accent-dark);
+  text-decoration: underline; /* Add underline on hover for non-nav links */
 }
 
-.prose p { /* Keep original prose style */
-  margin-bottom: 2em;
+/* Keep necessary utility classes like .prose if used, adjust if needed */
+.prose p {
+  margin-bottom: 1.5em; /* Adjust if needed */
 }
 
-textarea {
-  width: 100%;
+textarea, input {
   font-size: 16px;
+  font-family: var(--font-primary);
+  padding: 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  margin-bottom: 1rem;
 }
-
-input {
-  font-size: 16px;
-}
-
-table {
-  width: 100%;
+textarea:focus, input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-light);
 }
 
 img {
   max-width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: 12px; /* Match story border-radius */
+  box-shadow: var(--box-shadow);
 }
 
 code {
-  padding: 2px 5px;
-  background-color: rgb(var(--gray-light));
-  border-radius: 2px;
-  font-family: monospace; /* Add monospace font */
+  padding: 3px 6px; /* Adjusted padding */
+  background-color: var(--bg-secondary); /* Use secondary background */
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace; /* Explicit monospace */
+  font-size: 0.95em;
+  color: var(--accent-dark); /* Use accent color for code */
+  border: 1px solid var(--border-color);
 }
 
 pre {
   padding: 1.5em;
   border-radius: 8px;
-  background-color: rgb(var(--gray-light)); /* Add background */
-  overflow-x: auto; /* Add scroll for long code */
+  background-color: #2d2d2d; /* Dark background for code blocks */
+  color: #f0f0f0; /* Light text for code blocks */
+  overflow-x: auto;
+  box-shadow: var(--box-shadow);
+  border: none; /* Remove border */
 }
 
 pre > code {
   all: unset;
-  font-family: monospace; /* Add monospace font */
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 1.5; /* Ensure good line spacing in code blocks */
 }
 
 blockquote {
-  border-left: 4px solid var(--accent);
-  padding: 0 0 0 20px;
-  margin: 0 0 1.5rem 0; /* Add bottom margin */
-  font-size: 1.2em; /* Adjust size */
+  border-left: 5px solid var(--accent); /* Thicker border */
+  padding: 1rem 1.5rem; /* Add padding */
+  margin: 1.5rem 0;
+  font-size: 1.1em;
+  background-color: var(--accent-light); /* Add light background */
+  border-radius: 0 8px 8px 0; /* Rounded corners on right */
+  color: var(--text-secondary);
+}
+blockquote p {
+    margin-bottom: 0; /* Remove extra margin inside blockquote */
+    color: var(--text-primary);
 }
 
 hr {
   border: none;
-  border-top: 1px solid rgb(var(--gray-light));
-  margin: 2rem 0; /* Add margin */
+  border-top: 1px solid var(--border-color);
+  margin: 3rem 0; /* Increased margin */
 }
 
 @media (max-width: 720px) {
-  /* body font-size already set */
-  main {
-    padding: 1.5rem 1rem; /* Adjust padding */
-    max-width: 100%;
+  body {
+      font-size: 16px; /* Adjust mobile font size */
   }
-  .contact-email {
-      font-size: 1.8rem; /* Smaller email on mobile */
+  main {
+    padding: 2rem 1rem; /* Adjust mobile padding */
+  }
+  nav {
+      padding: 0.8rem 1rem;
   }
   nav a {
+      margin: 0 0.8rem;
       font-size: 1rem;
-      margin: 0 0.5rem;
+  }
+  h1 { font-size: 2.2em; }
+  h2 { font-size: 1.8em; }
+  .contact-email {
+      font-size: 1.5rem; /* Adjust mobile email size */
+      padding: 1rem;
+  }
+  .story {
+      padding: 1.5rem;
   }
 }
 
-.sr-only {
+.sr-only { /* Keep screen reader only class */
   border: 0;
   padding: 0;
   margin: 0;
