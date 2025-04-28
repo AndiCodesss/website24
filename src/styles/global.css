@@ -34,11 +34,17 @@
   font-display: swap;
 }
 
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 body {
     font-family: var(--font-primary); /* Use Poppins */
     margin: 0;
     padding: 0;
-    background-color: var(--bg-secondary); /* Use light grey bg */
+    /* background-color: var(--bg-secondary); Remove static background color */
     color: var(--text-primary); /* Use darker text color */
     display: flex;
     flex-direction: column;
@@ -47,6 +53,11 @@ body {
     line-height: 1.7;
     -webkit-font-smoothing: antialiased; /* Smoother fonts */
     -moz-osx-font-smoothing: grayscale;
+
+    /* Add animated gradient */
+    background: linear-gradient(-45deg, #e6f0ff, #f7f7f7, #e0e0e0, #e6f0ff);
+    background-size: 400% 400%;
+    animation: gradientAnimation 25s ease infinite;
 }
 
 nav {
