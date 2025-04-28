@@ -54,10 +54,11 @@ body {
     -webkit-font-smoothing: antialiased; /* Smoother fonts */
     -moz-osx-font-smoothing: grayscale;
 
-    /* Add animated gradient */
-    background: linear-gradient(-45deg, #e6f0ff, #f7f7f7, #e0e0e0, #e6f0ff);
+    /* --- DEBUG: Test static gradient --- */
+    background: linear-gradient(-45deg, red, yellow, lime, cyan);
     background-size: 400% 400%;
-    animation: gradientAnimation 25s ease infinite;
+    /* animation: gradientAnimation 25s ease infinite; */
+    /* --- END DEBUG --- */
 }
 
 nav {
