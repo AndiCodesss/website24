@@ -1,0 +1,25 @@
+---
+import '../styles/global.css'; // Link to our new CSS file
+
+const { title } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title || 'Andreas Oberdörfer'}</title>
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/contact">Contact</a>
+    </nav>
+    <main>
+        <slot /> <!-- Page content will go here -->
+    </main>
+    <footer>
+        <p>&copy; {new Date().getFullYear()} Andreas Oberdörfer</p>
+    </footer>
+</body>
+</html> 
