@@ -34,12 +34,6 @@
   font-display: swap;
 }
 
-@keyframes gradientAnimation {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
 body {
     font-family: var(--font-primary); /* Use Poppins */
     margin: 0;
@@ -53,16 +47,8 @@ body {
     -webkit-font-smoothing: antialiased; /* Smoother fonts */
     -moz-osx-font-smoothing: grayscale;
 
-    /* Apply the gradient statically first */
-    background: linear-gradient(-45deg, #e6f0ff, #f7f7f7, #e0e0e0, #e6f0ff);
-    background-size: 400% 400%;
-}
-
-/* Only apply animation if the user has NOT requested reduced motion */
-@media (prefers-reduced-motion: no-preference) {
-    body {
-        animation: gradientAnimation 25s ease infinite;
-    }
+    /* Revert to simple background */
+    background-color: var(--bg-primary); /* Use primary (white) background */
 }
 
 nav {
@@ -159,17 +145,12 @@ p {
 }
 
 .contact-email {
-    font-size: 2.2rem; /* Slightly smaller but still big */
+    font-size: 3rem; /* Increased font size */
     font-weight: bold;
     color: var(--accent); /* Use accent color */
     text-align: center;
-    margin: 3rem auto; /* Center horizontally */
-    padding: 1.5rem; /* Add padding */
-    background-color: var(--accent-light); /* Use light accent bg */
-    border-radius: 8px;
+    margin: 3rem 0; /* Removed auto horizontal margin, added vertical */
     word-break: break-all;
-    max-width: 90%; /* Prevent taking full width */
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); /* Inner shadow */
 }
 
 footer {
@@ -293,8 +274,7 @@ hr {
   h1 { font-size: 2.2em; }
   h2 { font-size: 1.8em; }
   .contact-email {
-      font-size: 1.5rem; /* Adjust mobile email size */
-      padding: 1rem;
+      font-size: 2rem; /* Adjust mobile email size */
   }
   .story {
       padding: 1.5rem;
