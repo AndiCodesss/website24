@@ -23,6 +23,60 @@ const { title } = Astro.props;
     </main>
     <footer>
         <p>&copy; {new Date().getFullYear()} Andreas Oberdörfer</p>
+        <p class="hint">(Hint: Try ↑ ↑ ↓ ↓ ← → ← → B A for a surprise!)</p>
     </footer>
+
+    <!-- Konami Code Image -->
+    <img src="/konami-pic.jpg" alt="Konami Code Surprise!" class="konami-image" id="konamiImage" />
+
+    <script>
+        const konamiCode = [
+            'ArrowUp', 'ArrowUp',
+            'ArrowDown', 'ArrowDown',
+            'ArrowLeft', 'ArrowRight',
+            'ArrowLeft', 'ArrowRight',
+            'b', 'a'
+        ];
+        let index = 0;
+
+        document.addEventListener('keydown', (event) => {
+            const requiredKey = konamiCode[index];
+            // Use event.key.toLowerCase() for letter keys to make it case-insensitive
+            const pressedKey = (event.key.length === 1) ? event.key.toLowerCase() : event.key;
+
+            if (pressedKey === requiredKey) {
+                index++;
+                if (index === konamiCode.length) {
+                    // Code entered correctly!
+                    activateKonami();
+                    index = 0; // Reset index
+                }
+            } else {
+                // Wrong key, reset index
+                index = 0;
+                 // Optional: Reset if the first key pressed is wrong but matches the first konami key again
+                 if (pressedKey === konamiCode[0]) {
+                    index = 1;
+                 }
+            }
+        });
+
+        function activateKonami() {
+            console.log("Konami Activated! Niceeee!");
+            document.body.classList.add('konami-effect');
+            const img = document.getElementById('konamiImage');
+            if (img) {
+                img.classList.add('show');
+            }
+
+            // Hide after a few seconds
+            setTimeout(() => {
+                document.body.classList.remove('konami-effect');
+                if (img) {
+                    img.classList.remove('show');
+                }
+            }, 4000); // Show for 4 seconds
+        }
+    </script>
 </body>
 </html> 

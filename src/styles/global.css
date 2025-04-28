@@ -44,7 +44,6 @@ body {
     font-family: var(--font-primary); /* Use Poppins */
     margin: 0;
     padding: 0;
-    /* background-color: var(--bg-secondary); Remove static background color */
     color: var(--text-primary); /* Use darker text color */
     display: flex;
     flex-direction: column;
@@ -54,11 +53,16 @@ body {
     -webkit-font-smoothing: antialiased; /* Smoother fonts */
     -moz-osx-font-smoothing: grayscale;
 
-    /* --- DEBUG: Test static gradient --- */
-    background: linear-gradient(-45deg, red, yellow, lime, cyan);
+    /* Apply the gradient statically first */
+    background: linear-gradient(-45deg, #e6f0ff, #f7f7f7, #e0e0e0, #e6f0ff);
     background-size: 400% 400%;
-    /* animation: gradientAnimation 25s ease infinite; */
-    /* --- END DEBUG --- */
+}
+
+/* Only apply animation if the user has NOT requested reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+    body {
+        animation: gradientAnimation 25s ease infinite;
+    }
 }
 
 nav {
@@ -178,6 +182,12 @@ footer {
     margin-top: auto;
 }
 
+footer .hint {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin-top: 0.5rem;
+}
 
 strong, b {
     font-weight: 700;
@@ -303,6 +313,44 @@ hr {
   clip: rect(1px, 1px, 1px, 1px);
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* Konami Code Styles */
+.konami-image {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 80vw;
+    max-height: 80vh;
+    border: 5px solid var(--accent-dark);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    z-index: 9999;
+    animation: konamiFadeIn 0.5s ease-out;
+}
+
+.konami-image.show {
+    display: block;
+}
+
+body.konami-effect {
+    animation: colorExplosion 0.8s linear 4;
+    filter: hue-rotate(0deg) contrast(1.2);
+}
+
+@keyframes colorExplosion {
+    0% { filter: hue-rotate(0deg) contrast(1.1); }
+    25% { filter: hue-rotate(90deg) contrast(1.3); }
+    50% { filter: hue-rotate(180deg) contrast(1.1); }
+    75% { filter: hue-rotate(270deg) contrast(1.3); }
+    100% { filter: hue-rotate(360deg) contrast(1.1); }
+}
+
+@keyframes konamiFadeIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 /* Add any other specific styles below */
