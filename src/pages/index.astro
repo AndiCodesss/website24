@@ -4,10 +4,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const pageTitle = "Home";
 ---
 <BaseLayout title={pageTitle}>
-	<h1>Andreas Oberdörfer</h1>
-	<!-- <p>Welcome to my very clean website!</p> -->
+	<section class="hero">
+		<img src="/profile-placeholder.jpg" alt="Andreas Oberdörfer" class="hero-image" />
+		<h1>Andreas Oberdörfer</h1>
+		<p>Web Developer & Creative Problem Solver</p>
+	</section>
 
-	<div class="story">
+	<div class="card animate-fade-in">
+		<h2>About Me</h2>
+		<p>
+			Hello there! I'm a passionate web developer who loves creating clean, functional, and beautiful websites.
+			When I'm not coding, you can find me debugging tricky problems and occasionally telling nerdy jokes.
+		</p>
+	</div>
+
+	<div class="card animate-fade-in-delay-1">
 		<h2>A Funny Story</h2>
 		<p>
 			Why don't scientists trust atoms?<br/>
@@ -20,4 +31,35 @@ const pageTitle = "Home";
 			Andreas was debugging a particularly tricky piece of code late one night. Frustrated, he muttered, "Why won't this work? It's like talking to a brick wall!" Suddenly, his computer screen flickered, and text appeared: "Actually, brick walls are excellent listeners. They just have a terrible response time. And unlike this code, they rarely crash." Andreas stared, blinked, then slowly reached for the coffee pot. It was going to be a <em>very</em> long night.
 		</p>
 	</div>
+
+	<div class="card animate-fade-in-delay-2">
+		<h2>Skills & Expertise</h2>
+		<div class="skills-container">
+			<div class="skill-item">HTML & CSS</div>
+			<div class="skill-item">JavaScript</div>
+			<div class="skill-item">Astro</div>
+			<div class="skill-item">Web Development</div>
+			<div class="skill-item">Problem Solving</div>
+			<div class="skill-item">Debugging</div>
+		</div>
+	</div>
 </BaseLayout>
+
+<style>
+	.skills-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 1rem;
+	}
+	
+	.skill-item {
+		background-color: var(--accent-light);
+		color: var(--accent-dark);
+		padding: 0.5rem 1rem;
+		border-radius: 20px;
+		display: inline-block;
+		font-weight: 500;
+		transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+	}
+</style>
