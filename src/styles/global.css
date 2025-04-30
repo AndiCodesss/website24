@@ -469,21 +469,17 @@ footer {
 }
 
 .social-links a {
-    color: var(--text-secondary);
+    color: var(--accent);
     font-size: 1.5rem;
     transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
-    padding: 10px;
-    border-radius: 50%;
-    background-color: var(--bg-secondary);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .social-links a:hover {
-    color: var(--accent);
+    color: var(--accent-dark);
     transform: translateY(-5px);
-    background-color: var(--accent-light);
 }
 
 /* Animations */
@@ -609,6 +605,15 @@ footer {
 /* Content container to center the cards */
 .content-container {
     max-width: 800px;
+    width: 100%;
     margin: 0 auto;
     padding: 2rem;
+    box-sizing: border-box;
+}
+
+@media (max-width: 720px) {
+    .content-container {
+        padding: 1.5rem;
+        max-width: 100%;
+    }
 }

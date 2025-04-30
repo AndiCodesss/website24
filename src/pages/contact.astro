@@ -13,7 +13,7 @@ const pageTitle = "Contact";
       <div class="contact-methods">
         <div class="contact-method">
           <span class="contact-icon">✉️</span>
-          <p class="contact-email">oberdoerfer.andreas@gmail.com</p>
+          <p class="contact-email">oberdoerfer.andreas<wbr/>@<wbr/>gmail<wbr/>.com</p>
         </div>
       </div>
     </div>
@@ -53,16 +53,12 @@ const pageTitle = "Contact";
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--accent);
-    word-break: keep-all;
-    overflow-wrap: anywhere;
-    display: inline-block;
-    max-width: 100%;
+    white-space: nowrap;
   }
 
   @media (max-width: 480px) {
     .contact-email {
       font-size: 1.1rem;
-      letter-spacing: -0.2px;
     }
   }
 </style> 
