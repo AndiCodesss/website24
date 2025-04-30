@@ -4,11 +4,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const pageTitle = "Contact";
 ---
 <BaseLayout title={pageTitle}>
-  <section class="hero">
+  <section class="hero hero-compact">
     <h1>Contact Me</h1>
   </section>
   
-  <div class="card animate-fade-in">
+  <div class="card animate-fade-in contact-card reveal-on-scroll">
     <div class="contact-methods">
       <div class="contact-method">
         <span class="contact-icon">✉️</span>
@@ -19,6 +19,15 @@ const pageTitle = "Contact";
 </BaseLayout>
 
 <style>
+  .hero-compact {
+    min-height: 20vh;
+    padding: 2rem;
+  }
+  
+  .contact-card {
+    margin-top: -1rem;
+  }
+
   .contact-methods {
     display: flex;
     flex-wrap: wrap;
