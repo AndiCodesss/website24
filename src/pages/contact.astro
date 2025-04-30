@@ -8,11 +8,13 @@ const pageTitle = "Contact";
     <h1>Contact Me</h1>
   </section>
   
-  <div class="card animate-fade-in contact-card reveal-on-scroll">
-    <div class="contact-methods">
-      <div class="contact-method">
-        <span class="contact-icon">✉️</span>
-        <p class="contact-email">oberdoerfer.andreas@gmail.com</p>
+  <div class="content-container">
+    <div class="card animate-fade-in contact-card reveal-on-scroll">
+      <div class="contact-methods">
+        <div class="contact-method">
+          <span class="contact-icon">✉️</span>
+          <p class="contact-email">oberdoerfer.andreas@gmail.com</p>
+        </div>
       </div>
     </div>
   </div>
@@ -51,6 +53,16 @@ const pageTitle = "Contact";
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--accent);
-    word-break: break-word;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  @media (max-width: 480px) {
+    .contact-email {
+      font-size: 1.1rem;
+      letter-spacing: -0.2px;
+    }
   }
 </style> 
