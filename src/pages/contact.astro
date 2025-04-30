@@ -13,7 +13,9 @@ const pageTitle = "Contact";
       <div class="contact-methods">
         <div class="contact-method">
           <span class="contact-icon">✉️</span>
-          <p class="contact-email">oberdoerfer.andreas<wbr/>@<wbr/>gmail<wbr/>.com</p>
+          <div class="email-container">
+            <a href="mailto:oberdoerfer.andreas@gmail.com" class="contact-email">oberdoerfer.andreas@gmail.com</a>
+          </div>
         </div>
       </div>
     </div>
@@ -49,16 +51,30 @@ const pageTitle = "Contact";
     display: inline-block;
   }
   
+  .email-container {
+    width: 100%;
+    overflow-x: auto;
+    margin: 0 auto;
+    text-align: center;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   .contact-email {
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--accent);
-    white-space: nowrap;
+    display: inline-block;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
   }
 
   @media (max-width: 480px) {
     .contact-email {
-      font-size: 1.1rem;
+      font-size: 1rem;
+    }
+    
+    .contact-card {
+      padding: 1.5rem 1rem;
     }
   }
 </style> 
