@@ -14,11 +14,38 @@ const pageTitle = "Home";
 		<h2>About Me</h2>
 		<p>
 			Hello there! I'm a passionate web developer who loves creating clean, functional, and beautiful websites.
-			When I'm not coding, you can find me debugging tricky problems and occasionally telling nerdy jokes.
+			I grew up in South Tyrol, a picturesque region in Northern Italy known for its stunning Alpine landscapes.
 		</p>
 	</div>
 
 	<div class="card animate-fade-in-delay-1">
+		<h2>Interests & Activities</h2>
+		<div class="interests-container">
+			<div class="interest-group">
+				<h3>Interests</h3>
+				<div class="skills-container">
+					<div class="skill-item">Finance</div>
+					<div class="skill-item">Informatics</div>
+					<div class="skill-item">Culture</div>
+					<div class="skill-item">Traveling</div>
+					<div class="skill-item">Music (Drumset)</div>
+				</div>
+			</div>
+			
+			<div class="interest-group">
+				<h3>Sports</h3>
+				<div class="skills-container">
+					<div class="skill-item">Karate</div>
+					<div class="skill-item">Boxing</div>
+					<div class="skill-item">Running (Marathons)</div>
+					<div class="skill-item">Cycling</div>
+					<div class="skill-item">Calisthenics</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="card animate-fade-in-delay-2">
 		<h2>A Funny Story</h2>
 		<p>
 			Why don't scientists trust atoms?<br/>
@@ -30,18 +57,6 @@ const pageTitle = "Home";
 		<p>
 			Andreas was debugging a particularly tricky piece of code late one night. Frustrated, he muttered, "Why won't this work? It's like talking to a brick wall!" Suddenly, his computer screen flickered, and text appeared: "Actually, brick walls are excellent listeners. They just have a terrible response time. And unlike this code, they rarely crash." Andreas stared, blinked, then slowly reached for the coffee pot. It was going to be a <em>very</em> long night.
 		</p>
-	</div>
-
-	<div class="card animate-fade-in-delay-2">
-		<h2>Skills & Expertise</h2>
-		<div class="skills-container">
-			<div class="skill-item">HTML & CSS</div>
-			<div class="skill-item">JavaScript</div>
-			<div class="skill-item">Astro</div>
-			<div class="skill-item">Web Development</div>
-			<div class="skill-item">Problem Solving</div>
-			<div class="skill-item">Debugging</div>
-		</div>
 	</div>
 </BaseLayout>
 
@@ -61,5 +76,17 @@ const pageTitle = "Home";
 		display: inline-block;
 		font-weight: 500;
 		transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+	}
+	
+	.interests-container {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+	
+	.interest-group h3 {
+		margin-bottom: 0.5rem;
+		font-size: 1.3rem;
+		color: var(--text-primary);
 	}
 </style>
