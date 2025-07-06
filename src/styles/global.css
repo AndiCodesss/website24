@@ -5,36 +5,34 @@
  */
 
 :root {
-  /* Standardized fonts - using system fonts for better performance */
-  --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  --font-mono: 'Courier New', Courier, monospace;
+  /* Professional fonts */
+  --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Fira Code', 'Monaco', 'Courier New', monospace;
   
-  /* Simplified color palette */
-  --accent: #2563eb; /* Primary blue */
-  --accent-light: #dbeafe; /* Light blue */
-  --accent-dark: #1d4ed8; /* Dark blue */
-  --text-primary: #1f2937; /* Dark gray */
-  --text-secondary: #6b7280; /* Medium gray */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
-  --border-color: #e5e7eb;
-  --shadow-color: rgba(0, 0, 0, 0.05);
+  /* Professional dark mode palette */
+  --accent: #6366f1; /* Sophisticated indigo */
+  --accent-light: #818cf8;
+  --accent-dark: #4f46e5;
+  --accent-glow: rgba(99, 102, 241, 0.4);
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --bg-primary: #0f172a; /* Deep navy */
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --border-color: #334155;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --gradient-subtle: linear-gradient(180deg, var(--bg-primary) 0%, #1a202c 100%);
 
-  --box-shadow: 0 1px 3px var(--shadow-color);
-  --transition-speed: 0.2s;
+  --box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -1px var(--shadow-color);
+  --box-shadow-lg: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -2px var(--shadow-color);
+  --transition-speed: 0.3s;
+  --transition-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* Dark mode colors */
+/* Force dark mode variables */
 .dark-mode {
-  --accent: #3b82f6;
-  --accent-light: #1e3a8a;
-  --accent-dark: #60a5fa;
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --bg-primary: #111827;
-  --bg-secondary: #1f2937;
-  --border-color: #374151;
-  --shadow-color: rgba(0, 0, 0, 0.3);
+  /* Already defined in :root for permanent dark mode */
 }
 
 /* Removed custom fonts for better performance */
@@ -48,51 +46,59 @@ body {
     flex-direction: column;
     min-height: 100vh;
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: var(--bg-primary);
+    background: var(--gradient-subtle);
+    background-attachment: fixed;
     transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    letter-spacing: -0.01em;
 }
 
 nav {
-    background-color: var(--bg-primary); /* White nav background */
-    padding: 1rem 2rem;
-    border-bottom: 1px solid var(--border-color); /* Use lighter border */
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.1);
     text-align: center;
-    box-shadow: 0 2px 5px var(--shadow-color); /* Add subtle shadow to nav */
-    position: sticky; /* Keep nav sticky */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 50;
+    transition: all var(--transition-speed) ease;
 }
 
 nav a {
-    margin: 0 1.5rem; /* Increased spacing */
+    margin: 0 1.5rem;
     text-decoration: none;
-    color: var(--accent);
-    font-weight: bold; /* Keep bold */
-    font-size: 1.1rem;
-    padding: 0.5rem 0; /* Add padding for better click area */
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
     position: relative;
-    transition: color 0.3s ease; /* Smooth color transition */
+    transition: all var(--transition-speed) ease;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
 }
 
-nav a::after { /* Underline effect on hover */
+nav a::after {
     content: '';
     position: absolute;
-    width: 100%;
+    width: calc(100% - 2rem);
     transform: scaleX(0);
     height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: var(--accent-dark);
+    bottom: -2px;
+    left: 1rem;
+    background: var(--gradient-primary);
     transform-origin: bottom right;
-    transition: transform 0.3s ease-out;
+    transition: transform var(--transition-speed) var(--transition-bounce);
+    box-shadow: 0 0 10px var(--accent-glow);
 }
 
 nav a:hover, nav a:focus {
-    color: var(--accent-dark); /* Darker on hover */
-    text-decoration: none; /* Remove default underline */
+    color: var(--accent-light);
+    text-decoration: none;
+    text-shadow: 0 0 20px var(--accent-glow);
 }
 
 nav a:hover::after { /* Animate underline */
@@ -110,9 +116,10 @@ main {
 
 h1, h2, h3, h4, h5, h6 {
     color: var(--text-primary);
-    margin: 0 0 1rem 0; /* Adjusted margin */
-    line-height: 1.3;
-    font-weight: 700; /* Use bold Poppins */
+    margin: 0 0 1.5rem 0;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -0.02em;
 }
 
 h1, h2 {
@@ -129,9 +136,11 @@ h6 { font-size: 1em; }
 
 
 p {
-    line-height: 1.7; /* Slightly increased line-height */
-    margin-bottom: 1.5rem; /* Increased paragraph spacing */
-    color: var(--text-secondary); /* Use secondary text color */
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    letter-spacing: 0.01em;
 }
 
 .story {
@@ -149,12 +158,22 @@ p {
 }
 
 .contact-email {
-    font-size: 2.8rem; /* Slightly reduced font size */
-    font-weight: bold;
-    color: var(--accent); /* Use accent color */
+    font-size: 2.5rem;
+    font-weight: 600;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     text-align: center;
-    margin: 3rem 0; /* Removed auto horizontal margin, added vertical */
-    overflow-wrap: break-word; /* Allow breaking only between words if needed */
+    margin: 3rem 0;
+    overflow-wrap: break-word;
+    letter-spacing: -0.02em;
+    transition: all var(--transition-speed) ease;
+}
+
+.contact-email:hover {
+    transform: scale(1.02);
+    text-shadow: 0 0 30px var(--accent-glow);
 }
 
 footer {
@@ -171,8 +190,10 @@ footer {
 footer .hint {
     font-size: 0.8em;
     color: var(--text-secondary);
-    opacity: 0.7;
+    opacity: 0.6;
     margin-top: 0.5rem;
+    font-style: italic;
+    letter-spacing: 0.02em;
 }
 
 strong, b {
@@ -182,12 +203,14 @@ strong, b {
 
 a {
   color: var(--accent);
-  text-decoration: none; /* Remove default underline */
-  transition: color 0.3s ease;
+  text-decoration: none;
+  transition: all var(--transition-speed) ease;
+  position: relative;
 }
+
 a:hover {
-  color: var(--accent-dark);
-  text-decoration: underline; /* Add underline on hover for non-nav links */
+  color: var(--accent-light);
+  text-shadow: 0 0 15px var(--accent-glow);
 }
 
 /* Keep necessary utility classes like .prose if used, adjust if needed */
@@ -301,51 +324,147 @@ hr {
   white-space: nowrap;
 }
 
-/* Konami Code Styles - simplified */
+/* Konami Code Styles - professional */
 .konami-image {
     display: none;
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.9);
     max-width: 80vw;
     max-height: 80vh;
     border: 2px solid var(--accent);
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 100px var(--accent-glow);
     z-index: 9999;
+    animation: konamiPop 0.5s var(--transition-bounce) forwards;
+}
+
+@keyframes konamiPop {
+    to {
+        transform: translate(-50%, -50%) scale(1);
+    }
 }
 
 .konami-image.show {
     display: block;
 }
 
+/* Konami effect overlay */
+.konami-effect {
+    position: relative;
+}
+
+.konami-effect::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(99, 102, 241, 0.2) 100%);
+    pointer-events: none;
+    z-index: 9998;
+    animation: konamiGlow 10s ease-out;
+}
+
+@keyframes konamiGlow {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Professional animations and effects */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Subtle breathing effect for accent elements */
+.card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: var(--gradient-primary);
+    border-radius: inherit;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity var(--transition-speed) ease;
+}
+
+.card:hover::before {
+    opacity: 0.1;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Professional scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-tertiary);
+    border-radius: 5px;
+    border: 2px solid var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* Selection styling */
+::selection {
+    background: var(--accent);
+    color: white;
+}
+
+::-moz-selection {
+    background: var(--accent);
+    color: white;
+}
+
 /* Add any other specific styles below */
 
-/* Hero section styles */
+/* Professional hero section */
 .hero {
-    padding: 4rem 2rem;
+    padding: 6rem 2rem 4rem;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2rem;
+    margin-bottom: 4rem;
     position: relative;
     overflow: hidden;
-    min-height: 60vh;
-    background: var(--bg-primary);
+    min-height: 70vh;
+    background: radial-gradient(ellipse at center top, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
     transition: background var(--transition-speed) ease;
 }
 
 .hero h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-    letter-spacing: -0.5px;
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(to right, #e2e8f0 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -1px;
     font-weight: 700;
     position: relative;
     z-index: 10;
+    text-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
 }
 
 .hero p {
@@ -359,15 +478,16 @@ hr {
 
 /* Hero image replaced by HolographicProfile component */
 
-/* Card styles */
+/* Professional card styles */
 .card {
-    background: var(--bg-secondary);
-    border-radius: 12px;
-    box-shadow: var(--box-shadow);
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border: 1px solid var(--border-color);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: rgba(30, 41, 59, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: var(--box-shadow-lg);
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    transition: all var(--transition-speed) ease;
     position: relative;
     overflow: hidden;
 }
@@ -375,39 +495,21 @@ hr {
 /* Removed complex card effects for better performance */
 
 .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--shadow-color);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px var(--shadow-color), 0 10px 10px -5px var(--shadow-color);
+    border-color: rgba(99, 102, 241, 0.3);
 }
 
 .card h2, .card h3 {
-    color: var(--accent);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-top: 0;
+    font-weight: 600;
 }
 
-/* Dark mode toggle */
-.theme-toggle {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: var(--bg-primary);
-    color: var(--accent);
-    border: 1px solid var(--border-color);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: var(--box-shadow);
-    z-index: 100;
-    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-}
-
-.theme-toggle:hover {
-    background-color: var(--accent);
-    color: white;
-}
+/* Removed theme toggle styles */
 
 /* Enhanced footer */
 footer {
@@ -439,15 +541,22 @@ footer {
 .social-links a {
     color: var(--accent);
     font-size: 1.5rem;
-    transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    transition: all var(--transition-speed) ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0.75rem;
+    border-radius: 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid transparent;
 }
 
 .social-links a:hover {
-    color: var(--accent-dark);
-    transform: translateY(-5px);
+    color: var(--accent-light);
+    transform: translateY(-3px);
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
 }
 
 /* Animations */
@@ -568,6 +677,22 @@ footer {
 
 .reveal-stagger .reveal-item:nth-child(6).revealed {
   animation-delay: 0.5s;
+}
+
+/* Add smooth page load animation */
+@keyframes pageLoad {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+main {
+    animation: pageLoad 0.8s ease-out;
 }
 
 /* Content container to center the cards */
