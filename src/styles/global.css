@@ -5,64 +5,53 @@
  */
 
 :root {
-  --font-primary: 'Poppins', sans-serif; /* Added Poppins */
-  --accent: #0056b3; /* Slightly darker blue */
-  --accent-light: #e6f0ff; /* Light blue for backgrounds/accents */
-  --accent-dark: #003d80; /* Even darker blue for hover */
-  --text-primary: #333; /* Darker grey for main text */
-  --text-secondary: #555; /* Slightly lighter grey */
-  --bg-primary: #ffffff; /* White background */
-  --bg-secondary: #f7f7f7; /* Very light grey for subtle contrast */
-  --border-color: #e0e0e0; /* Lighter border color */
-  --shadow-color: rgba(0, 0, 0, 0.08); /* Softer shadow */
+  /* Standardized fonts - using system fonts for better performance */
+  --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-mono: 'Courier New', Courier, monospace;
+  
+  /* Simplified color palette */
+  --accent: #2563eb; /* Primary blue */
+  --accent-light: #dbeafe; /* Light blue */
+  --accent-dark: #1d4ed8; /* Dark blue */
+  --text-primary: #1f2937; /* Dark gray */
+  --text-secondary: #6b7280; /* Medium gray */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --border-color: #e5e7eb;
+  --shadow-color: rgba(0, 0, 0, 0.05);
 
-  --box-shadow: 0 4px 12px var(--shadow-color); /* Refined shadow */
-  --transition-speed: 0.3s;
+  --box-shadow: 0 1px 3px var(--shadow-color);
+  --transition-speed: 0.2s;
 }
 
 /* Dark mode colors */
 .dark-mode {
-  --accent: #4d94ff;
-  --accent-light: #1e3a60;
-  --accent-dark: #80b3ff;
-  --text-primary: #e0e0e0;
-  --text-secondary: #b0b0b0;
-  --bg-primary: #121212;
-  --bg-secondary: #1e1e1e;
-  --border-color: #2c2c2c;
+  --accent: #3b82f6;
+  --accent-light: #1e3a8a;
+  --accent-dark: #60a5fa;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --border-color: #374151;
   --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
-@font-face {
-  font-family: "Atkinson";
-  src: url("/fonts/atkinson-regular.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Atkinson";
-  src: url("/fonts/atkinson-bold.woff") format("woff");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+/* Removed custom fonts for better performance */
 
 body {
-    font-family: var(--font-primary); /* Use Poppins */
+    font-family: var(--font-primary);
     margin: 0;
     padding: 0;
-    color: var(--text-primary); /* Use darker text color */
+    color: var(--text-primary);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    font-size: 17px; /* Slightly smaller base font */
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased; /* Smoother fonts */
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-    /* Revert to simple background */
-    background-color: var(--bg-primary); /* Use primary (white) background */
+    background-color: var(--bg-primary);
     transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
@@ -312,50 +301,30 @@ hr {
   white-space: nowrap;
 }
 
-/* Konami Code Styles */
+/* Konami Code Styles - simplified */
 .konami-image {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     max-width: 80vw;
     max-height: 80vh;
-    border: 5px solid var(--accent-dark);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     z-index: 9999;
-    animation: konamiFadeIn 0.5s ease-out;
 }
 
 .konami-image.show {
     display: block;
 }
 
-body.konami-effect {
-    /* Run fast animation for 13 iterations (~10.4s) */
-    animation: colorExplosion 0.8s linear 13;
-    filter: hue-rotate(0deg) contrast(1.2);
-}
-
-@keyframes colorExplosion {
-    0% { filter: hue-rotate(0deg) contrast(1.1); }
-    25% { filter: hue-rotate(90deg) contrast(1.3); }
-    50% { filter: hue-rotate(180deg) contrast(1.1); }
-    75% { filter: hue-rotate(270deg) contrast(1.3); }
-    100% { filter: hue-rotate(360deg) contrast(1.1); }
-}
-
-@keyframes konamiFadeIn {
-    from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
-
 /* Add any other specific styles below */
 
 /* Hero section styles */
 .hero {
-    padding: 8rem 2rem 4rem;
+    padding: 4rem 2rem;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -364,27 +333,26 @@ body.konami-effect {
     margin-bottom: 2rem;
     position: relative;
     overflow: hidden;
-    min-height: 100vh;
-    background: #000;
+    min-height: 60vh;
+    background: var(--bg-primary);
     transition: background var(--transition-speed) ease;
 }
 
 .hero h1 {
-    font-size: 4rem;
+    font-size: 3rem;
     margin-bottom: 1rem;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    font-weight: 900;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    font-weight: 700;
     position: relative;
     z-index: 10;
 }
 
 .hero p {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     max-width: 600px;
     margin: 0 auto 2rem;
-    color: #ccc;
+    color: var(--text-secondary);
     position: relative;
     z-index: 10;
 }
@@ -393,85 +361,22 @@ body.konami-effect {
 
 /* Card styles */
 .card {
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: 
-        0 8px 32px 0 rgba(31, 38, 135, 0.37),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-    padding: 2.5rem;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
     margin-bottom: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
 }
 
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(102, 126, 234, 0.1) 0%,
-        transparent 40%,
-        transparent 60%,
-        rgba(118, 75, 162, 0.1) 100%
-    );
-    opacity: 0;
-    transition: opacity 0.6s ease;
-    pointer-events: none;
-}
-
-.card::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(
-        circle,
-        rgba(102, 126, 234, 0.3) 0%,
-        transparent 70%
-    );
-    opacity: 0;
-    transform: scale(0);
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
-    pointer-events: none;
-}
+/* Removed complex card effects for better performance */
 
 .card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 
-        0 20px 60px 0 rgba(31, 38, 135, 0.5),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.2),
-        0 0 80px rgba(102, 126, 234, 0.3);
-    border-color: rgba(102, 126, 234, 0.3);
-}
-
-.card:hover::before {
-    opacity: 1;
-}
-
-.card:hover::after {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* Glowing border animation */
-@keyframes glow {
-    0% { box-shadow: 0 0 5px rgba(102, 126, 234, 0.5), inset 0 0 5px rgba(102, 126, 234, 0.2); }
-    50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8), inset 0 0 10px rgba(102, 126, 234, 0.3); }
-    100% { box-shadow: 0 0 5px rgba(102, 126, 234, 0.5), inset 0 0 5px rgba(102, 126, 234, 0.2); }
-}
-
-.card:hover {
-    animation: glow 2s ease-in-out infinite;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 .card h2, .card h3 {

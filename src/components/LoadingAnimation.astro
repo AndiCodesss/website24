@@ -8,15 +8,7 @@
       <div class="helix"></div>
       <div class="helix"></div>
     </div>
-    <div class="loading-text">
-      <span class="loading-letter">L</span>
-      <span class="loading-letter">O</span>
-      <span class="loading-letter">A</span>
-      <span class="loading-letter">D</span>
-      <span class="loading-letter">I</span>
-      <span class="loading-letter">N</span>
-      <span class="loading-letter">G</span>
-    </div>
+    <div class="loading-text">good things take time</div>
     <div class="loading-progress">
       <div class="progress-bar"></div>
     </div>
@@ -85,30 +77,13 @@
   }
   
   .loading-text {
-    font-size: 2rem;
-    font-weight: 900;
+    font-size: 1.5rem;
+    font-weight: 400;
     color: #fff;
     margin-bottom: 2rem;
-    letter-spacing: 0.5rem;
-  }
-  
-  .loading-letter {
-    display: inline-block;
-    animation: bounce 1.4s infinite;
-    animation-delay: calc(var(--i) * 0.1s);
-  }
-  
-  .loading-letter:nth-child(1) { --i: 0; }
-  .loading-letter:nth-child(2) { --i: 1; }
-  .loading-letter:nth-child(3) { --i: 2; }
-  .loading-letter:nth-child(4) { --i: 3; }
-  .loading-letter:nth-child(5) { --i: 4; }
-  .loading-letter:nth-child(6) { --i: 5; }
-  .loading-letter:nth-child(7) { --i: 6; }
-  
-  @keyframes bounce {
-    0%, 60%, 100% { transform: translateY(0); }
-    30% { transform: translateY(-15px); }
+    letter-spacing: 0.1rem;
+    opacity: 0.8;
+    font-style: italic;
   }
   
   .loading-progress {

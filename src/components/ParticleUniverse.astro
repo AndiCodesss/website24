@@ -15,6 +15,8 @@
     height: 100%;
     overflow: hidden;
     z-index: -1;
+    opacity: 0.3;
+    pointer-events: none;
   }
   
   #particle-canvas {
@@ -38,7 +40,7 @@
       });
       
       this.particles = null;
-      this.particleCount = 1500;
+      this.particleCount = 300;
       this.mouseX = 0;
       this.mouseY = 0;
       this.targetMouseX = 0;
@@ -69,9 +71,8 @@
           (Math.random() - 0.5) * 100
         );
         
-        // Beautiful color gradient
-        const color = new THREE.Color();
-        color.setHSL(Math.random() * 0.1 + 0.55, 0.7, 0.5); // Blue to purple range
+        // Simplified color palette
+        const color = new THREE.Color(0x2563eb);
         colors.push(color.r, color.g, color.b);
         
         sizes.push(Math.random() * 2 + 0.5);
@@ -128,8 +129,7 @@
       this.particles = new THREE.Points(geometry, material);
       this.scene.add(this.particles);
       
-      // Add connecting lines between nearby particles
-      this.createConnections();
+      // Removed connections for better performance
       
       // Mouse interaction
       document.addEventListener('mousemove', (e) => {
@@ -145,52 +145,6 @@
       });
     }
     
-    createConnections() {
-      const positions = this.particles.geometry.attributes.position.array;
-      const connectionGeometry = new THREE.BufferGeometry();
-      const connectionPositions = [];
-      const connectionColors = [];
-      
-      for (let i = 0; i < this.particleCount; i++) {
-        const x1 = positions[i * 3];
-        const y1 = positions[i * 3 + 1];
-        const z1 = positions[i * 3 + 2];
-        
-        for (let j = i + 1; j < this.particleCount; j++) {
-          const x2 = positions[j * 3];
-          const y2 = positions[j * 3 + 1];
-          const z2 = positions[j * 3 + 2];
-          
-          const distance = Math.sqrt(
-            Math.pow(x2 - x1, 2) +
-            Math.pow(y2 - y1, 2) +
-            Math.pow(z2 - z1, 2)
-          );
-          
-          if (distance < 15) {
-            connectionPositions.push(x1, y1, z1, x2, y2, z2);
-            
-            const alpha = 1.0 - distance / 15;
-            connectionColors.push(
-              0.3, 0.5, 0.8, alpha * 0.3,
-              0.3, 0.5, 0.8, alpha * 0.3
-            );
-          }
-        }
-      }
-      
-      connectionGeometry.setAttribute('position', new THREE.Float32BufferAttribute(connectionPositions, 3));
-      connectionGeometry.setAttribute('color', new THREE.Float32BufferAttribute(connectionColors, 4));
-      
-      const connectionMaterial = new THREE.LineBasicMaterial({
-        vertexColors: true,
-        transparent: true,
-        blending: THREE.AdditiveBlending
-      });
-      
-      this.connections = new THREE.LineSegments(connectionGeometry, connectionMaterial);
-      this.scene.add(this.connections);
-    }
     
     animate() {
       requestAnimationFrame(() => this.animate());
@@ -199,19 +153,12 @@
       this.mouseX += (this.targetMouseX - this.mouseX) * 0.05;
       this.mouseY += (this.targetMouseY - this.mouseY) * 0.05;
       
-      // Rotate particles based on mouse
-      this.particles.rotation.y += 0.001;
-      this.particles.rotation.x = this.mouseY * 0.2;
-      this.particles.rotation.y += this.mouseX * 0.2;
+      // Simplified rotation
+      this.particles.rotation.y += 0.0005;
       
       // Update shader time
       this.particles.material.uniforms.time.value = performance.now() * 0.001;
       
-      // Rotate connections
-      if (this.connections) {
-        this.connections.rotation.y = this.particles.rotation.y;
-        this.connections.rotation.x = this.particles.rotation.x;
-      }
       
       this.renderer.render(this.scene, this.camera);
     }
