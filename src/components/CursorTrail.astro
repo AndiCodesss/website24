@@ -1,0 +1,253 @@
+---
+// Cursor Trail Component
+---
+
+<div class="cursor-container">
+  <div class="cursor-dot"></div>
+  <div class="cursor-outline"></div>
+</div>
+
+<style>
+  .cursor-container {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10001;
+  }
+  
+  .cursor-dot {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: #667eea;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s ease, background 0.2s ease;
+    mix-blend-mode: screen;
+  }
+  
+  .cursor-outline {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(102, 126, 234, 0.5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.1s ease;
+    mix-blend-mode: screen;
+  }
+  
+  .cursor-dot.clicking {
+    transform: translate(-50%, -50%) scale(0.5);
+    background: #764ba2;
+  }
+  
+  .cursor-outline.hovering {
+    width: 50px;
+    height: 50px;
+    border-color: rgba(118, 75, 162, 0.8);
+    border-width: 3px;
+  }
+  
+  /* Trail particles */
+  .trail-particle {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.8), transparent);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: fadeOut 1s ease-out forwards;
+  }
+  
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0) translate(-50%, -50%);
+    }
+  }
+  
+  /* Hide default cursor */
+  body {
+    cursor: none;
+  }
+  
+  a, button, input, textarea, select, [role="button"] {
+    cursor: none;
+  }
+  
+  /* Mobile - show default cursor */
+  @media (hover: none) and (pointer: coarse) {
+    .cursor-container {
+      display: none;
+    }
+    
+    body, a, button, input, textarea, select, [role="button"] {
+      cursor: auto;
+    }
+  }
+</style>
+
+<script>
+  class CursorTrail {
+    constructor() {
+      this.dot = document.querySelector('.cursor-dot');
+      this.outline = document.querySelector('.cursor-outline');
+      this.cursorPos = { x: 0, y: 0 };
+      this.dotPos = { x: 0, y: 0 };
+      this.outlinePos = { x: 0, y: 0 };
+      this.isHovering = false;
+      this.isClicking = false;
+      this.trail = [];
+      this.maxTrailLength = 20;
+      
+      this.init();
+    }
+    
+    init() {
+      // Mouse move
+      document.addEventListener('mousemove', (e) => {
+        this.cursorPos.x = e.clientX;
+        this.cursorPos.y = e.clientY;
+        
+        // Create trail particle
+        this.createTrailParticle(e.clientX, e.clientY);
+      });
+      
+      // Mouse down/up
+      document.addEventListener('mousedown', () => {
+        this.isClicking = true;
+        this.dot.classList.add('clicking');
+        this.createExplosion(this.cursorPos.x, this.cursorPos.y);
+      });
+      
+      document.addEventListener('mouseup', () => {
+        this.isClicking = false;
+        this.dot.classList.remove('clicking');
+      });
+      
+      // Hover states
+      const interactiveElements = 'a, button, input, textarea, select, [role="button"]';
+      document.querySelectorAll(interactiveElements).forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          this.isHovering = true;
+          this.outline.classList.add('hovering');
+        });
+        
+        el.addEventListener('mouseleave', () => {
+          this.isHovering = false;
+          this.outline.classList.remove('hovering');
+        });
+      });
+      
+      // Hide cursor when leaving window
+      document.addEventListener('mouseleave', () => {
+        this.dot.style.opacity = '0';
+        this.outline.style.opacity = '0';
+      });
+      
+      document.addEventListener('mouseenter', () => {
+        this.dot.style.opacity = '1';
+        this.outline.style.opacity = '1';
+      });
+      
+      // Animation loop
+      this.animate();
+    }
+    
+    animate() {
+      // Smooth follow for dot
+      this.dotPos.x += (this.cursorPos.x - this.dotPos.x) * 0.3;
+      this.dotPos.y += (this.cursorPos.y - this.dotPos.y) * 0.3;
+      
+      // Smoother follow for outline
+      this.outlinePos.x += (this.cursorPos.x - this.outlinePos.x) * 0.15;
+      this.outlinePos.y += (this.cursorPos.y - this.outlinePos.y) * 0.15;
+      
+      // Apply positions
+      this.dot.style.left = this.dotPos.x + 'px';
+      this.dot.style.top = this.dotPos.y + 'px';
+      
+      this.outline.style.left = this.outlinePos.x + 'px';
+      this.outline.style.top = this.outlinePos.y + 'px';
+      
+      requestAnimationFrame(() => this.animate());
+    }
+    
+    createTrailParticle(x, y) {
+      // Throttle trail creation
+      if (Math.random() > 0.5) return;
+      
+      const particle = document.createElement('div');
+      particle.className = 'trail-particle';
+      particle.style.left = x + 'px';
+      particle.style.top = y + 'px';
+      
+      // Random color variation
+      const hue = 250 + Math.random() * 30;
+      particle.style.background = `radial-gradient(circle, hsla(${hue}, 70%, 60%, 0.8), transparent)`;
+      
+      document.body.appendChild(particle);
+      
+      // Remove after animation
+      setTimeout(() => particle.remove(), 1000);
+    }
+    
+    createExplosion(x, y) {
+      const particleCount = 12;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'explosion-particle';
+        particle.style.cssText = `
+          position: fixed;
+          width: 6px;
+          height: 6px;
+          background: #667eea;
+          border-radius: 50%;
+          left: ${x}px;
+          top: ${y}px;
+          pointer-events: none;
+          z-index: 10000;
+        `;
+        
+        document.body.appendChild(particle);
+        
+        const angle = (i / particleCount) * Math.PI * 2;
+        const velocity = 100 + Math.random() * 100;
+        const lifetime = 500 + Math.random() * 500;
+        
+        // Animate with vanilla JS instead of GSAP
+        let progress = 0;
+        const animate = () => {
+          progress += 16 / lifetime;
+          if (progress >= 1) {
+            particle.remove();
+            return;
+          }
+          
+          const x = Math.cos(angle) * velocity * progress;
+          const y = Math.sin(angle) * velocity * progress;
+          particle.style.transform = `translate(${x}px, ${y}px) scale(${1 - progress})`;
+          particle.style.opacity = 1 - progress;
+          
+          requestAnimationFrame(animate);
+        };
+        requestAnimationFrame(animate);
+      }
+    }
+  }
+  
+  // Initialize on DOM load
+  document.addEventListener('DOMContentLoaded', () => {
+    // Only initialize on desktop
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      new CursorTrail();
+    }
+  });
+</script>

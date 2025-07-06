@@ -1,0 +1,656 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TextScramble from '../components/TextScramble.astro';
+
+const pageTitle = "404 - Page Not Found";
+---
+
+<BaseLayout title={pageTitle}>
+  <div class="error-page">
+    <div class="glitch-container">
+      <h1 class="glitch" data-text="404">404</h1>
+    </div>
+    <h2><TextScramble text="Reality Not Found" delay="300" /></h2>
+    <p class="error-message">
+      <TextScramble text="The page you're looking for exists in another dimension" delay="600" />
+    </p>
+    
+    <div class="portal-home">
+      <a href="/" class="home-button">
+        <span>Return to Reality</span>
+        <div class="button-glow"></div>
+      </a>
+    </div>
+    
+    <div class="secret-hint">
+      <p>psst... press SPACE to access the void</p>
+    </div>
+    
+    <!-- Hidden Snake Game -->
+    <div class="game-container" id="snakeGame">
+      <canvas id="gameCanvas"></canvas>
+      <div class="game-overlay">
+        <h3>VOID SNAKE</h3>
+        <p>Use arrow keys to control</p>
+        <p>Score: <span id="score">0</span></p>
+        <p>Press ESC to exit the void</p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .error-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    background: #000;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .error-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 50%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(240, 147, 251, 0.05) 0%, transparent 50%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  
+  .glitch-container {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+  
+  .glitch {
+    font-size: 10rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    position: relative;
+    color: #fff;
+    letter-spacing: 5px;
+    margin: 0;
+    animation: glitch-skew 1s infinite linear alternate-reverse;
+  }
+  
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .glitch::before {
+    animation: glitch-1 0.5s infinite;
+    color: #00ffff;
+    z-index: -1;
+  }
+  
+  .glitch::after {
+    animation: glitch-2 0.5s infinite;
+    color: #ff00ff;
+    z-index: -2;
+  }
+  
+  @keyframes glitch-1 {
+    0% {
+      clip: rect(44px, 450px, 56px, 0);
+      transform: skew(0.5deg);
+    }
+    5% {
+      clip: rect(22px, 450px, 88px, 0);
+      transform: skew(0.5deg);
+    }
+    10% {
+      clip: rect(77px, 450px, 33px, 0);
+      transform: skew(0.5deg);
+    }
+    15% {
+      clip: rect(55px, 450px, 44px, 0);
+      transform: skew(0.5deg);
+    }
+    20% {
+      clip: rect(11px, 450px, 99px, 0);
+      transform: skew(0.5deg);
+    }
+    25% {
+      clip: rect(66px, 450px, 22px, 0);
+      transform: skew(0.5deg);
+    }
+    30% {
+      clip: rect(88px, 450px, 11px, 0);
+      transform: skew(0.5deg);
+    }
+    35% {
+      clip: rect(33px, 450px, 77px, 0);
+      transform: skew(0.5deg);
+    }
+    40% {
+      clip: rect(99px, 450px, 0px, 0);
+      transform: skew(0.5deg);
+    }
+    45% {
+      clip: rect(0px, 450px, 111px, 0);
+      transform: skew(0.5deg);
+    }
+    50% {
+      clip: rect(44px, 450px, 56px, 0);
+      transform: skew(0.5deg);
+    }
+    55% {
+      clip: rect(22px, 450px, 88px, 0);
+      transform: skew(-0.5deg);
+    }
+    60% {
+      clip: rect(77px, 450px, 33px, 0);
+      transform: skew(-0.5deg);
+    }
+    65% {
+      clip: rect(55px, 450px, 44px, 0);
+      transform: skew(-0.5deg);
+    }
+    70% {
+      clip: rect(11px, 450px, 99px, 0);
+      transform: skew(-0.5deg);
+    }
+    75% {
+      clip: rect(66px, 450px, 22px, 0);
+      transform: skew(-0.5deg);
+    }
+    80% {
+      clip: rect(88px, 450px, 11px, 0);
+      transform: skew(-0.5deg);
+    }
+    85% {
+      clip: rect(33px, 450px, 77px, 0);
+      transform: skew(-0.5deg);
+    }
+    90% {
+      clip: rect(99px, 450px, 0px, 0);
+      transform: skew(-0.5deg);
+    }
+    95% {
+      clip: rect(0px, 450px, 111px, 0);
+      transform: skew(-0.5deg);
+    }
+    100% {
+      clip: rect(44px, 450px, 56px, 0);
+      transform: skew(-0.5deg);
+    }
+  }
+  
+  @keyframes glitch-2 {
+    0% {
+      clip: rect(65px, 450px, 34px, 0);
+      transform: skew(0.8deg);
+    }
+    5% {
+      clip: rect(33px, 450px, 77px, 0);
+      transform: skew(0.8deg);
+    }
+    10% {
+      clip: rect(88px, 450px, 22px, 0);
+      transform: skew(0.8deg);
+    }
+    15% {
+      clip: rect(44px, 450px, 55px, 0);
+      transform: skew(0.8deg);
+    }
+    20% {
+      clip: rect(22px, 450px, 88px, 0);
+      transform: skew(0.8deg);
+    }
+    25% {
+      clip: rect(77px, 450px, 33px, 0);
+      transform: skew(0.8deg);
+    }
+    30% {
+      clip: rect(99px, 450px, 0px, 0);
+      transform: skew(0.8deg);
+    }
+    35% {
+      clip: rect(22px, 450px, 88px, 0);
+      transform: skew(0.8deg);
+    }
+    40% {
+      clip: rect(88px, 450px, 11px, 0);
+      transform: skew(0.8deg);
+    }
+    45% {
+      clip: rect(11px, 450px, 100px, 0);
+      transform: skew(0.8deg);
+    }
+    50% {
+      clip: rect(65px, 450px, 34px, 0);
+      transform: skew(0.8deg);
+    }
+    55% {
+      clip: rect(33px, 450px, 77px, 0);
+      transform: skew(-0.8deg);
+    }
+    60% {
+      clip: rect(88px, 450px, 22px, 0);
+      transform: skew(-0.8deg);
+    }
+    65% {
+      clip: rect(44px, 450px, 55px, 0);
+      transform: skew(-0.8deg);
+    }
+    70% {
+      clip: rect(22px, 450px, 88px, 0);
+      transform: skew(-0.8deg);
+    }
+    75% {
+      clip: rect(77px, 450px, 33px, 0);
+      transform: skew(-0.8deg);
+    }
+    80% {
+      clip: rect(99px, 450px, 0px, 0);
+      transform: skew(-0.8deg);
+    }
+    85% {
+      clip: rect(22px, 450px, 88px, 0);
+      transform: skew(-0.8deg);
+    }
+    90% {
+      clip: rect(88px, 450px, 11px, 0);
+      transform: skew(-0.8deg);
+    }
+    95% {
+      clip: rect(11px, 450px, 100px, 0);
+      transform: skew(-0.8deg);
+    }
+    100% {
+      clip: rect(65px, 450px, 34px, 0);
+      transform: skew(-0.8deg);
+    }
+  }
+  
+  @keyframes glitch-skew {
+    0% { transform: skew(0deg); }
+    10% { transform: skew(1deg); }
+    20% { transform: skew(-1deg); }
+    30% { transform: skew(2deg); }
+    40% { transform: skew(-2deg); }
+    50% { transform: skew(0deg); }
+    60% { transform: skew(-1deg); }
+    70% { transform: skew(1deg); }
+    80% { transform: skew(-2deg); }
+    90% { transform: skew(2deg); }
+    100% { transform: skew(0deg); }
+  }
+  
+  .error-page h2 {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .error-message {
+    font-size: 1.2rem;
+    color: #ccc;
+    margin-bottom: 3rem;
+    max-width: 600px;
+  }
+  
+  .portal-home {
+    position: relative;
+    z-index: 10;
+  }
+  
+  .home-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  
+  .home-button:hover {
+    transform: scale(1.05);
+  }
+  
+  .button-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+    animation: rotate 3s linear infinite;
+  }
+  
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  .secret-hint {
+    position: absolute;
+    bottom: 2rem;
+    opacity: 0.3;
+    font-size: 0.9rem;
+    color: #666;
+    transition: opacity 0.3s ease;
+  }
+  
+  .secret-hint:hover {
+    opacity: 0.6;
+  }
+  
+  /* Snake Game Styles */
+  .game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+  }
+  
+  .game-container.active {
+    display: flex;
+  }
+  
+  #gameCanvas {
+    border: 2px solid #667eea;
+    box-shadow: 0 0 50px rgba(102, 126, 234, 0.5);
+  }
+  
+  .game-overlay {
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: white;
+  }
+  
+  .game-overlay h3 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #667eea;
+  }
+  
+  .game-overlay p {
+    margin: 0.5rem 0;
+    color: #ccc;
+  }
+  
+  #score {
+    color: #764ba2;
+    font-weight: bold;
+  }
+  
+  @media (max-width: 720px) {
+    .glitch {
+      font-size: 6rem;
+    }
+    
+    .error-page h2 {
+      font-size: 1.5rem;
+    }
+    
+    .error-message {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<script>
+  // Snake Game Implementation
+  class SnakeGame {
+    constructor() {
+      this.canvas = document.getElementById('gameCanvas');
+      this.ctx = this.canvas.getContext('2d');
+      this.container = document.getElementById('snakeGame');
+      this.scoreElement = document.getElementById('score');
+      
+      this.gridSize = 20;
+      this.tileCount = 20;
+      this.tileSize = this.gridSize;
+      
+      this.canvas.width = this.tileCount * this.gridSize;
+      this.canvas.height = this.tileCount * this.gridSize;
+      
+      this.snake = [];
+      this.direction = { x: 0, y: 0 };
+      this.food = {};
+      this.score = 0;
+      this.gameRunning = false;
+      
+      this.init();
+    }
+    
+    init() {
+      // Space to start game
+      document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && !this.gameRunning) {
+          e.preventDefault();
+          this.startGame();
+        } else if (e.code === 'Escape' && this.gameRunning) {
+          this.endGame();
+        } else if (this.gameRunning) {
+          this.handleInput(e);
+        }
+      });
+    }
+    
+    startGame() {
+      this.container.classList.add('active');
+      this.gameRunning = true;
+      this.score = 0;
+      this.scoreElement.textContent = this.score;
+      
+      // Initialize snake
+      this.snake = [
+        { x: 10, y: 10 }
+      ];
+      this.direction = { x: 0, y: 0 };
+      
+      // Place food
+      this.placeFood();
+      
+      // Start game loop
+      this.gameLoop();
+    }
+    
+    endGame() {
+      this.container.classList.remove('active');
+      this.gameRunning = false;
+    }
+    
+    handleInput(e) {
+      switch(e.key) {
+        case 'ArrowUp':
+          if (this.direction.y === 0) {
+            this.direction = { x: 0, y: -1 };
+          }
+          break;
+        case 'ArrowDown':
+          if (this.direction.y === 0) {
+            this.direction = { x: 0, y: 1 };
+          }
+          break;
+        case 'ArrowLeft':
+          if (this.direction.x === 0) {
+            this.direction = { x: -1, y: 0 };
+          }
+          break;
+        case 'ArrowRight':
+          if (this.direction.x === 0) {
+            this.direction = { x: 1, y: 0 };
+          }
+          break;
+      }
+    }
+    
+    gameLoop() {
+      if (!this.gameRunning) return;
+      
+      this.update();
+      this.draw();
+      
+      setTimeout(() => this.gameLoop(), 100);
+    }
+    
+    update() {
+      // Move snake
+      const head = { ...this.snake[0] };
+      head.x += this.direction.x;
+      head.y += this.direction.y;
+      
+      // Check walls
+      if (head.x < 0 || head.x >= this.tileCount || 
+          head.y < 0 || head.y >= this.tileCount) {
+        this.gameOver();
+        return;
+      }
+      
+      // Check self collision
+      for (const segment of this.snake) {
+        if (head.x === segment.x && head.y === segment.y) {
+          this.gameOver();
+          return;
+        }
+      }
+      
+      this.snake.unshift(head);
+      
+      // Check food
+      if (head.x === this.food.x && head.y === this.food.y) {
+        this.score += 10;
+        this.scoreElement.textContent = this.score;
+        this.placeFood();
+      } else {
+        this.snake.pop();
+      }
+    }
+    
+    draw() {
+      // Clear canvas
+      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      
+      // Draw snake
+      this.snake.forEach((segment, index) => {
+        const gradient = this.ctx.createRadialGradient(
+          segment.x * this.gridSize + this.gridSize / 2,
+          segment.y * this.gridSize + this.gridSize / 2,
+          0,
+          segment.x * this.gridSize + this.gridSize / 2,
+          segment.y * this.gridSize + this.gridSize / 2,
+          this.gridSize / 2
+        );
+        
+        if (index === 0) {
+          gradient.addColorStop(0, '#764ba2');
+          gradient.addColorStop(1, '#667eea');
+        } else {
+          gradient.addColorStop(0, '#667eea');
+          gradient.addColorStop(1, '#4facfe');
+        }
+        
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(
+          segment.x * this.gridSize,
+          segment.y * this.gridSize,
+          this.gridSize - 2,
+          this.gridSize - 2
+        );
+      });
+      
+      // Draw food
+      const foodGradient = this.ctx.createRadialGradient(
+        this.food.x * this.gridSize + this.gridSize / 2,
+        this.food.y * this.gridSize + this.gridSize / 2,
+        0,
+        this.food.x * this.gridSize + this.gridSize / 2,
+        this.food.y * this.gridSize + this.gridSize / 2,
+        this.gridSize / 2
+      );
+      foodGradient.addColorStop(0, '#f093fb');
+      foodGradient.addColorStop(1, '#f5576c');
+      
+      this.ctx.fillStyle = foodGradient;
+      this.ctx.beginPath();
+      this.ctx.arc(
+        this.food.x * this.gridSize + this.gridSize / 2,
+        this.food.y * this.gridSize + this.gridSize / 2,
+        this.gridSize / 2 - 2,
+        0,
+        Math.PI * 2
+      );
+      this.ctx.fill();
+    }
+    
+    placeFood() {
+      do {
+        this.food = {
+          x: Math.floor(Math.random() * this.tileCount),
+          y: Math.floor(Math.random() * this.tileCount)
+        };
+      } while (this.snake.some(segment => 
+        segment.x === this.food.x && segment.y === this.food.y
+      ));
+    }
+    
+    gameOver() {
+      this.gameRunning = false;
+      
+      // Show game over
+      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      
+      this.ctx.fillStyle = '#fff';
+      this.ctx.font = 'bold 30px Poppins';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText('GAME OVER', this.canvas.width / 2, this.canvas.height / 2);
+      
+      this.ctx.font = '20px Poppins';
+      this.ctx.fillText(`Score: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 40);
+      
+      setTimeout(() => {
+        this.endGame();
+      }, 3000);
+    }
+  }
+  
+  // Initialize game
+  document.addEventListener('DOMContentLoaded', () => {
+    new SnakeGame();
+  });
+</script>

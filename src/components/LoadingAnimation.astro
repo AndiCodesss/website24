@@ -1,0 +1,202 @@
+---
+// Loading Animation Component
+---
+
+<div class="loading-container" id="loadingContainer">
+  <div class="loading-content">
+    <div class="dna-loader">
+      <div class="helix"></div>
+      <div class="helix"></div>
+    </div>
+    <div class="loading-text">
+      <span class="loading-letter">L</span>
+      <span class="loading-letter">O</span>
+      <span class="loading-letter">A</span>
+      <span class="loading-letter">D</span>
+      <span class="loading-letter">I</span>
+      <span class="loading-letter">N</span>
+      <span class="loading-letter">G</span>
+    </div>
+    <div class="loading-progress">
+      <div class="progress-bar"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .loading-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+  
+  .loading-container.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .loading-content {
+    text-align: center;
+  }
+  
+  .dna-loader {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 2rem;
+    position: relative;
+    transform: rotate(45deg);
+  }
+  
+  .helix {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 50%;
+  }
+  
+  .helix:nth-child(1) {
+    border-top: 3px solid #667eea;
+    border-bottom: 3px solid #764ba2;
+    animation: rotate1 2s linear infinite;
+  }
+  
+  .helix:nth-child(2) {
+    border-left: 3px solid #f093fb;
+    border-right: 3px solid #4facfe;
+    animation: rotate2 2s linear infinite;
+  }
+  
+  @keyframes rotate1 {
+    0% { transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg); }
+    100% { transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg); }
+  }
+  
+  @keyframes rotate2 {
+    0% { transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg); }
+    100% { transform: rotateX(50deg) rotateY(10deg) rotateZ(-360deg); }
+  }
+  
+  .loading-text {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 2rem;
+    letter-spacing: 0.5rem;
+  }
+  
+  .loading-letter {
+    display: inline-block;
+    animation: bounce 1.4s infinite;
+    animation-delay: calc(var(--i) * 0.1s);
+  }
+  
+  .loading-letter:nth-child(1) { --i: 0; }
+  .loading-letter:nth-child(2) { --i: 1; }
+  .loading-letter:nth-child(3) { --i: 2; }
+  .loading-letter:nth-child(4) { --i: 3; }
+  .loading-letter:nth-child(5) { --i: 4; }
+  .loading-letter:nth-child(6) { --i: 5; }
+  .loading-letter:nth-child(7) { --i: 6; }
+  
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-15px); }
+  }
+  
+  .loading-progress {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #4facfe);
+    background-size: 400% 100%;
+    animation: progress 2s ease-in-out infinite, gradient 4s ease infinite;
+    border-radius: 2px;
+  }
+  
+  @keyframes progress {
+    0% { width: 0%; }
+    50% { width: 100%; }
+    100% { width: 0%; }
+  }
+  
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+</style>
+
+<script>
+  class LoadingAnimation {
+    constructor() {
+      this.container = document.getElementById('loadingContainer');
+      this.minimumLoadTime = 2000; // Minimum 2 seconds
+      this.startTime = Date.now();
+      
+      this.init();
+    }
+    
+    init() {
+      // Listen for window load
+      window.addEventListener('load', () => {
+        const elapsedTime = Date.now() - this.startTime;
+        const remainingTime = Math.max(0, this.minimumLoadTime - elapsedTime);
+        
+        // Ensure minimum loading time for effect
+        setTimeout(() => {
+          this.hide();
+        }, remainingTime);
+      });
+      
+      // Also hide on DOM ready if everything loads fast
+      if (document.readyState === 'complete') {
+        setTimeout(() => this.hide(), this.minimumLoadTime);
+      }
+    }
+    
+    hide() {
+      this.container.classList.add('hidden');
+      
+      // Remove from DOM after animation
+      setTimeout(() => {
+        this.container.remove();
+      }, 500);
+      
+      // Trigger entrance animations
+      this.triggerEntranceAnimations();
+    }
+    
+    triggerEntranceAnimations() {
+      // Add staggered animations to main content
+      const elements = document.querySelectorAll('.hero, .card, .skill-orbs-container');
+      elements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+          el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, index * 100);
+      });
+    }
+  }
+  
+  // Initialize immediately
+  new LoadingAnimation();
+</script>

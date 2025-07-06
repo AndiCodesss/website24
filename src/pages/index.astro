@@ -1,18 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ParticleUniverse from '../components/ParticleUniverse.astro';
+import HolographicProfile from '../components/HolographicProfile.astro';
+import TextScramble from '../components/TextScramble.astro';
+import SkillOrbs from '../components/SkillOrbs.astro';
 
 const pageTitle = "Home";
 ---
 <BaseLayout title={pageTitle}>
 	<section class="hero">
-		<img src="/profile-placeholder.jpg" alt="Andreas Oberdörfer" class="hero-image" />
-		<h1>Andreas Oberdörfer</h1>
-		<p>People Person & Quantitative Thinker</p>
+		<ParticleUniverse />
+		<HolographicProfile src="/profile-placeholder.jpg" alt="Andreas Oberdörfer" />
+		<h1><TextScramble text="Andreas Oberdörfer" delay="500" /></h1>
+		<p><TextScramble text="People Person & Quantitative Thinker" delay="1000" /></p>
 	</section>
 
 	<div class="content-container">
 		<div class="card reveal-on-scroll">
-			<h2>About Me</h2>
+			<h2><TextScramble text="About Me" delay="100" /></h2>
 			<p>
 				Hi there! I'm passionate about innovative ideas and automation that makes life easier.
 				With a keen interest in quantitative finance, I love exploring where numbers meet strategy.
@@ -26,30 +31,9 @@ const pageTitle = "Home";
 		</div>
 
 		<div class="card reveal-on-scroll">
-			<h2>What I Like</h2>
-			<div class="interests-container">
-				<div class="interest-group">
-					<h3>Interests</h3>
-					<div class="skills-container reveal-stagger">
-						<div class="skill-item reveal-item">Finance</div>
-						<div class="skill-item reveal-item">Informatics</div>
-						<div class="skill-item reveal-item">Culture</div>
-						<div class="skill-item reveal-item">Traveling</div>
-						<div class="skill-item reveal-item">Music (Drumset)</div>
-					</div>
-				</div>
-				
-				<div class="interest-group">
-					<h3>Sports</h3>
-					<div class="skills-container reveal-stagger">
-						<div class="skill-item reveal-item">Karate</div>
-						<div class="skill-item reveal-item">Boxing</div>
-						<div class="skill-item reveal-item">Running (Marathons)</div>
-						<div class="skill-item reveal-item">Cycling</div>
-						<div class="skill-item reveal-item">Calisthenics</div>
-					</div>
-				</div>
-			</div>
+			<h2><TextScramble text="Skills & Interests" delay="200" /></h2>
+			<p>Click and drag the orbs! Click anywhere to create an explosion!</p>
+			<SkillOrbs />
 		</div>
 
 		<div class="card reveal-on-scroll">

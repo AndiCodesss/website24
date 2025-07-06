@@ -1,0 +1,336 @@
+---
+const { skills } = Astro.props;
+---
+
+<div class="skill-orbs-container">
+  <canvas id="skill-orbs-canvas"></canvas>
+  <div class="skill-tooltip" id="skillTooltip">
+    <div class="tooltip-content"></div>
+  </div>
+</div>
+
+<style>
+  .skill-orbs-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    margin: 2rem 0;
+    border-radius: 20px;
+    background: radial-gradient(circle at center, rgba(102, 126, 234, 0.05), transparent);
+    overflow: hidden;
+  }
+  
+  #skill-orbs-canvas {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+  }
+  
+  #skill-orbs-canvas:active {
+    cursor: grabbing;
+  }
+  
+  .skill-tooltip {
+    position: absolute;
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid rgba(102, 126, 234, 0.5);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: white;
+    font-size: 0.9rem;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -120%);
+    transition: opacity 0.3s ease;
+    z-index: 100;
+    white-space: nowrap;
+  }
+  
+  .skill-tooltip.active {
+    opacity: 1;
+  }
+  
+  .skill-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(20, 20, 20, 0.95);
+  }
+</style>
+
+<script define:vars={{ skills }}>
+  import Matter from 'matter-js';
+  
+  class SkillOrbs {
+    constructor() {
+      this.canvas = document.getElementById('skill-orbs-canvas');
+      this.tooltip = document.getElementById('skillTooltip');
+      this.tooltipContent = this.tooltip.querySelector('.tooltip-content');
+      
+      this.width = this.canvas.offsetWidth;
+      this.height = this.canvas.offsetHeight;
+      
+      this.skills = skills || [
+        { name: 'Finance', level: 90, color: '#667eea' },
+        { name: 'Informatics', level: 85, color: '#764ba2' },
+        { name: 'Culture', level: 80, color: '#f093fb' },
+        { name: 'Traveling', level: 95, color: '#4facfe' },
+        { name: 'Music', level: 75, color: '#00f2fe' },
+        { name: 'Karate', level: 85, color: '#fa709a' },
+        { name: 'Boxing', level: 80, color: '#fee140' },
+        { name: 'Running', level: 90, color: '#30cfd0' },
+        { name: 'Cycling', level: 85, color: '#a8edea' },
+        { name: 'Calisthenics', level: 80, color: '#fed6e3' }
+      ];
+      
+      this.init();
+    }
+    
+    init() {
+      // Matter.js setup
+      const Engine = Matter.Engine;
+      const Render = Matter.Render;
+      const World = Matter.World;
+      const Bodies = Matter.Bodies;
+      const Mouse = Matter.Mouse;
+      const MouseConstraint = Matter.MouseConstraint;
+      const Events = Matter.Events;
+      
+      // Create engine
+      this.engine = Engine.create();
+      this.engine.world.gravity.y = 0.5;
+      
+      // Create renderer
+      this.render = Render.create({
+        canvas: this.canvas,
+        engine: this.engine,
+        options: {
+          width: this.width,
+          height: this.height,
+          wireframes: false,
+          background: 'transparent'
+        }
+      });
+      
+      // Create boundaries
+      const walls = [
+        Bodies.rectangle(this.width / 2, this.height + 50, this.width, 100, { 
+          isStatic: true,
+          render: { visible: false }
+        }),
+        Bodies.rectangle(-50, this.height / 2, 100, this.height, { 
+          isStatic: true,
+          render: { visible: false }
+        }),
+        Bodies.rectangle(this.width + 50, this.height / 2, 100, this.height, { 
+          isStatic: true,
+          render: { visible: false }
+        })
+      ];
+      
+      World.add(this.engine.world, walls);
+      
+      // Create skill orbs
+      this.orbs = [];
+      this.skills.forEach((skill, index) => {
+        const size = 40 + (skill.level / 100) * 30;
+        const x = Math.random() * (this.width - size * 2) + size;
+        const y = -size - Math.random() * 200;
+        
+        const orb = Bodies.circle(x, y, size, {
+          restitution: 0.8,
+          friction: 0.1,
+          density: 0.001,
+          render: {
+            fillStyle: skill.color,
+            strokeStyle: 'rgba(255, 255, 255, 0.3)',
+            lineWidth: 2
+          },
+          skill: skill
+        });
+        
+        this.orbs.push(orb);
+      });
+      
+      // Add orbs with delay for cascade effect
+      this.orbs.forEach((orb, index) => {
+        setTimeout(() => {
+          World.add(this.engine.world, orb);
+        }, index * 100);
+      });
+      
+      // Mouse control
+      const mouse = Mouse.create(this.render.canvas);
+      const mouseConstraint = MouseConstraint.create(this.engine, {
+        mouse: mouse,
+        constraint: {
+          stiffness: 0.2,
+          render: { visible: false }
+        }
+      });
+      
+      World.add(this.engine.world, mouseConstraint);
+      
+      // Keep the mouse in sync with rendering
+      this.render.mouse = mouse;
+      
+      // Mouse events for tooltip
+      Events.on(mouseConstraint, 'mousemove', (event) => {
+        const { mouse } = event;
+        const hoveredOrb = this.orbs.find(orb => {
+          const distance = Math.sqrt(
+            Math.pow(orb.position.x - mouse.position.x, 2) +
+            Math.pow(orb.position.y - mouse.position.y, 2)
+          );
+          return distance < orb.circleRadius;
+        });
+        
+        if (hoveredOrb) {
+          this.showTooltip(hoveredOrb);
+        } else {
+          this.hideTooltip();
+        }
+      });
+      
+      // Run the engine
+      Engine.run(this.engine);
+      Render.run(this.render);
+      
+      // Custom rendering for text
+      Events.on(this.render, 'afterRender', () => {
+        const context = this.render.canvas.getContext('2d');
+        
+        this.orbs.forEach(orb => {
+          const { x, y } = orb.position;
+          const skill = orb.skill;
+          
+          // Add glow effect
+          context.save();
+          context.shadowBlur = 20;
+          context.shadowColor = skill.color;
+          context.globalAlpha = 0.5;
+          context.beginPath();
+          context.arc(x, y, orb.circleRadius, 0, 2 * Math.PI);
+          context.fillStyle = skill.color;
+          context.fill();
+          context.restore();
+          
+          // Draw skill name
+          context.save();
+          context.fillStyle = 'white';
+          context.font = 'bold 14px Poppins';
+          context.textAlign = 'center';
+          context.textBaseline = 'middle';
+          context.fillText(skill.name, x, y);
+          
+          // Draw level
+          context.font = '12px Poppins';
+          context.fillStyle = 'rgba(255, 255, 255, 0.8)';
+          context.fillText(`${skill.level}%`, x, y + 18);
+          context.restore();
+        });
+      });
+      
+      // Resize handler
+      window.addEventListener('resize', () => {
+        this.width = this.canvas.offsetWidth;
+        this.height = this.canvas.offsetHeight;
+        this.render.canvas.width = this.width;
+        this.render.canvas.height = this.height;
+      });
+      
+      // Add some fun interactions
+      this.addInteractions();
+    }
+    
+    showTooltip(orb) {
+      const skill = orb.skill;
+      this.tooltipContent.textContent = `${skill.name} - Proficiency: ${skill.level}%`;
+      this.tooltip.style.left = orb.position.x + 'px';
+      this.tooltip.style.top = orb.position.y + 'px';
+      this.tooltip.classList.add('active');
+    }
+    
+    hideTooltip() {
+      this.tooltip.classList.remove('active');
+    }
+    
+    addInteractions() {
+      // Click to explode
+      this.canvas.addEventListener('click', (e) => {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        // Apply explosion force
+        this.orbs.forEach(orb => {
+          const distance = Math.sqrt(
+            Math.pow(orb.position.x - x, 2) +
+            Math.pow(orb.position.y - y, 2)
+          );
+          
+          if (distance < 200) {
+            const force = (200 - distance) / 200 * 0.05;
+            const angle = Math.atan2(orb.position.y - y, orb.position.x - x);
+            
+            Matter.Body.applyForce(orb, orb.position, {
+              x: Math.cos(angle) * force,
+              y: Math.sin(angle) * force
+            });
+          }
+        });
+        
+        // Visual feedback
+        this.createRipple(x, y);
+      });
+    }
+    
+    createRipple(x, y) {
+      const ripple = document.createElement('div');
+      ripple.style.cssText = `
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        border: 2px solid rgba(102, 126, 234, 0.5);
+        left: ${x}px;
+        top: ${y}px;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      `;
+      
+      this.canvas.parentElement.appendChild(ripple);
+      
+      // Animate ripple with vanilla JS
+      let size = 0;
+      let opacity = 0.5;
+      const animateRipple = () => {
+        size += 8;
+        opacity -= 0.01;
+        
+        if (opacity <= 0) {
+          ripple.remove();
+          return;
+        }
+        
+        ripple.style.width = size + 'px';
+        ripple.style.height = size + 'px';
+        ripple.style.opacity = opacity;
+        
+        requestAnimationFrame(animateRipple);
+      };
+      requestAnimationFrame(animateRipple);
+    }
+  }
+  
+  // Initialize on DOM load
+  document.addEventListener('DOMContentLoaded', () => {
+    new SkillOrbs();
+  });
+</script>

@@ -1,0 +1,275 @@
+---
+// Magnetic Navigation Component
+---
+
+<nav class="magnetic-nav">
+  <a href="/" class="magnetic-link" data-text="Home">
+    <span>Home</span>
+    <div class="magnetic-bg"></div>
+  </a>
+  <a href="/contact" class="magnetic-link" data-text="Contact">
+    <span>Contact</span>
+    <div class="magnetic-bg"></div>
+  </a>
+  <div class="nav-indicator"></div>
+</nav>
+
+<style>
+  .magnetic-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+  }
+  
+  .magnetic-link {
+    position: relative;
+    display: inline-block;
+    padding: 1rem 2rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .magnetic-link span {
+    position: relative;
+    z-index: 2;
+    transition: color 0.3s ease;
+  }
+  
+  .magnetic-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                height 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1;
+  }
+  
+  .magnetic-link:hover .magnetic-bg {
+    width: 150%;
+    height: 150%;
+  }
+  
+  .magnetic-link:hover span {
+    color: white;
+  }
+  
+  .magnetic-link::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: transparent;
+    font-weight: 900;
+    font-size: 1.3em;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+    text-stroke: 1px rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 0;
+  }
+  
+  .magnetic-link:hover::before {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  
+  .nav-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    opacity: 0;
+    border-radius: 3px;
+  }
+  
+  /* Glowing effect on hover */
+  .magnetic-link:hover {
+    filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.6));
+  }
+  
+  /* Active state */
+  .magnetic-link.active .magnetic-bg {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+  }
+  
+  .magnetic-link.active span {
+    color: white;
+  }
+  
+  /* Responsive */
+  @media (max-width: 720px) {
+    .magnetic-nav {
+      gap: 1.5rem;
+      padding: 1rem;
+    }
+    
+    .magnetic-link {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<script>
+  import Matter from 'matter-js';
+  import { gsap } from 'gsap';
+  
+  // Initialize magnetic physics
+  class MagneticNav {
+    constructor() {
+      this.links = document.querySelectorAll('.magnetic-link');
+      this.indicator = document.querySelector('.nav-indicator');
+      this.mouseX = 0;
+      this.mouseY = 0;
+      this.currentLink = null;
+      
+      this.init();
+    }
+    
+    init() {
+      // Set active link based on current page
+      const currentPath = window.location.pathname;
+      this.links.forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+          link.classList.add('active');
+          this.updateIndicator(link);
+        }
+      });
+      
+      // Mouse tracking
+      document.addEventListener('mousemove', (e) => {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+        this.updateMagneticEffect();
+      });
+      
+      // Link interactions
+      this.links.forEach(link => {
+        link.addEventListener('mouseenter', () => {
+          this.currentLink = link;
+          this.updateIndicator(link);
+        });
+        
+        link.addEventListener('mouseleave', () => {
+          this.currentLink = null;
+          gsap.to(link, {
+            x: 0,
+            y: 0,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        });
+      });
+      
+      // Hide indicator when not hovering
+      document.querySelector('.magnetic-nav').addEventListener('mouseleave', () => {
+        gsap.to(this.indicator, {
+          opacity: 0,
+          duration: 0.3
+        });
+      });
+    }
+    
+    updateMagneticEffect() {
+      if (!this.currentLink) return;
+      
+      const rect = this.currentLink.getBoundingClientRect();
+      const linkCenterX = rect.left + rect.width / 2;
+      const linkCenterY = rect.top + rect.height / 2;
+      
+      const distanceX = this.mouseX - linkCenterX;
+      const distanceY = this.mouseY - linkCenterY;
+      const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+      
+      const maxDistance = 150;
+      const magnetStrength = Math.max(0, 1 - distance / maxDistance);
+      
+      if (distance < maxDistance) {
+        const translateX = distanceX * magnetStrength * 0.3;
+        const translateY = distanceY * magnetStrength * 0.3;
+        
+        gsap.to(this.currentLink, {
+          x: translateX,
+          y: translateY,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+        
+        // Add ripple effect
+        this.createRipple(this.mouseX, this.mouseY);
+      }
+    }
+    
+    updateIndicator(link) {
+      const rect = link.getBoundingClientRect();
+      const navRect = link.parentElement.getBoundingClientRect();
+      
+      gsap.to(this.indicator, {
+        left: rect.left - navRect.left,
+        width: rect.width,
+        opacity: 1,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    }
+    
+    createRipple(x, y) {
+      const ripple = document.createElement('div');
+      ripple.className = 'magnetic-ripple';
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+      
+      document.body.appendChild(ripple);
+      
+      gsap.to(ripple, {
+        width: 100,
+        height: 100,
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+        onComplete: () => ripple.remove()
+      });
+    }
+  }
+  
+  // Initialize on DOM load
+  document.addEventListener('DOMContentLoaded', () => {
+    new MagneticNav();
+  });
+</script>
+
+<style is:global>
+  .magnetic-ripple {
+    position: fixed;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.3), transparent);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 999;
+  }
+</style>

@@ -1,0 +1,224 @@
+---
+// Particle Universe Component
+---
+
+<div id="particle-universe" class="particle-universe">
+  <canvas id="particle-canvas"></canvas>
+</div>
+
+<style>
+  .particle-universe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+  }
+  
+  #particle-canvas {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  import * as THREE from 'three';
+  import { gsap } from 'gsap';
+  
+  class ParticleUniverse {
+    constructor() {
+      this.scene = new THREE.Scene();
+      this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      this.renderer = new THREE.WebGLRenderer({ 
+        canvas: document.getElementById('particle-canvas'),
+        alpha: true,
+        antialias: true 
+      });
+      
+      this.particles = null;
+      this.particleCount = 1500;
+      this.mouseX = 0;
+      this.mouseY = 0;
+      this.targetMouseX = 0;
+      this.targetMouseY = 0;
+      
+      this.init();
+      this.animate();
+    }
+    
+    init() {
+      // Setup renderer
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.setPixelRatio(window.devicePixelRatio);
+      
+      // Camera position
+      this.camera.position.z = 50;
+      
+      // Create particles
+      const geometry = new THREE.BufferGeometry();
+      const positions = [];
+      const colors = [];
+      const sizes = [];
+      
+      for (let i = 0; i < this.particleCount; i++) {
+        positions.push(
+          (Math.random() - 0.5) * 100,
+          (Math.random() - 0.5) * 100,
+          (Math.random() - 0.5) * 100
+        );
+        
+        // Beautiful color gradient
+        const color = new THREE.Color();
+        color.setHSL(Math.random() * 0.1 + 0.55, 0.7, 0.5); // Blue to purple range
+        colors.push(color.r, color.g, color.b);
+        
+        sizes.push(Math.random() * 2 + 0.5);
+      }
+      
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+      geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+      
+      // Shader material for advanced effects
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          time: { value: 0 },
+          pixelRatio: { value: this.renderer.getPixelRatio() }
+        },
+        vertexShader: `
+          attribute float size;
+          uniform float time;
+          varying vec3 vColor;
+          
+          void main() {
+            vColor = color;
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            
+            // Add wave motion
+            mvPosition.y += sin(time + position.x * 0.1) * 2.0;
+            mvPosition.x += cos(time + position.y * 0.1) * 2.0;
+            
+            gl_PointSize = size * (300.0 / -mvPosition.z) * pixelRatio;
+            gl_Position = projectionMatrix * mvPosition;
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vColor;
+          
+          void main() {
+            vec2 xy = gl_PointCoord.xy - vec2(0.5);
+            float r = length(xy);
+            
+            if (r > 0.5) discard;
+            
+            float intensity = 1.0 - (r * 2.0);
+            intensity = pow(intensity, 3.0);
+            
+            gl_FragColor = vec4(vColor * intensity, intensity);
+          }
+        `,
+        transparent: true,
+        vertexColors: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      
+      this.particles = new THREE.Points(geometry, material);
+      this.scene.add(this.particles);
+      
+      // Add connecting lines between nearby particles
+      this.createConnections();
+      
+      // Mouse interaction
+      document.addEventListener('mousemove', (e) => {
+        this.targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
+        this.targetMouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+      });
+      
+      // Resize handler
+      window.addEventListener('resize', () => {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+    
+    createConnections() {
+      const positions = this.particles.geometry.attributes.position.array;
+      const connectionGeometry = new THREE.BufferGeometry();
+      const connectionPositions = [];
+      const connectionColors = [];
+      
+      for (let i = 0; i < this.particleCount; i++) {
+        const x1 = positions[i * 3];
+        const y1 = positions[i * 3 + 1];
+        const z1 = positions[i * 3 + 2];
+        
+        for (let j = i + 1; j < this.particleCount; j++) {
+          const x2 = positions[j * 3];
+          const y2 = positions[j * 3 + 1];
+          const z2 = positions[j * 3 + 2];
+          
+          const distance = Math.sqrt(
+            Math.pow(x2 - x1, 2) +
+            Math.pow(y2 - y1, 2) +
+            Math.pow(z2 - z1, 2)
+          );
+          
+          if (distance < 15) {
+            connectionPositions.push(x1, y1, z1, x2, y2, z2);
+            
+            const alpha = 1.0 - distance / 15;
+            connectionColors.push(
+              0.3, 0.5, 0.8, alpha * 0.3,
+              0.3, 0.5, 0.8, alpha * 0.3
+            );
+          }
+        }
+      }
+      
+      connectionGeometry.setAttribute('position', new THREE.Float32BufferAttribute(connectionPositions, 3));
+      connectionGeometry.setAttribute('color', new THREE.Float32BufferAttribute(connectionColors, 4));
+      
+      const connectionMaterial = new THREE.LineBasicMaterial({
+        vertexColors: true,
+        transparent: true,
+        blending: THREE.AdditiveBlending
+      });
+      
+      this.connections = new THREE.LineSegments(connectionGeometry, connectionMaterial);
+      this.scene.add(this.connections);
+    }
+    
+    animate() {
+      requestAnimationFrame(() => this.animate());
+      
+      // Smooth mouse movement
+      this.mouseX += (this.targetMouseX - this.mouseX) * 0.05;
+      this.mouseY += (this.targetMouseY - this.mouseY) * 0.05;
+      
+      // Rotate particles based on mouse
+      this.particles.rotation.y += 0.001;
+      this.particles.rotation.x = this.mouseY * 0.2;
+      this.particles.rotation.y += this.mouseX * 0.2;
+      
+      // Update shader time
+      this.particles.material.uniforms.time.value = performance.now() * 0.001;
+      
+      // Rotate connections
+      if (this.connections) {
+        this.connections.rotation.y = this.particles.rotation.y;
+        this.connections.rotation.x = this.particles.rotation.x;
+      }
+      
+      this.renderer.render(this.scene, this.camera);
+    }
+  }
+  
+  // Initialize on DOM load
+  document.addEventListener('DOMContentLoaded', () => {
+    new ParticleUniverse();
+  });
+</script>

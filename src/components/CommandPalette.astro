@@ -1,0 +1,540 @@
+---
+// Command Palette Component
+---
+
+<div class="command-palette-container" id="commandPalette">
+  <div class="command-palette">
+    <div class="command-header">
+      <input 
+        type="text" 
+        class="command-input" 
+        placeholder="Type a command or search..."
+        autocomplete="off"
+      />
+      <span class="command-hint">ESC to close</span>
+    </div>
+    <div class="command-results">
+      <div class="command-section">
+        <h3>Navigation</h3>
+        <button class="command-item" data-action="navigate" data-target="/">
+          <span class="command-icon">🏠</span>
+          <span>Go to Home</span>
+          <span class="command-shortcut">Alt+H</span>
+        </button>
+        <button class="command-item" data-action="navigate" data-target="/contact">
+          <span class="command-icon">📧</span>
+          <span>Go to Contact</span>
+          <span class="command-shortcut">Alt+C</span>
+        </button>
+      </div>
+      <div class="command-section">
+        <h3>Actions</h3>
+        <button class="command-item" data-action="theme">
+          <span class="command-icon">🌓</span>
+          <span>Toggle Theme</span>
+          <span class="command-shortcut">Alt+T</span>
+        </button>
+        <button class="command-item" data-action="matrix">
+          <span class="command-icon">💊</span>
+          <span>Enter the Matrix</span>
+          <span class="command-shortcut">Alt+M</span>
+        </button>
+        <button class="command-item" data-action="particles">
+          <span class="command-icon">✨</span>
+          <span>Toggle Particles</span>
+          <span class="command-shortcut">Alt+P</span>
+        </button>
+        <button class="command-item" data-action="konami">
+          <span class="command-icon">🎮</span>
+          <span>Activate Konami Code</span>
+          <span class="command-shortcut">↑↑↓↓←→←→BA</span>
+        </button>
+      </div>
+      <div class="command-section">
+        <h3>Fun Stuff</h3>
+        <button class="command-item" data-action="confetti">
+          <span class="command-icon">🎉</span>
+          <span>Confetti Explosion</span>
+        </button>
+        <button class="command-item" data-action="shake">
+          <span class="command-icon">🌀</span>
+          <span>Shake It!</span>
+        </button>
+        <button class="command-item" data-action="flip">
+          <span class="command-icon">🔄</span>
+          <span>Flip the World</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .command-palette-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10vh;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  .command-palette-container.active {
+    display: flex;
+    opacity: 1;
+  }
+  
+  .command-palette {
+    width: 90%;
+    max-width: 600px;
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    transform: translateY(-20px);
+    animation: slideDown 0.3s ease forwards;
+  }
+  
+  @keyframes slideDown {
+    to {
+      transform: translateY(0);
+    }
+  }
+  
+  .command-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .command-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    outline: none;
+    font-family: inherit;
+  }
+  
+  .command-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .command-hint {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+  }
+  
+  .command-results {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 0.5rem;
+  }
+  
+  .command-section {
+    margin-bottom: 1rem;
+  }
+  
+  .command-section h3 {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0.5rem 1rem;
+  }
+  
+  .command-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+    text-align: left;
+    font-family: inherit;
+    font-size: 1rem;
+  }
+  
+  .command-item:hover,
+  .command-item.selected {
+    background: rgba(102, 126, 234, 0.2);
+  }
+  
+  .command-icon {
+    font-size: 1.2rem;
+    width: 2rem;
+    text-align: center;
+  }
+  
+  .command-shortcut {
+    margin-left: auto;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+    font-family: 'Courier New', monospace;
+  }
+  
+  /* Scrollbar styling */
+  .command-results::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .command-results::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .command-results::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+  
+  .command-results::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+</style>
+
+<script>
+  class CommandPalette {
+    constructor() {
+      this.container = document.getElementById('commandPalette');
+      this.input = this.container.querySelector('.command-input');
+      this.items = this.container.querySelectorAll('.command-item');
+      this.selectedIndex = -1;
+      this.isOpen = false;
+      
+      this.init();
+    }
+    
+    init() {
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        // Ctrl+K or Cmd+K to open
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          this.toggle();
+        }
+        
+        // ESC to close
+        if (e.key === 'Escape' && this.isOpen) {
+          this.close();
+        }
+        
+        // Navigation keys when open
+        if (this.isOpen) {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            this.selectNext();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            this.selectPrevious();
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            this.executeSelected();
+          }
+        }
+      });
+      
+      // Click outside to close
+      this.container.addEventListener('click', (e) => {
+        if (e.target === this.container) {
+          this.close();
+        }
+      });
+      
+      // Item clicks
+      this.items.forEach((item, index) => {
+        item.addEventListener('click', () => {
+          this.executeAction(item);
+        });
+        
+        item.addEventListener('mouseenter', () => {
+          this.selectIndex(index);
+        });
+      });
+      
+      // Input filtering
+      this.input.addEventListener('input', (e) => {
+        this.filterItems(e.target.value);
+      });
+    }
+    
+    toggle() {
+      if (this.isOpen) {
+        this.close();
+      } else {
+        this.open();
+      }
+    }
+    
+    open() {
+      this.isOpen = true;
+      this.container.classList.add('active');
+      this.input.value = '';
+      this.input.focus();
+      this.filterItems('');
+      this.selectedIndex = -1;
+    }
+    
+    close() {
+      this.isOpen = false;
+      this.container.classList.remove('active');
+    }
+    
+    selectNext() {
+      const visibleItems = Array.from(this.items).filter(item => 
+        item.style.display !== 'none'
+      );
+      
+      if (visibleItems.length === 0) return;
+      
+      this.selectedIndex = (this.selectedIndex + 1) % visibleItems.length;
+      this.updateSelection();
+    }
+    
+    selectPrevious() {
+      const visibleItems = Array.from(this.items).filter(item => 
+        item.style.display !== 'none'
+      );
+      
+      if (visibleItems.length === 0) return;
+      
+      this.selectedIndex = this.selectedIndex <= 0 
+        ? visibleItems.length - 1 
+        : this.selectedIndex - 1;
+      this.updateSelection();
+    }
+    
+    selectIndex(index) {
+      this.selectedIndex = index;
+      this.updateSelection();
+    }
+    
+    updateSelection() {
+      this.items.forEach((item, index) => {
+        if (index === this.selectedIndex) {
+          item.classList.add('selected');
+          item.scrollIntoView({ block: 'nearest' });
+        } else {
+          item.classList.remove('selected');
+        }
+      });
+    }
+    
+    executeSelected() {
+      const visibleItems = Array.from(this.items).filter(item => 
+        item.style.display !== 'none'
+      );
+      
+      if (this.selectedIndex >= 0 && visibleItems[this.selectedIndex]) {
+        this.executeAction(visibleItems[this.selectedIndex]);
+      }
+    }
+    
+    executeAction(item) {
+      const action = item.dataset.action;
+      const target = item.dataset.target;
+      
+      switch(action) {
+        case 'navigate':
+          window.location.href = target;
+          break;
+          
+        case 'theme':
+          document.getElementById('themeToggle').click();
+          break;
+          
+        case 'matrix':
+          this.activateMatrix();
+          break;
+          
+        case 'particles':
+          this.toggleParticles();
+          break;
+          
+        case 'konami':
+          window.activateKonami();
+          break;
+          
+        case 'confetti':
+          this.confettiExplosion();
+          break;
+          
+        case 'shake':
+          this.shakeScreen();
+          break;
+          
+        case 'flip':
+          this.flipWorld();
+          break;
+      }
+      
+      this.close();
+    }
+    
+    filterItems(query) {
+      const lowerQuery = query.toLowerCase();
+      
+      this.items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(lowerQuery)) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      
+      // Reset selection
+      this.selectedIndex = -1;
+      this.updateSelection();
+    }
+    
+    // Special effects
+    activateMatrix() {
+      const matrix = document.createElement('div');
+      matrix.id = 'matrix-rain';
+      matrix.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+      `;
+      document.body.appendChild(matrix);
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      matrix.appendChild(canvas);
+      
+      const ctx = canvas.getContext('2d');
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+      const fontSize = 10;
+      const columns = canvas.width / fontSize;
+      const drops = Array(Math.floor(columns)).fill(1);
+      
+      const draw = () => {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = '#0F0';
+        ctx.font = fontSize + 'px monospace';
+        
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+          
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+      };
+      
+      const interval = setInterval(draw, 35);
+      
+      setTimeout(() => {
+        clearInterval(interval);
+        matrix.remove();
+      }, 10000);
+    }
+    
+    toggleParticles() {
+      const universe = document.getElementById('particle-universe');
+      if (universe) {
+        universe.style.display = universe.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+    
+    confettiExplosion() {
+      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+      const confettiCount = 100;
+      
+      for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.cssText = `
+          position: fixed;
+          width: 10px;
+          height: 10px;
+          background: ${colors[Math.floor(Math.random() * colors.length)]};
+          left: 50%;
+          top: 50%;
+          pointer-events: none;
+          z-index: 9999;
+        `;
+        document.body.appendChild(confetti);
+        
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = Math.random() * 15 + 5;
+        const gravity = 0.5;
+        let vx = Math.cos(angle) * velocity;
+        let vy = Math.sin(angle) * velocity - 10;
+        let x = 0;
+        let y = 0;
+        let rotation = 0;
+        
+        const animate = () => {
+          vy += gravity;
+          x += vx;
+          y += vy;
+          rotation += 10;
+          
+          confetti.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`;
+          
+          if (y < window.innerHeight) {
+            requestAnimationFrame(animate);
+          } else {
+            confetti.remove();
+          }
+        };
+        
+        requestAnimationFrame(animate);
+      }
+    }
+    
+    shakeScreen() {
+      document.body.style.animation = 'shake 0.5s';
+      setTimeout(() => {
+        document.body.style.animation = '';
+      }, 500);
+    }
+    
+    flipWorld() {
+      document.body.style.transition = 'transform 1s ease';
+      document.body.style.transform = 'rotateY(180deg)';
+      setTimeout(() => {
+        document.body.style.transform = '';
+      }, 1000);
+    }
+  }
+  
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    new CommandPalette();
+  });
+</script>
+
+<style is:global>
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+    20%, 40%, 60%, 80% { transform: translateX(10px); }
+  }
+</style>

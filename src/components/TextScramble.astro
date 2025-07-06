@@ -1,0 +1,171 @@
+---
+const { text, className = '', delay = 0 } = Astro.props;
+---
+
+<span class={`text-scramble ${className}`} data-text={text} data-delay={delay}>
+  {text}
+</span>
+
+<style>
+  .text-scramble {
+    display: inline-block;
+    position: relative;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.05em;
+  }
+  
+  .text-scramble.scrambling {
+    color: #0f0;
+    text-shadow: 0 0 10px #0f0;
+  }
+  
+  .text-scramble.scrambling::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 255, 0, 0.1) 50%,
+      transparent 100%
+    );
+    animation: scanline 1s infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+  
+  .text-scramble .char {
+    display: inline-block;
+    position: relative;
+    color: inherit;
+    transition: all 0.3s ease;
+  }
+  
+  .text-scramble .char.revealed {
+    color: var(--text-primary);
+    text-shadow: none;
+  }
+  
+  .text-scramble .char.glitch {
+    animation: glitchChar 0.2s infinite;
+  }
+  
+  @keyframes glitchChar {
+    0%, 100% { 
+      transform: translateX(0);
+      color: inherit;
+    }
+    20% { 
+      transform: translateX(-2px);
+      color: #ff0;
+    }
+    40% { 
+      transform: translateX(2px);
+      color: #0ff;
+    }
+    60% { 
+      transform: translateX(-1px);
+      color: #f0f;
+    }
+    80% { 
+      transform: translateX(1px);
+      color: #0f0;
+    }
+  }
+</style>
+
+<script>
+  class TextScrambler {
+    constructor(element) {
+      this.element = element;
+      this.text = element.dataset.text;
+      this.delay = parseInt(element.dataset.delay) || 0;
+      this.chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+      this.revealed = false;
+      this.observer = null;
+      
+      this.init();
+    }
+    
+    init() {
+      // Replace text with individual character spans
+      const chars = this.text.split('');
+      this.element.innerHTML = chars.map((char, i) => 
+        `<span class="char" data-char="${char}">${char}</span>`
+      ).join('');
+      
+      this.charElements = this.element.querySelectorAll('.char');
+      
+      // Set up intersection observer
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !this.revealed) {
+            setTimeout(() => this.scramble(), this.delay);
+            this.observer.disconnect();
+          }
+        });
+      }, { threshold: 0.5 });
+      
+      this.observer.observe(this.element);
+    }
+    
+    scramble() {
+      this.element.classList.add('scrambling');
+      this.revealed = true;
+      
+      const scrambleDuration = 1500;
+      const charDelay = 50;
+      
+      this.charElements.forEach((charEl, index) => {
+        const originalChar = charEl.dataset.char;
+        const startTime = Date.now() + index * charDelay;
+        
+        const scrambleChar = () => {
+          const elapsed = Date.now() - startTime;
+          
+          if (elapsed < scrambleDuration) {
+            // Scramble effect
+            if (Math.random() < 0.3) {
+              charEl.classList.add('glitch');
+              setTimeout(() => charEl.classList.remove('glitch'), 100);
+            }
+            
+            if (originalChar === ' ') {
+              charEl.textContent = ' ';
+            } else {
+              charEl.textContent = this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
+            
+            requestAnimationFrame(scrambleChar);
+          } else {
+            // Reveal original character
+            charEl.textContent = originalChar;
+            charEl.classList.add('revealed');
+            
+            // Remove scrambling class when all chars are revealed
+            if (index === this.charElements.length - 1) {
+              setTimeout(() => {
+                this.element.classList.remove('scrambling');
+              }, 500);
+            }
+          }
+        };
+        
+        scrambleChar();
+      });
+    }
+  }
+  
+  // Initialize all text scramble elements
+  document.addEventListener('DOMContentLoaded', () => {
+    const elements = document.querySelectorAll('.text-scramble');
+    elements.forEach(el => new TextScrambler(el));
+  });
+</script>
