@@ -108,56 +108,69 @@ const { title } = Astro.props;
             'ArrowLeft', 'ArrowRight',
             'b', 'a'
         ];
-        let index = 0;
+        let konamiIndex = 0;
+        let konamiActive = false;
 
         document.addEventListener('keydown', (event) => {
-            const requiredKey = konamiCode[index];
-            // Use event.key.toLowerCase() for letter keys to make it case-insensitive
+            if (konamiActive) return; // Prevent re-triggering while active
+            
+            const requiredKey = konamiCode[konamiIndex];
             const pressedKey = (event.key.length === 1) ? event.key.toLowerCase() : event.key;
 
+            console.log(`Konami progress: ${konamiIndex}/${konamiCode.length}, pressed: ${pressedKey}, expected: ${requiredKey}`);
+
             if (pressedKey === requiredKey) {
-                index++;
-                if (index === konamiCode.length) {
-                    // Code entered correctly!
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
                     activateKonami();
-                    index = 0; // Reset index
+                    konamiIndex = 0;
                 }
             } else {
-                // Wrong key, reset index
-                index = 0;
-                 // Optional: Reset if the first key pressed is wrong but matches the first konami key again
-                 if (pressedKey === konamiCode[0]) {
-                    index = 1;
-                 }
+                konamiIndex = 0;
+                if (pressedKey === konamiCode[0]) {
+                    konamiIndex = 1;
+                }
             }
         });
 
         function activateKonami() {
-            console.log("Konami Activated! Niceeee!");
+            console.log("🎮 Konami Code Activated!");
+            konamiActive = true;
             document.body.classList.add('konami-effect');
 
             const img = document.getElementById('konamiImage');
-            if (img) {
-                img.classList.add('show');
-            }
-
             const audio = document.getElementById('konamiAudio');
-            if (audio) {
-                audio.currentTime = 29; // Start at 29 seconds
-                audio.play();
+            
+            if (img) {
+                img.style.display = 'block';
+                img.classList.add('show');
+                console.log("Konami image shown");
+            } else {
+                console.error("Konami image not found!");
             }
 
-            // Hide after a few seconds
+            if (audio) {
+                audio.volume = 0.5;
+                audio.currentTime = 29;
+                audio.play().catch(e => console.log("Audio play failed:", e));
+            } else {
+                console.error("Konami audio not found!");
+            }
+
             setTimeout(() => {
                 document.body.classList.remove('konami-effect');
                 if (img) {
                     img.classList.remove('show');
+                    setTimeout(() => {
+                        img.style.display = 'none';
+                    }, 500);
                 }
                 if (audio) {
-                    audio.pause(); // Stop the audio
-                    audio.currentTime = 0; // Rewind
+                    audio.pause();
+                    audio.currentTime = 0;
                 }
-            }, 10000); // Duration matches visual effect
+                konamiActive = false;
+            }, 10000);
         }
     </script>
 </body>

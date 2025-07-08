@@ -16,14 +16,16 @@ const { skills } = Astro.props;
     height: 400px;
     margin: 2rem 0;
     border-radius: 20px;
-    background: radial-gradient(circle at center, rgba(102, 126, 234, 0.05), transparent);
+    background: radial-gradient(circle at center, rgba(255, 215, 0, 0.05), transparent);
     overflow: hidden;
+    border: 1px solid rgba(255, 215, 0, 0.1);
   }
   
   #skill-orbs-canvas {
     width: 100%;
     height: 100%;
     cursor: grab;
+    display: block;
   }
   
   #skill-orbs-canvas:active {
@@ -32,11 +34,11 @@ const { skills } = Astro.props;
   
   .skill-tooltip {
     position: absolute;
-    background: rgba(20, 20, 20, 0.95);
-    border: 1px solid rgba(102, 126, 234, 0.5);
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid rgba(255, 215, 0, 0.5);
     border-radius: 8px;
     padding: 0.75rem 1rem;
-    color: white;
+    color: var(--accent);
     font-size: 0.9rem;
     pointer-events: none;
     opacity: 0;
@@ -73,50 +75,63 @@ const { skills } = Astro.props;
       this.tooltip = document.getElementById('skillTooltip');
       this.tooltipContent = this.tooltip.querySelector('.tooltip-content');
       
-      this.width = this.canvas.offsetWidth;
-      this.height = this.canvas.offsetHeight;
+      if (!this.canvas) {
+        console.error('SkillOrbs: Canvas not found!');
+        return;
+      }
       
+      this.width = this.canvas.offsetWidth || 800;
+      this.height = this.canvas.offsetHeight || 400;
+      
+      // Update colors to match new theme
       this.skills = [
-        { name: 'Finance', level: 90, color: '#2563eb' },
-        { name: 'Informatics', level: 85, color: '#3b82f6' },
-        { name: 'Culture', level: 80, color: '#60a5fa' },
-        { name: 'Traveling', level: 95, color: '#2563eb' },
-        { name: 'Music', level: 75, color: '#3b82f6' },
-        { name: 'Karate', level: 85, color: '#60a5fa' },
-        { name: 'Boxing', level: 80, color: '#2563eb' },
-        { name: 'Running', level: 90, color: '#3b82f6' },
-        { name: 'Cycling', level: 85, color: '#60a5fa' },
-        { name: 'Calisthenics', level: 80, color: '#2563eb' }
+        { name: 'Finance', level: 90, color: '#FFD700' },
+        { name: 'Informatics', level: 85, color: '#0EA5E9' },
+        { name: 'Culture', level: 80, color: '#FFED4E' },
+        { name: 'Traveling', level: 95, color: '#FFD700' },
+        { name: 'Music', level: 75, color: '#0284C7' },
+        { name: 'Karate', level: 85, color: '#B8860B' },
+        { name: 'Boxing', level: 80, color: '#0EA5E9' },
+        { name: 'Running', level: 90, color: '#FFD700' },
+        { name: 'Cycling', level: 85, color: '#FFED4E' },
+        { name: 'Calisthenics', level: 80, color: '#0284C7' }
       ];
       
+      console.log('SkillOrbs: Initializing with', this.skills.length, 'skills');
       this.init();
     }
     
     init() {
-      // Matter.js setup
-      const Engine = Matter.Engine;
-      const Render = Matter.Render;
-      const World = Matter.World;
-      const Bodies = Matter.Bodies;
-      const Mouse = Matter.Mouse;
-      const MouseConstraint = Matter.MouseConstraint;
-      const Events = Matter.Events;
-      
-      // Create engine
-      this.engine = Engine.create();
-      this.engine.world.gravity.y = 0.8;
-      
-      // Create renderer
-      this.render = Render.create({
-        canvas: this.canvas,
-        engine: this.engine,
-        options: {
-          width: this.width,
-          height: this.height,
-          wireframes: false,
-          background: 'transparent'
-        }
-      });
+      try {
+        // Matter.js setup
+        const Engine = Matter.Engine;
+        const Render = Matter.Render;
+        const World = Matter.World;
+        const Bodies = Matter.Bodies;
+        const Mouse = Matter.Mouse;
+        const MouseConstraint = Matter.MouseConstraint;
+        const Events = Matter.Events;
+        
+        // Create engine
+        this.engine = Engine.create();
+        this.engine.world.gravity.y = 0.8;
+        
+        // Set canvas size explicitly
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+        
+        // Create renderer
+        this.render = Render.create({
+          canvas: this.canvas,
+          engine: this.engine,
+          options: {
+            width: this.width,
+            height: this.height,
+            wireframes: false,
+            background: 'transparent',
+            showVelocity: false
+          }
+        });
       
       // Create boundaries
       const walls = [
@@ -194,10 +209,6 @@ const { skills } = Astro.props;
         }
       });
       
-      // Run the engine
-      Engine.run(this.engine);
-      Render.run(this.render);
-      
       // Custom rendering for text
       Events.on(this.render, 'afterRender', () => {
         const context = this.render.canvas.getContext('2d');
@@ -206,29 +217,29 @@ const { skills } = Astro.props;
           const { x, y } = orb.position;
           const skill = orb.skill;
           
-          // Simplified glow effect
+          // Glow effect
           context.save();
-          context.shadowBlur = 10;
+          context.shadowBlur = 15;
           context.shadowColor = skill.color;
-          context.globalAlpha = 0.3;
+          context.globalAlpha = 0.4;
           context.beginPath();
-          context.arc(x, y, orb.circleRadius, 0, 2 * Math.PI);
+          context.arc(x, y, orb.circleRadius * 1.2, 0, 2 * Math.PI);
           context.fillStyle = skill.color;
           context.fill();
           context.restore();
           
           // Draw skill name
           context.save();
-          context.fillStyle = 'white';
-          context.font = 'bold 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+          context.fillStyle = '#000000';
+          context.font = 'bold 14px Poppins, -apple-system, sans-serif';
           context.textAlign = 'center';
           context.textBaseline = 'middle';
-          context.fillText(skill.name, x, y);
+          context.fillText(skill.name, x, y - 5);
           
           // Draw level
-          context.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-          context.fillStyle = 'rgba(255, 255, 255, 0.8)';
-          context.fillText(`${skill.level}%`, x, y + 18);
+          context.font = '12px Poppins, -apple-system, sans-serif';
+          context.fillStyle = 'rgba(0, 0, 0, 0.8)';
+          context.fillText(`${skill.level}%`, x, y + 12);
           context.restore();
         });
       });
@@ -243,6 +254,15 @@ const { skills } = Astro.props;
       
       // Add some fun interactions
       this.addInteractions();
+      
+        // Run the engine
+        Engine.run(this.engine);
+        Render.run(this.render);
+        
+        console.log('SkillOrbs: Matter.js initialized successfully');
+      } catch (error) {
+        console.error('SkillOrbs: Failed to initialize Matter.js:', error);
+      }
     }
     
     showTooltip(orb) {
@@ -294,7 +314,7 @@ const { skills } = Astro.props;
         width: 0;
         height: 0;
         border-radius: 50%;
-        border: 2px solid rgba(102, 126, 234, 0.5);
+        border: 2px solid rgba(255, 215, 0, 0.5);
         left: ${x}px;
         top: ${y}px;
         transform: translate(-50%, -50%);
@@ -326,7 +346,14 @@ const { skills } = Astro.props;
   }
   
   // Initialize on DOM load
-  document.addEventListener('DOMContentLoaded', () => {
-    new SkillOrbs();
-  });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('SkillOrbs: DOM loaded, initializing...');
+      new SkillOrbs();
+    });
+  } else {
+    // DOM already loaded
+    console.log('SkillOrbs: DOM already loaded, initializing...');
+    setTimeout(() => new SkillOrbs(), 100);
+  }
 </script>
