@@ -3,21 +3,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ParticleUniverse from '../components/ParticleUniverse.astro';
 import HolographicProfile from '../components/HolographicProfile.astro';
 import TextScramble from '../components/TextScramble.astro';
-import SkillOrbs from '../components/SkillOrbs.astro';
 
 const pageTitle = "Home";
+const skills = [
+  "Quantitative Finance",
+  "Interpersonal Communication",
+  "Software Development",
+  "Data Analysis",
+  "Automation & Scripting",
+  "Strategic Thinking"
+];
 ---
 <BaseLayout title={pageTitle}>
 	<section class="hero">
 		<ParticleUniverse />
 		<HolographicProfile src="/profile-placeholder.JPG" alt="Andreas Oberdörfer" />
-		<h1><TextScramble text="Andreas Oberdörfer" delay="500" /></h1>
-		<p><TextScramble text="People Person & Quantitative Thinker" delay="1000" /></p>
+		<h1><TextScramble text="Andreas Oberdörfer" /></h1>
+		<p><TextScramble text="People Person & Quantitative Thinker" /></p>
 	</section>
 
 	<div class="content-container">
 		<div class="card reveal-on-scroll">
-			<h2><TextScramble text="About Me" delay="100" /></h2>
+			<h2>About Me</h2>
 			<p>
 				Hi there! I'm passionate about innovative ideas and automation that makes life easier.
 				With a keen interest in quantitative finance, I love exploring where numbers meet strategy.
@@ -31,9 +38,10 @@ const pageTitle = "Home";
 		</div>
 
 		<div class="card reveal-on-scroll">
-			<h2><TextScramble text="Skills & Interests" delay="200" /></h2>
-			<p>Click and drag the orbs! Click anywhere to create an explosion!</p>
-			<SkillOrbs />
+			<h2>Skills & Expertise</h2>
+			<ul class="skills-list">
+				{skills.map(skill => <li class="skill-item">{skill}</li>)}
+			</ul>
 		</div>
 
 		<div class="card reveal-on-scroll">
@@ -42,43 +50,6 @@ const pageTitle = "Home";
 				Why don't scientists trust atoms?<br/>
 				Because they make up everything!
 			</p>
-			<p>
-				Okay, okay, maybe that's a bit <em>elementary</em>. How about this:
-			</p>
-			<p>
-				Andreas was debugging a particularly tricky piece of code late one night. Frustrated, he muttered, "Why won't this work? It's like talking to a brick wall!" Suddenly, his computer screen flickered, and text appeared: "Actually, brick walls are excellent listeners. They just have a terrible response time. And unlike this code, they rarely crash." Andreas stared, blinked, then slowly reached for the coffee pot. It was going to be a <em>very</em> long night.
-			</p>
 		</div>
 	</div>
 </BaseLayout>
-
-<style>
-	.skills-container {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-		margin-top: 1rem;
-	}
-	
-	.skill-item {
-		background-color: var(--accent-light);
-		color: var(--accent-dark);
-		padding: 0.5rem 1rem;
-		border-radius: 20px;
-		display: inline-block;
-		font-weight: 500;
-		transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-	}
-	
-	.interests-container {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-	}
-	
-	.interest-group h3 {
-		margin-bottom: 0.5rem;
-		font-size: 1.3rem;
-		color: var(--text-primary);
-	}
-</style>

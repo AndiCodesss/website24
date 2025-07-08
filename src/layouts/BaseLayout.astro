@@ -15,7 +15,7 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/favicon.png">
     <meta name="description" content="Andreas Oberdörfer - People Person & Quantitative Thinker with interests in finance, informatics and culture">
@@ -31,17 +31,15 @@ const { title } = Astro.props;
         <slot /> <!-- Page content will go here -->
     </main>
     <footer>
-        <div class="footer-content">
-            <div class="social-links">
-                <a href="https://www.linkedin.com/in/andreas-oberdoerfer/" target="_blank" aria-label="LinkedIn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                    </svg>
-                </a>
-            </div>
-            <p>&copy; {new Date().getFullYear()} Andreas Oberdörfer. All rights reserved.</p>
-            <p class="hint">(Hint: Try ↑ ↑ ↓ ↓ ← → ← → B A for a surprise!)</p>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/andreas-oberdoerfer/" target="_blank" aria-label="LinkedIn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+            </a>
         </div>
+        <p>&copy; {new Date().getFullYear()} Andreas Oberdörfer. All rights reserved.</p>
+        <p class="hint">(Hint: Try ↑ ↑ ↓ ↓ ← → ← → B A for a surprise!)</p>
     </footer>
 
 
@@ -59,44 +57,19 @@ const { title } = Astro.props;
         // Register GSAP plugins
         gsap.registerPlugin(ScrollTrigger);
         
-        // Always use dark mode
-        document.body.classList.add('dark-mode');
-
-        // Scroll reveal functionality
         document.addEventListener('DOMContentLoaded', () => {
-            const scrollElements = document.querySelectorAll('.reveal-on-scroll, .reveal-item');
+            const scrollElements = document.querySelectorAll('.reveal-on-scroll');
             
-            const elementInView = (el, scrollOffset = 100) => {
-                const elementTop = el.getBoundingClientRect().top;
-                return (
-                    elementTop <= (window.innerHeight || document.documentElement.clientHeight) - scrollOffset
-                );
-            };
-            
-            const displayScrollElement = (element) => {
-                element.classList.add('revealed');
-            };
-            
-            const hideScrollElement = (element) => {
-                element.classList.remove('revealed');
-            };
-            
-            const handleScrollAnimation = () => {
-                scrollElements.forEach((el) => {
-                    if (elementInView(el, 100)) {
-                        displayScrollElement(el);
-                    } else {
-                        hideScrollElement(el);
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
                     }
                 });
-            };
-            
-            // Initial check on page load
-            handleScrollAnimation();
-            
-            // Listen for scroll events
-            window.addEventListener('scroll', () => {
-                handleScrollAnimation();
+            }, { threshold: 0.1 });
+
+            scrollElements.forEach(el => {
+                observer.observe(el);
             });
         });
 
@@ -109,15 +82,10 @@ const { title } = Astro.props;
             'b', 'a'
         ];
         let konamiIndex = 0;
-        let konamiActive = false;
 
         document.addEventListener('keydown', (event) => {
-            if (konamiActive) return; // Prevent re-triggering while active
-            
             const requiredKey = konamiCode[konamiIndex];
             const pressedKey = (event.key.length === 1) ? event.key.toLowerCase() : event.key;
-
-            console.log(`Konami progress: ${konamiIndex}/${konamiCode.length}, pressed: ${pressedKey}, expected: ${requiredKey}`);
 
             if (pressedKey === requiredKey) {
                 konamiIndex++;
@@ -127,50 +95,21 @@ const { title } = Astro.props;
                 }
             } else {
                 konamiIndex = 0;
-                if (pressedKey === konamiCode[0]) {
-                    konamiIndex = 1;
-                }
             }
         });
 
         function activateKonami() {
-            console.log("🎮 Konami Code Activated!");
-            konamiActive = true;
-            document.body.classList.add('konami-effect');
-
             const img = document.getElementById('konamiImage');
             const audio = document.getElementById('konamiAudio');
             
             if (img) {
                 img.style.display = 'block';
-                img.classList.add('show');
-                console.log("Konami image shown");
-            } else {
-                console.error("Konami image not found!");
+                setTimeout(() => img.style.display = 'none', 10000);
             }
 
             if (audio) {
-                audio.volume = 0.5;
-                audio.currentTime = 29;
                 audio.play().catch(e => console.log("Audio play failed:", e));
-            } else {
-                console.error("Konami audio not found!");
             }
-
-            setTimeout(() => {
-                document.body.classList.remove('konami-effect');
-                if (img) {
-                    img.classList.remove('show');
-                    setTimeout(() => {
-                        img.style.display = 'none';
-                    }, 500);
-                }
-                if (audio) {
-                    audio.pause();
-                    audio.currentTime = 0;
-                }
-                konamiActive = false;
-            }, 10000);
         }
     </script>
 </body>
