@@ -10,13 +10,14 @@ const { text, className = '', delay = 0 } = Astro.props;
   .text-scramble {
     display: inline-block;
     position: relative;
-    font-family: 'Courier New', monospace;
-    letter-spacing: 0.05em;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    transition: all 0.3s ease;
   }
   
   .text-scramble.scrambling {
-    color: #0f0;
-    text-shadow: 0 0 10px #0f0;
+    color: #D4AF37;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
   }
   
   .text-scramble.scrambling::before {
@@ -29,10 +30,10 @@ const { text, className = '', delay = 0 } = Astro.props;
     background: linear-gradient(
       180deg,
       transparent 0%,
-      rgba(0, 255, 0, 0.1) 50%,
+      rgba(212, 175, 55, 0.05) 50%,
       transparent 100%
     );
-    animation: scanline 1s infinite;
+    animation: scanline 1.5s infinite;
     pointer-events: none;
   }
   
@@ -49,7 +50,7 @@ const { text, className = '', delay = 0 } = Astro.props;
   }
   
   .text-scramble .char.revealed {
-    color: var(--text-primary);
+    color: inherit;
     text-shadow: none;
   }
   
@@ -60,24 +61,29 @@ const { text, className = '', delay = 0 } = Astro.props;
   @keyframes glitchChar {
     0%, 100% { 
       transform: translateX(0);
-      color: inherit;
+      opacity: 1;
     }
     20% { 
-      transform: translateX(-2px);
-      color: #ff0;
+      transform: translateX(-1px);
+      opacity: 0.8;
     }
     40% { 
-      transform: translateX(2px);
-      color: #0ff;
+      transform: translateX(1px);
+      opacity: 0.9;
     }
     60% { 
-      transform: translateX(-1px);
-      color: #f0f;
+      transform: translateX(-0.5px);
+      opacity: 0.85;
     }
     80% { 
-      transform: translateX(1px);
-      color: #0f0;
+      transform: translateX(0.5px);
+      opacity: 0.95;
     }
+  }
+  
+  .text-scramble.completed {
+    color: inherit;
+    text-shadow: none;
   }
 </style>
 
@@ -87,7 +93,7 @@ const { text, className = '', delay = 0 } = Astro.props;
       this.element = element;
       this.text = element.dataset.text;
       this.delay = parseInt(element.dataset.delay) || 0;
-      this.chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+      this.chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
       this.revealed = false;
       this.observer = null;
       
@@ -95,14 +101,6 @@ const { text, className = '', delay = 0 } = Astro.props;
     }
     
     init() {
-      // Replace text with individual character spans
-      const chars = this.text.split('');
-      this.element.innerHTML = chars.map((char, i) => 
-        `<span class="char" data-char="${char}">${char}</span>`
-      ).join('');
-      
-      this.charElements = this.element.querySelectorAll('.char');
-      
       // Set up intersection observer
       this.observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -120,10 +118,18 @@ const { text, className = '', delay = 0 } = Astro.props;
       this.element.classList.add('scrambling');
       this.revealed = true;
       
-      const scrambleDuration = 1500;
-      const charDelay = 50;
+      // Replace text with individual character spans
+      const chars = this.text.split('');
+      this.element.innerHTML = chars.map((char, i) => 
+        `<span class="char" data-char="${char}">${char}</span>`
+      ).join('');
       
-      this.charElements.forEach((charEl, index) => {
+      const charElements = this.element.querySelectorAll('.char');
+      const scrambleDuration = 1000;
+      const charDelay = 30;
+      let completedCount = 0;
+      
+      charElements.forEach((charEl, index) => {
         const originalChar = charEl.dataset.char;
         const startTime = Date.now() + index * charDelay;
         
@@ -132,7 +138,7 @@ const { text, className = '', delay = 0 } = Astro.props;
           
           if (elapsed < scrambleDuration) {
             // Scramble effect
-            if (Math.random() < 0.3) {
+            if (Math.random() < 0.1) {
               charEl.classList.add('glitch');
               setTimeout(() => charEl.classList.remove('glitch'), 100);
             }
@@ -145,15 +151,19 @@ const { text, className = '', delay = 0 } = Astro.props;
             
             requestAnimationFrame(scrambleChar);
           } else {
-            // Reveal original character
+            // Reveal original character and keep it
             charEl.textContent = originalChar;
             charEl.classList.add('revealed');
+            completedCount++;
             
-            // Remove scrambling class when all chars are revealed
-            if (index === this.charElements.length - 1) {
+            // When all characters are revealed, clean up
+            if (completedCount === charElements.length) {
               setTimeout(() => {
                 this.element.classList.remove('scrambling');
-              }, 500);
+                this.element.classList.add('completed');
+                // Restore the original text to ensure it stays visible
+                this.element.textContent = this.text;
+              }, 300);
             }
           }
         };
