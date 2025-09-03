@@ -1,0 +1,174 @@
+---
+const { experience } = Astro.props;
+---
+
+<div class="timeline-container">
+  <div class="timeline-line"></div>
+  {experience.map((item, index) => (
+    <div class={`timeline-item ${index % 2 === 0 ? 'left' : 'right'}`} style={`animation-delay: ${index * 0.2}s`}>
+      <div class="timeline-content">
+        <span class="timeline-year">{item.year}</span>
+        <h3 class="timeline-title">{item.title}</h3>
+        <p class="timeline-company">{item.company}</p>
+        <p class="timeline-description">{item.description}</p>
+      </div>
+      <div class="timeline-dot"></div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .timeline-container {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: var(--space-xl) 0;
+  }
+  
+  .timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent 0%, var(--color-accent-primary) 10%, var(--color-accent-secondary) 90%, transparent 100%);
+    transform: translateX(-50%);
+  }
+  
+  .timeline-item {
+    position: relative;
+    width: 45%;
+    opacity: 0;
+    animation: fadeInScale 0.8s ease-out forwards;
+  }
+  
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .timeline-item.left {
+    text-align: right;
+    margin-bottom: var(--space-2xl);
+  }
+  
+  .timeline-item.right {
+    margin-left: auto;
+    margin-bottom: var(--space-2xl);
+  }
+  
+  .timeline-content {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: var(--space-lg);
+    transition: all var(--transition-speed) ease;
+    position: relative;
+  }
+  
+  .timeline-content::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 2px;
+    background: var(--glass-border);
+    transform: translateY(-50%);
+  }
+  
+  .timeline-item.left .timeline-content::before {
+    right: -20px;
+  }
+  
+  .timeline-item.right .timeline-content::before {
+    left: -20px;
+  }
+  
+  .timeline-content:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+  
+  .timeline-dot {
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    background: var(--gradient-accent);
+    border-radius: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    z-index: 1;
+  }
+  
+  .timeline-item.left .timeline-dot {
+    right: -8px;
+  }
+  
+  .timeline-item.right .timeline-dot {
+    left: -8px;
+  }
+  
+  .timeline-year {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .timeline-title {
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-xs);
+  }
+  
+  .timeline-company {
+    color: var(--color-accent-primary);
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .timeline-description {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  @media (max-width: 768px) {
+    .timeline-line {
+      left: 20px;
+    }
+    
+    .timeline-item {
+      width: calc(100% - 40px);
+      margin-left: 40px !important;
+      margin-bottom: var(--space-xl);
+      text-align: left !important;
+    }
+    
+    .timeline-dot {
+      left: -28px !important;
+      right: auto !important;
+    }
+    
+    .timeline-content::before {
+      left: -20px !important;
+      right: auto !important;
+    }
+  }
+</style>

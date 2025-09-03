@@ -2,15 +2,42 @@
 // Magnetic Navigation Component
 ---
 
-<nav class="magnetic-nav">
-  <a href="/" class="magnetic-link" data-text="Home">
-    <span>Home</span>
-    <div class="magnetic-bg"></div>
-  </a>
-  <a href="/contact" class="magnetic-link" data-text="Contact">
-    <span>Contact</span>
-    <div class="magnetic-bg"></div>
-  </a>
+<nav class="magnetic-nav" id="mainNav">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <a href="/" class="logo-link">
+        <span class="logo-text">AO</span>
+        <span class="logo-full">Andreas Oberdörfer</span>
+      </a>
+    </div>
+    
+    <div class="nav-menu" id="navMenu">
+      <a href="#about" class="nav-link magnetic-link" data-text="About">
+        <span>About</span>
+        <div class="magnetic-bg"></div>
+      </a>
+      <a href="#skills" class="nav-link magnetic-link" data-text="Skills">
+        <span>Skills</span>
+        <div class="magnetic-bg"></div>
+      </a>
+      <a href="#projects" class="nav-link magnetic-link" data-text="Projects">
+        <span>Projects</span>
+        <div class="magnetic-bg"></div>
+      </a>
+      <a href="#contact" class="nav-link magnetic-link" data-text="Contact">
+        <span>Contact</span>
+        <div class="magnetic-bg"></div>
+      </a>
+    </div>
+    
+    <div class="nav-actions">
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
   <div class="nav-indicator"></div>
 </nav>
 
@@ -20,27 +47,83 @@
     top: 0;
     left: 0;
     right: 0;
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    padding: 2rem;
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 2rem;
+    background: rgba(2, 6, 23, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--glass-border);
     z-index: 1000;
+    transition: all var(--transition-speed) ease;
   }
   
+  .magnetic-nav.scrolled {
+    background: rgba(2, 6, 23, 0.95);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+  
+  .nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-logo {
+    position: relative;
+    z-index: 1001;
+  }
+  
+  .logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    font-weight: 800;
+    transition: all var(--transition-speed) ease;
+  }
+  
+  .logo-text {
+    display: inline-block;
+    padding: 0.5rem 0.75rem;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.5rem;
+    letter-spacing: -0.05em;
+  }
+  
+  .logo-full {
+    display: none;
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+  
+  @media (min-width: 768px) {
+    .logo-full {
+      display: inline;
+    }
+  }
+  
+  .nav-menu {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: center;
+  }
+  
+  .nav-link,
   .magnetic-link {
     position: relative;
     display: inline-block;
-    padding: 1rem 2rem;
-    color: var(--text-primary);
+    padding: 0.75rem 1.25rem;
+    color: var(--color-text-secondary);
     text-decoration: none;
-    font-weight: 600;
-    font-size: 1.1rem;
+    font-weight: 500;
+    font-size: 1rem;
     overflow: hidden;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all var(--transition-speed) ease;
   }
   
   .magnetic-link span {
@@ -56,7 +139,7 @@
     width: 0;
     height: 0;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-accent);
     transform: translate(-50%, -50%);
     transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
                 height 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -96,11 +179,64 @@
   .nav-indicator {
     position: absolute;
     bottom: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    height: 2px;
+    background: var(--gradient-accent);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     opacity: 0;
-    border-radius: 3px;
+    border-radius: 2px;
+  }
+  
+  .nav-actions {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+  }
+  
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 44px;
+    height: 44px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    cursor: pointer;
+    padding: 0.75rem;
+    transition: all var(--transition-speed) ease;
+  }
+  
+  @media (max-width: 768px) {
+    .menu-toggle {
+      display: flex;
+      position: relative;
+      z-index: 1001;
+    }
+  }
+  
+  .menu-toggle span {
+    width: 100%;
+    height: 2px;
+    background: var(--color-text-secondary);
+    transition: all var(--transition-speed) ease;
+  }
+  
+  .menu-toggle.active span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  
+  .menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .menu-toggle.active span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+  
+  .menu-toggle:hover {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+    transform: scale(1.05);
   }
   
   /* Glowing effect on hover */
@@ -120,145 +256,163 @@
   }
   
   /* Responsive */
-  @media (max-width: 720px) {
-    .magnetic-nav {
-      gap: 1.5rem;
-      padding: 1rem;
+  @media (max-width: 768px) {
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      height: 100vh;
+      background: var(--color-bg-primary);
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--space-lg);
+      transition: right var(--transition-speed) ease;
+      padding-top: 5rem;
+    }
+    
+    .nav-menu.active {
+      right: 0;
     }
     
     .magnetic-link {
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
+      padding: 1rem 2rem;
+      font-size: 1.25rem;
     }
   }
 </style>
 
 <script>
-  import Matter from 'matter-js';
-  import { gsap } from 'gsap';
-  
-  // Initialize magnetic physics
-  class MagneticNav {
-    constructor() {
-      this.links = document.querySelectorAll('.magnetic-link');
-      this.indicator = document.querySelector('.nav-indicator');
-      this.mouseX = 0;
-      this.mouseY = 0;
-      this.currentLink = null;
-      
-      this.init();
+  // Scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('mainNav');
+    if (nav) {
+      if (window.scrollY > 50) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
     }
+  });
+  
+  // Mobile menu toggle
+  const menuToggle = document.getElementById('menuToggle');
+  const navMenu = document.getElementById('navMenu');
+  
+  if (menuToggle && navMenu) {
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      navMenu.classList.toggle('active');
+    });
     
-    init() {
-      // Set active link based on current page
-      const currentPath = window.location.pathname;
-      this.links.forEach(link => {
-        if (link.getAttribute('href') === currentPath) {
-          link.classList.add('active');
-          this.updateIndicator(link);
+    // Close menu on link click
+    navMenu.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+      });
+    });
+  }
+  
+  // Smooth scrolling for nav links
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href');
+      if (targetId && targetId.startsWith('#')) {
+        const target = document.querySelector(targetId);
+        if (target) {
+          const navHeight = document.getElementById('mainNav').offsetHeight;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
         }
-      });
-      
-      // Mouse tracking
-      document.addEventListener('mousemove', (e) => {
-        this.mouseX = e.clientX;
-        this.mouseY = e.clientY;
-        this.updateMagneticEffect();
-      });
-      
-      // Link interactions
-      this.links.forEach(link => {
-        link.addEventListener('mouseenter', () => {
-          this.currentLink = link;
-          this.updateIndicator(link);
-        });
+      }
+    });
+  });
+  
+  // Magnetic effect using GSAP if available
+  if (typeof gsap !== 'undefined') {
+    class MagneticNav {
+      constructor() {
+        this.links = document.querySelectorAll('.magnetic-link');
+        this.indicator = document.querySelector('.nav-indicator');
+        this.currentLink = null;
         
-        link.addEventListener('mouseleave', () => {
-          this.currentLink = null;
-          gsap.to(link, {
-            x: 0,
-            y: 0,
-            duration: 0.3,
-            ease: "power2.out"
+        this.init();
+      }
+      
+      init() {
+        // Link interactions
+        this.links.forEach(link => {
+          link.addEventListener('mouseenter', (e) => {
+            this.currentLink = link;
+            this.updateIndicator(link);
+            gsap.to(link, {
+              scale: 1.05,
+              duration: 0.3,
+              ease: "power2.out"
+            });
+          });
+          
+          link.addEventListener('mouseleave', (e) => {
+            this.currentLink = null;
+            gsap.to(link, {
+              scale: 1,
+              x: 0,
+              y: 0,
+              duration: 0.3,
+              ease: "power2.out"
+            });
+          });
+          
+          link.addEventListener('mousemove', (e) => {
+            const rect = link.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            gsap.to(link, {
+              x: x * 0.3,
+              y: y * 0.3,
+              duration: 0.3,
+              ease: "power2.out"
+            });
           });
         });
-      });
-      
-      // Hide indicator when not hovering
-      document.querySelector('.magnetic-nav').addEventListener('mouseleave', () => {
-        gsap.to(this.indicator, {
-          opacity: 0,
-          duration: 0.3
-        });
-      });
-    }
-    
-    updateMagneticEffect() {
-      if (!this.currentLink) return;
-      
-      const rect = this.currentLink.getBoundingClientRect();
-      const linkCenterX = rect.left + rect.width / 2;
-      const linkCenterY = rect.top + rect.height / 2;
-      
-      const distanceX = this.mouseX - linkCenterX;
-      const distanceY = this.mouseY - linkCenterY;
-      const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-      
-      const maxDistance = 150;
-      const magnetStrength = Math.max(0, 1 - distance / maxDistance);
-      
-      if (distance < maxDistance) {
-        const translateX = distanceX * magnetStrength * 0.3;
-        const translateY = distanceY * magnetStrength * 0.3;
         
-        gsap.to(this.currentLink, {
-          x: translateX,
-          y: translateY,
+        // Hide indicator when not hovering
+        document.querySelector('.magnetic-nav').addEventListener('mouseleave', () => {
+          if (this.indicator) {
+            gsap.to(this.indicator, {
+              opacity: 0,
+              duration: 0.3
+            });
+          }
+        });
+      }
+      
+      updateIndicator(link) {
+        if (!this.indicator) return;
+        const rect = link.getBoundingClientRect();
+        const navRect = link.closest('.nav-menu').getBoundingClientRect();
+        
+        gsap.to(this.indicator, {
+          left: rect.left - navRect.left,
+          width: rect.width,
+          opacity: 1,
           duration: 0.3,
           ease: "power2.out"
         });
-        
-        // Add ripple effect
-        this.createRipple(this.mouseX, this.mouseY);
       }
     }
     
-    updateIndicator(link) {
-      const rect = link.getBoundingClientRect();
-      const navRect = link.parentElement.getBoundingClientRect();
-      
-      gsap.to(this.indicator, {
-        left: rect.left - navRect.left,
-        width: rect.width,
-        opacity: 1,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-    }
-    
-    createRipple(x, y) {
-      const ripple = document.createElement('div');
-      ripple.className = 'magnetic-ripple';
-      ripple.style.left = x + 'px';
-      ripple.style.top = y + 'px';
-      
-      document.body.appendChild(ripple);
-      
-      gsap.to(ripple, {
-        width: 100,
-        height: 100,
-        opacity: 0,
-        duration: 1,
-        ease: "power2.out",
-        onComplete: () => ripple.remove()
-      });
-    }
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      new MagneticNav();
+    });
   }
-  
-  // Initialize on DOM load
-  document.addEventListener('DOMContentLoaded', () => {
-    new MagneticNav();
-  });
 </script>
 
 <style is:global>

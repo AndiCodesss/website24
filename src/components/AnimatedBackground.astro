@@ -1,0 +1,143 @@
+---
+---
+
+<div class="animated-background">
+  <div class="gradient-bg"></div>
+  <div class="grid-overlay"></div>
+  <canvas id="particle-canvas"></canvas>
+</div>
+
+<style>
+  .animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+  }
+  
+  .gradient-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.4;
+    background: 
+      radial-gradient(ellipse at top left, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at top right, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at center bottom, rgba(236, 72, 153, 0.3) 0%, transparent 50%);
+    animation: gradientShift 15s ease-in-out infinite;
+  }
+  
+  @keyframes gradientShift {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    33% { transform: rotate(1deg) scale(1.05); }
+    66% { transform: rotate(-1deg) scale(1.05); }
+  }
+  
+  .grid-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+  }
+  
+  @keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+  }
+  
+  #particle-canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+  }
+</style>
+
+<script>
+  class ParticleAnimation {
+    constructor() {
+      this.canvas = document.getElementById('particle-canvas') as HTMLCanvasElement;
+      if (!this.canvas) return;
+      
+      this.ctx = this.canvas.getContext('2d');
+      this.particles = [];
+      this.particleCount = 50;
+      this.init();
+    }
+    
+    init() {
+      this.resize();
+      this.createParticles();
+      this.animate();
+      
+      window.addEventListener('resize', () => this.resize());
+    }
+    
+    resize() {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+    }
+    
+    createParticles() {
+      for (let i = 0; i < this.particleCount; i++) {
+        this.particles.push({
+          x: Math.random() * this.canvas.width,
+          y: Math.random() * this.canvas.height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          size: Math.random() * 2 + 1,
+          opacity: Math.random() * 0.5 + 0.1
+        });
+      }
+    }
+    
+    animate() {
+      if (!this.ctx) return;
+      
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      
+      this.particles.forEach((particle, index) => {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        
+        if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
+        if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
+        
+        this.ctx.beginPath();
+        this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        this.ctx.fillStyle = `rgba(59, 130, 246, ${particle.opacity})`;
+        this.ctx.fill();
+        
+        // Connect nearby particles
+        this.particles.slice(index + 1).forEach(otherParticle => {
+          const dx = particle.x - otherParticle.x;
+          const dy = particle.y - otherParticle.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < 100) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(particle.x, particle.y);
+            this.ctx.lineTo(otherParticle.x, otherParticle.y);
+            this.ctx.strokeStyle = `rgba(139, 92, 246, ${0.1 * (1 - distance / 100)})`;
+            this.ctx.stroke();
+          }
+        });
+      });
+      
+      requestAnimationFrame(() => this.animate());
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => new ParticleAnimation());
+  } else {
+    new ParticleAnimation();
+  }
+</script>

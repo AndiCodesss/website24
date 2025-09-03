@@ -3,60 +3,483 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ParticleUniverse from '../components/ParticleUniverse.astro';
 import HolographicProfile from '../components/HolographicProfile.astro';
 import TextScramble from '../components/TextScramble.astro';
+import SkillOrbs from '../components/SkillOrbs.astro';
+import AnimatedBackground from '../components/AnimatedBackground.astro';
+import ProjectShowcase from '../components/ProjectShowcase.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.astro';
+import ContactSection from '../components/ContactSection.astro';
+import StatsCounter from '../components/StatsCounter.astro';
 
-const pageTitle = "Home";
+const pageTitle = "Andreas Oberdörfer | Digital Architect";
+
 const skills = [
   "Quantitative Finance",
-  "Interpersonal Communication",
-  "Software Development",
+  "Machine Learning",
+  "Software Architecture",
   "Data Analysis",
-  "Automation & Scripting",
-  "Strategic Thinking"
+  "Cloud Computing",
+  "Strategic Planning"
+];
+
+const projects = [
+  {
+    title: "Portfolio Optimization Engine",
+    description: "Advanced quantitative models for risk-adjusted portfolio management",
+    tags: ["Python", "Machine Learning", "Finance"],
+    link: "#"
+  },
+  {
+    title: "Real-time Analytics Platform",
+    description: "Scalable data pipeline processing millions of events daily",
+    tags: ["Cloud", "Big Data", "Architecture"],
+    link: "#"
+  },
+  {
+    title: "Automated Trading System",
+    description: "High-frequency trading system with sub-millisecond latency",
+    tags: ["C++", "Algorithms", "Finance"],
+    link: "#"
+  }
+];
+
+const experience = [
+  {
+    year: "2023",
+    title: "Senior Quantitative Analyst",
+    company: "Investment Firm",
+    description: "Leading quantitative research and portfolio optimization strategies"
+  },
+  {
+    year: "2021",
+    title: "Software Architect",
+    company: "Tech Startup",
+    description: "Designed and implemented scalable cloud-native architectures"
+  },
+  {
+    year: "2019",
+    title: "Data Scientist",
+    company: "Financial Services",
+    description: "Developed ML models for risk assessment and fraud detection"
+  }
+];
+
+const stats = [
+  { value: "50+", label: "Projects Completed" },
+  { value: "10M+", label: "Data Points Analyzed" },
+  { value: "5", label: "Years Experience" },
+  { value: "100%", label: "Client Satisfaction" }
 ];
 ---
 <BaseLayout title={pageTitle}>
+	<AnimatedBackground />
+	
 	<section class="hero">
-		<ParticleUniverse />
-		<HolographicProfile src="/profile-placeholder.JPG" alt="Andreas Oberdörfer" />
-		<h1><TextScramble text="Andreas Oberdörfer" /></h1>
-		<p><TextScramble text="People Person & Quantitative Thinker" /></p>
+		<div class="hero-content">
+			<div class="hero-badge">
+				<span class="badge-text">Available for Projects</span>
+			</div>
+			<HolographicProfile src="/profile-placeholder.JPG" alt="Andreas Oberdörfer" />
+			<h1 class="hero-title">
+				<TextScramble text="Andreas Oberdörfer" />
+			</h1>
+			<p class="hero-subtitle">
+				<TextScramble text="Quantitative Finance Expert & Software Architect" delay={500} />
+			</p>
+			<p class="hero-description">
+				Bridging the gap between complex financial models and elegant software solutions
+			</p>
+			<div class="hero-cta">
+				<a href="#contact" class="button button-primary">Get In Touch</a>
+				<a href="#projects" class="button button-secondary">View Projects</a>
+			</div>
+		</div>
+		<div class="scroll-indicator">
+			<span>Scroll to explore</span>
+			<div class="scroll-arrow"></div>
+		</div>
 	</section>
 
 	<div class="content-container">
-		<div class="card reveal-on-scroll">
-			<h2>About Me</h2>
-			<p>
-				Hi there! I'm passionate about innovative ideas and automation that makes life easier.
-				With a keen interest in quantitative finance, I love exploring where numbers meet strategy.
-				I grew up in South Tyrol, a picturesque region in Northern Italy known for its stunning Alpine landscapes.
-			</p>
-			<p>
-				What truly sets me apart is my talent for connecting with people. I excel in interpersonal communication and
-				consider my social skills to be my greatest strength. I enjoy bringing people together and finding common ground
-				in any situation.
-			</p>
-		</div>
+		<section class="stats-section reveal-on-scroll">
+			<StatsCounter stats={stats} />
+		</section>
 
-		<div class="card reveal-on-scroll">
-			<h2>Skills & Expertise</h2>
-			<ul class="skills-list">
-				{skills.map(skill => <li class="skill-item">{skill}</li>)}
-			</ul>
-		</div>
+		<section class="about-section reveal-on-scroll">
+			<div class="section-header">
+				<span class="section-label">About</span>
+				<h2>Combining Technical Excellence with Human Connection</h2>
+			</div>
+			<div class="about-grid">
+				<div class="about-content">
+					<p class="lead-text">
+						I'm passionate about innovative ideas and automation that makes life easier. 
+						With deep expertise in quantitative finance, I love exploring where numbers meet strategy.
+					</p>
+					<p>
+						Originally from South Tyrol, a picturesque region in Northern Italy known for its stunning Alpine landscapes, 
+						I bring a unique perspective shaped by diverse cultures and languages.
+					</p>
+					<p>
+						What truly sets me apart is my talent for connecting with people. I excel in interpersonal communication 
+						and consider my social skills to be my greatest strength, allowing me to bridge technical complexity with human understanding.
+					</p>
+				</div>
+				<div class="about-highlights">
+					<div class="highlight-card">
+						<span class="highlight-icon">🎯</span>
+						<h3>Mission</h3>
+						<p>Transform complex problems into elegant, scalable solutions</p>
+					</div>
+					<div class="highlight-card">
+						<span class="highlight-icon">💡</span>
+						<h3>Vision</h3>
+						<p>Create technology that enhances human potential</p>
+					</div>
+					<div class="highlight-card">
+						<span class="highlight-icon">🤝</span>
+						<h3>Values</h3>
+						<p>Excellence, integrity, and meaningful connections</p>
+					</div>
+				</div>
+			</div>
+		</section>
 
-		<div class="card reveal-on-scroll">
-			<h2>Something to Make You Smile</h2>
-			<p>
-				Why don't scientists trust atoms?<br/>
-				Because they make up everything!
-			</p>
-		</div>
+		<section class="skills-section reveal-on-scroll">
+			<div class="section-header">
+				<span class="section-label">Expertise</span>
+				<h2>Skills & Technologies</h2>
+			</div>
+			<div class="skills-container">
+				<SkillOrbs skills={skills} />
+			</div>
+			<div class="skills-grid">
+				<div class="skill-category">
+					<h3>Technical</h3>
+					<ul class="skills-list">
+						<li class="skill-item">Python & Machine Learning</li>
+						<li class="skill-item">Cloud Architecture (AWS/Azure)</li>
+						<li class="skill-item">Quantitative Modeling</li>
+						<li class="skill-item">Data Engineering</li>
+					</ul>
+				</div>
+				<div class="skill-category">
+					<h3>Business</h3>
+					<ul class="skills-list">
+						<li class="skill-item">Strategic Planning</li>
+						<li class="skill-item">Risk Management</li>
+						<li class="skill-item">Portfolio Optimization</li>
+						<li class="skill-item">Business Analysis</li>
+					</ul>
+				</div>
+				<div class="skill-category">
+					<h3>Personal</h3>
+					<ul class="skills-list">
+						<li class="skill-item">Team Leadership</li>
+						<li class="skill-item">Cross-cultural Communication</li>
+						<li class="skill-item">Problem Solving</li>
+						<li class="skill-item">Continuous Learning</li>
+					</ul>
+				</div>
+			</div>
+		</section>
 
-		<div class="card reveal-on-scroll">
-			<h2>A Developer's Tale</h2>
-			<p>
-				Andreas was debugging a particularly tricky piece of code late one night. Frustrated, he muttered, "Why won't this work? It's like talking to a brick wall!" Suddenly, his computer screen flickered, and text appeared: "Actually, brick walls are excellent listeners. They just have a terrible response time. And unlike this code, they rarely crash." Andreas stared, blinked, then slowly reached for the coffee pot. It was going to be a very long night.
-			</p>
-		</div>
+		<section id="projects" class="projects-section reveal-on-scroll">
+			<div class="section-header">
+				<span class="section-label">Portfolio</span>
+				<h2>Featured Projects</h2>
+			</div>
+			<ProjectShowcase projects={projects} />
+		</section>
+
+		<section class="experience-section reveal-on-scroll">
+			<div class="section-header">
+				<span class="section-label">Journey</span>
+				<h2>Professional Experience</h2>
+			</div>
+			<ExperienceTimeline experience={experience} />
+		</section>
+
+		<section id="contact" class="contact-section reveal-on-scroll">
+			<div class="section-header">
+				<span class="section-label">Connect</span>
+				<h2>Let's Build Something Amazing Together</h2>
+			</div>
+			<ContactSection />
+		</section>
 	</div>
 </BaseLayout>
+
+<style>
+	.hero-content {
+		position: relative;
+		z-index: 10;
+	}
+
+	.hero-badge {
+		display: inline-block;
+		margin-bottom: var(--space-lg);
+		animation: fadeInDown 1s ease-out;
+	}
+
+	.badge-text {
+		padding: 0.5rem 1.5rem;
+		background: rgba(16, 185, 129, 0.1);
+		border: 1px solid rgba(16, 185, 129, 0.3);
+		border-radius: 50px;
+		color: #10B981;
+		font-size: 0.875rem;
+		font-weight: 600;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+	}
+
+	.hero-title {
+		margin: var(--space-lg) 0 var(--space-md);
+		animation: fadeInUp 1s ease-out 0.2s both;
+	}
+
+	.hero-subtitle {
+		animation: fadeInUp 1s ease-out 0.4s both;
+		margin-bottom: var(--space-md);
+	}
+
+	.hero-description {
+		max-width: 600px;
+		margin: 0 auto var(--space-xl);
+		color: var(--color-text-muted);
+		animation: fadeInUp 1s ease-out 0.6s both;
+	}
+
+	.hero-cta {
+		animation: fadeInUp 1s ease-out 0.8s both;
+	}
+
+	.button {
+		padding: 1rem 2.5rem;
+		border-radius: 50px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		transition: all var(--transition-speed) ease;
+		display: inline-block;
+		margin: 0.5rem;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.button-primary {
+		background: var(--gradient-accent);
+		color: white;
+		border: none;
+	}
+
+	.button-secondary {
+		background: transparent;
+		color: var(--color-text-primary);
+		border: 2px solid var(--glass-border);
+	}
+
+	.button:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+	}
+
+	.button-primary:hover {
+		box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+	}
+
+	.button-secondary:hover {
+		background: var(--glass-bg);
+		border-color: var(--color-accent-primary);
+	}
+
+	.scroll-indicator {
+		position: absolute;
+		bottom: 2rem;
+		left: 50%;
+		transform: translateX(-50%);
+		text-align: center;
+		animation: bounce 2s infinite;
+	}
+
+	.scroll-indicator span {
+		font-size: 0.875rem;
+		color: var(--color-text-muted);
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+	}
+
+	.scroll-arrow {
+		width: 24px;
+		height: 24px;
+		margin: 0.5rem auto 0;
+		border-right: 2px solid var(--color-text-muted);
+		border-bottom: 2px solid var(--color-text-muted);
+		transform: rotate(45deg);
+		animation: scrollArrow 1.5s infinite;
+	}
+
+	@keyframes bounce {
+		0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+		40% { transform: translateX(-50%) translateY(-10px); }
+		60% { transform: translateX(-50%) translateY(-5px); }
+	}
+
+	@keyframes scrollArrow {
+		0% { opacity: 0; transform: rotate(45deg) translate(-5px, -5px); }
+		50% { opacity: 1; }
+		100% { opacity: 0; transform: rotate(45deg) translate(5px, 5px); }
+	}
+
+	@keyframes fadeInDown {
+		from { opacity: 0; transform: translateY(-20px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+
+	@keyframes fadeInUp {
+		from { opacity: 0; transform: translateY(20px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+
+	/* Section Styling */
+	.section-header {
+		text-align: center;
+		margin-bottom: var(--space-2xl);
+	}
+
+	.section-label {
+		display: inline-block;
+		padding: 0.25rem 1rem;
+		background: var(--gradient-accent);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		font-size: 0.875rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		margin-bottom: var(--space-sm);
+	}
+
+	.stats-section {
+		margin: var(--space-3xl) 0;
+	}
+
+	.about-section {
+		margin: var(--space-3xl) 0;
+	}
+
+	.about-grid {
+		display: grid;
+		grid-template-columns: 1.5fr 1fr;
+		gap: var(--space-xl);
+		align-items: start;
+	}
+
+	.lead-text {
+		font-size: 1.25rem;
+		line-height: 1.8;
+		color: var(--color-text-primary);
+		margin-bottom: var(--space-lg);
+	}
+
+	.about-highlights {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-md);
+	}
+
+	.highlight-card {
+		background: var(--glass-bg);
+		border: 1px solid var(--glass-border);
+		border-radius: 16px;
+		padding: var(--space-lg);
+		transition: all var(--transition-speed) ease;
+	}
+
+	.highlight-card:hover {
+		transform: translateX(8px);
+		border-color: rgba(59, 130, 246, 0.3);
+		box-shadow: var(--shadow-lg);
+	}
+
+	.highlight-icon {
+		font-size: 2rem;
+		display: block;
+		margin-bottom: var(--space-sm);
+	}
+
+	.highlight-card h3 {
+		font-size: 1.25rem;
+		margin-bottom: var(--space-xs);
+		color: var(--color-text-primary);
+	}
+
+	.highlight-card p {
+		color: var(--color-text-muted);
+		font-size: 0.95rem;
+		margin: 0;
+	}
+
+	.skills-section {
+		margin: var(--space-3xl) 0;
+	}
+
+	.skills-container {
+		margin-bottom: var(--space-2xl);
+	}
+
+	.skills-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: var(--space-lg);
+		margin-top: var(--space-xl);
+	}
+
+	.skill-category {
+		background: var(--glass-bg);
+		border: 1px solid var(--glass-border);
+		border-radius: 16px;
+		padding: var(--space-lg);
+	}
+
+	.skill-category h3 {
+		margin-bottom: var(--space-md);
+		color: var(--color-accent-primary);
+	}
+
+	.projects-section {
+		margin: var(--space-3xl) 0;
+	}
+
+	.experience-section {
+		margin: var(--space-3xl) 0;
+	}
+
+	.contact-section {
+		margin: var(--space-3xl) 0;
+		padding: var(--space-2xl) 0;
+		border-top: 1px solid var(--glass-border);
+	}
+
+	/* Responsive */
+	@media (max-width: 768px) {
+		.about-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.skills-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.hero-cta {
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.button {
+			width: 100%;
+			max-width: 300px;
+		}
+	}
+</style>
