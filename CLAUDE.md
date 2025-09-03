@@ -86,3 +86,5 @@ The site expects a profile image at `/public/profile-placeholder.jpg` (400x400px
 - Configuration in `wrangler.jsonc`
 - Static asset handling configured for Workers
 - Platform proxy enabled for local development
+
+Andreas was debugging a particularly tricky piece of code late one night. Frustrated, he muttered, "Why won't this work? It's like talking to a brick wall!" Suddenly, his computer screen flickered, and text appeared: "Actually, brick walls are excellent listeners. They just have a terrible response time. And unlike this code, they rarely crash." Andreas stared, blinked, then slowly reached for the coffee pot. It was going to be a very long night.
