@@ -1,5 +1,5 @@
 ---
-// Particle Universe Component
+// Enhanced Particle Universe with Cursor Interaction
 ---
 
 <div id="particle-universe" class="particle-universe">
@@ -8,14 +8,13 @@
 
 <style>
   .particle-universe {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
     z-index: -1;
-    opacity: 0.6;
     pointer-events: none;
   }
   
@@ -27,7 +26,6 @@
 
 <script>
   import * as THREE from 'three';
-  import { gsap } from 'gsap';
   
   class ParticleUniverse {
     constructor() {
@@ -36,15 +34,19 @@
       this.renderer = new THREE.WebGLRenderer({ 
         canvas: document.getElementById('particle-canvas'),
         alpha: true,
-        antialias: true 
+        antialias: true,
+        powerPreference: "high-performance"
       });
       
       this.particles = null;
-      this.particleCount = 200;
+      this.particleCount = 150;
       this.mouseX = 0;
       this.mouseY = 0;
       this.targetMouseX = 0;
       this.targetMouseY = 0;
+      this.mouseMagnitude = 0;
+      this.originalPositions = [];
+      this.velocities = [];
       
       this.init();
       this.animate();
@@ -53,7 +55,7 @@
     init() {
       // Setup renderer
       this.renderer.setSize(window.innerWidth, window.innerHeight);
-      this.renderer.setPixelRatio(window.devicePixelRatio);
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       
       // Camera position
       this.camera.position.z = 50;
@@ -63,51 +65,92 @@
       const positions = [];
       const colors = [];
       const sizes = [];
+      const randoms = [];
       
       for (let i = 0; i < this.particleCount; i++) {
-        positions.push(
-          (Math.random() - 0.5) * 100,
-          (Math.random() - 0.5) * 100,
-          (Math.random() - 0.5) * 100
-        );
+        const x = (Math.random() - 0.5) * 100;
+        const y = (Math.random() - 0.5) * 100;
+        const z = (Math.random() - 0.5) * 50;
         
-        // Gold color palette
-        const goldColors = [0xD4AF37, 0xB8941F, 0xF4E5C2, 0xFFD700];
-        const color = new THREE.Color(goldColors[Math.floor(Math.random() * goldColors.length)]);
-        colors.push(color.r, color.g, color.b);
+        positions.push(x, y, z);
+        this.originalPositions.push(x, y, z);
+        this.velocities.push(0, 0, 0);
         
-        sizes.push(Math.random() * 3 + 0.5);
+        // Gold color palette with variations
+        const goldVariations = [
+          [212/255, 175/255, 55/255],   // Classic gold
+          [184/255, 148/255, 31/255],   // Dark gold
+          [244/255, 229/255, 194/255],  // Light gold
+          [255/255, 215/255, 0],         // Bright gold
+          [218/255, 165/255, 32/255]    // Goldenrod
+        ];
+        const colorChoice = goldVariations[Math.floor(Math.random() * goldVariations.length)];
+        colors.push(colorChoice[0], colorChoice[1], colorChoice[2]);
+        
+        sizes.push(Math.random() * 2 + 0.5);
+        randoms.push(Math.random());
       }
       
       geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
       geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
       geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+      geometry.setAttribute('random', new THREE.Float32BufferAttribute(randoms, 1));
       
-      // Shader material for advanced effects
+      // Enhanced shader material with cursor interaction
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
+          mousePosition: { value: new THREE.Vector3(0, 0, 0) },
+          mouseMagnitude: { value: 0 },
           pixelRatio: { value: this.renderer.getPixelRatio() }
         },
         vertexShader: `
           attribute float size;
+          attribute float random;
           uniform float time;
+          uniform vec3 mousePosition;
+          uniform float mouseMagnitude;
+          uniform float pixelRatio;
           varying vec3 vColor;
+          varying float vRandom;
           
           void main() {
             vColor = color;
-            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            vRandom = random;
             
-            // Add wave motion
-            mvPosition.y += sin(time + position.x * 0.1) * 2.0;
-            mvPosition.x += cos(time + position.y * 0.1) * 2.0;
+            vec3 pos = position;
             
-            gl_PointSize = size * (300.0 / -mvPosition.z) * pixelRatio;
+            // Gentle floating motion
+            float floatY = sin(time * 0.5 + random * 6.28) * 1.5;
+            float floatX = cos(time * 0.3 + random * 6.28) * 1.0;
+            pos.y += floatY;
+            pos.x += floatX;
+            
+            // Mouse repulsion effect
+            vec3 toMouse = pos - mousePosition;
+            float distance = length(toMouse);
+            float influence = smoothstep(20.0, 0.0, distance) * mouseMagnitude;
+            
+            // Push particles away from cursor
+            if (distance > 0.0) {
+              vec3 pushDirection = normalize(toMouse);
+              pos += pushDirection * influence * 15.0;
+            }
+            
+            vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+            
+            // Dynamic size based on mouse proximity
+            float sizeMultiplier = 1.0 + influence * 0.5;
+            gl_PointSize = size * sizeMultiplier * (300.0 / -mvPosition.z) * pixelRatio;
+            
             gl_Position = projectionMatrix * mvPosition;
           }
         `,
         fragmentShader: `
           varying vec3 vColor;
+          varying float vRandom;
+          uniform float time;
+          uniform float mouseMagnitude;
           
           void main() {
             vec2 xy = gl_PointCoord.xy - vec2(0.5);
@@ -115,11 +158,20 @@
             
             if (r > 0.5) discard;
             
-            float intensity = 1.0 - (r * 2.0);
-            intensity = pow(intensity, 2.0);
+            // Soft circular gradient
+            float intensity = 1.0 - smoothstep(0.0, 0.5, r);
+            intensity = pow(intensity, 1.5);
             
-            vec3 goldGlow = vColor * (1.0 + intensity * 0.5);
-            gl_FragColor = vec4(goldGlow * intensity, intensity * 0.8);
+            // Pulsing glow effect
+            float pulse = sin(time * 2.0 + vRandom * 6.28) * 0.1 + 0.9;
+            
+            // Enhanced glow on mouse interaction
+            float glow = 1.0 + mouseMagnitude * 0.3;
+            
+            vec3 finalColor = vColor * pulse * glow;
+            float alpha = intensity * 0.7 * (0.8 + mouseMagnitude * 0.2);
+            
+            gl_FragColor = vec4(finalColor * intensity, alpha);
           }
         `,
         transparent: true,
@@ -131,12 +183,29 @@
       this.particles = new THREE.Points(geometry, material);
       this.scene.add(this.particles);
       
-      // Removed connections for better performance
-      
-      // Mouse interaction
+      // Enhanced mouse interaction with world coordinates
       document.addEventListener('mousemove', (e) => {
         this.targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
         this.targetMouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+        
+        // Calculate mouse speed for dynamic effects
+        const dx = this.targetMouseX - this.mouseX;
+        const dy = this.targetMouseY - this.mouseY;
+        this.mouseMagnitude = Math.min(Math.sqrt(dx * dx + dy * dy) * 5, 1);
+      });
+      
+      // Touch support for mobile
+      document.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+          const touch = e.touches[0];
+          this.targetMouseX = (touch.clientX / window.innerWidth) * 2 - 1;
+          this.targetMouseY = -(touch.clientY / window.innerHeight) * 2 + 1;
+          this.mouseMagnitude = 0.5;
+        }
+      });
+      
+      document.addEventListener('touchend', () => {
+        this.mouseMagnitude = 0;
       });
       
       // Resize handler
@@ -147,27 +216,70 @@
       });
     }
     
-    
     animate() {
       requestAnimationFrame(() => this.animate());
       
-      // Smooth mouse movement
-      this.mouseX += (this.targetMouseX - this.mouseX) * 0.05;
-      this.mouseY += (this.targetMouseY - this.mouseY) * 0.05;
+      // Smooth mouse movement with lerp
+      this.mouseX += (this.targetMouseX - this.mouseX) * 0.1;
+      this.mouseY += (this.targetMouseY - this.mouseY) * 0.1;
       
-      // Simplified rotation
-      this.particles.rotation.y += 0.0005;
+      // Convert mouse to world coordinates
+      const mouse3D = new THREE.Vector3(
+        this.mouseX * 50,
+        this.mouseY * 50,
+        0
+      );
       
-      // Update shader time
-      this.particles.material.uniforms.time.value = performance.now() * 0.001;
+      // Smooth magnitude decay
+      this.mouseMagnitude *= 0.95;
       
+      // Gentle auto-rotation
+      this.particles.rotation.y += 0.0002;
+      this.particles.rotation.x = Math.sin(performance.now() * 0.0001) * 0.05;
+      
+      // Update shader uniforms
+      const material = this.particles.material;
+      material.uniforms.time.value = performance.now() * 0.001;
+      material.uniforms.mousePosition.value = mouse3D;
+      material.uniforms.mouseMagnitude.value = this.mouseMagnitude;
+      
+      // Apply physics-based movement to particles
+      const positions = this.particles.geometry.attributes.position.array;
+      for (let i = 0; i < this.particleCount; i++) {
+        const i3 = i * 3;
+        
+        // Spring force to original position
+        const dx = this.originalPositions[i3] - positions[i3];
+        const dy = this.originalPositions[i3 + 1] - positions[i3 + 1];
+        const dz = this.originalPositions[i3 + 2] - positions[i3 + 2];
+        
+        this.velocities[i3] += dx * 0.01;
+        this.velocities[i3 + 1] += dy * 0.01;
+        this.velocities[i3 + 2] += dz * 0.01;
+        
+        // Damping
+        this.velocities[i3] *= 0.95;
+        this.velocities[i3 + 1] *= 0.95;
+        this.velocities[i3 + 2] *= 0.95;
+        
+        // Apply velocity
+        positions[i3] += this.velocities[i3];
+        positions[i3 + 1] += this.velocities[i3 + 1];
+        positions[i3 + 2] += this.velocities[i3 + 2];
+      }
+      
+      this.particles.geometry.attributes.position.needsUpdate = true;
       
       this.renderer.render(this.scene, this.camera);
     }
   }
   
   // Initialize on DOM load
-  document.addEventListener('DOMContentLoaded', () => {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      new ParticleUniverse();
+    });
+  } else {
     new ParticleUniverse();
-  });
+  }
 </script>

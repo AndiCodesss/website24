@@ -5,6 +5,7 @@ import CommandPalette from '../components/CommandPalette.astro';
 import PortalTransition from '../components/PortalTransition.astro';
 import LoadingAnimation from '../components/LoadingAnimation.astro';
 import CursorTrail from '../components/CursorTrail.astro';
+import ParticleUniverse from '../components/ParticleUniverse.astro';
 
 const { title } = Astro.props;
 ---
@@ -23,6 +24,7 @@ const { title } = Astro.props;
 </head>
 <body>
     <LoadingAnimation />
+    <ParticleUniverse />
     <CursorTrail />
     <MagneticNav />
     <CommandPalette />

@@ -11,7 +11,8 @@
       "Bash(npx tsc:*)",
       "Bash(git push:*)",
       "Read(//mnt/c/Users/**)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": []
   }
