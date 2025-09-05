@@ -57,23 +57,7 @@ const { title } = Astro.props;
         // Register GSAP plugins
         gsap.registerPlugin(ScrollTrigger);
         
-        document.addEventListener('DOMContentLoaded', () => {
-            const scrollElements = document.querySelectorAll('.reveal-on-scroll');
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            scrollElements.forEach(el => {
-                observer.observe(el);
-            });
-        });
-
-        // Konami Code
+        // Konami Code (moved outside DOMContentLoaded for better initialization)
         const konamiCode = [
             'ArrowUp', 'ArrowUp',
             'ArrowDown', 'ArrowDown',
@@ -86,6 +70,8 @@ const { title } = Astro.props;
         document.addEventListener('keydown', (event) => {
             const requiredKey = konamiCode[konamiIndex];
             const pressedKey = (event.key.length === 1) ? event.key.toLowerCase() : event.key;
+            
+            console.log(`Key pressed: ${pressedKey}, expecting: ${requiredKey}`);
 
             if (pressedKey === requiredKey) {
                 konamiIndex++;
@@ -128,6 +114,22 @@ const { title } = Astro.props;
                 console.error('Konami audio element not found');
             }
         }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const scrollElements = document.querySelectorAll('.reveal-on-scroll');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            scrollElements.forEach(el => {
+                observer.observe(el);
+            });
+        });
     </script>
 </body>
 </html> 
