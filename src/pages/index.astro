@@ -6,36 +6,52 @@ import TextScramble from '../components/TextScramble.astro';
 const pageTitle = "Andreas Oberdörfer";
 
 const skills = [
-  "Quantitative Finance",
-  "Machine Learning", 
-  "Software Architecture",
-  "Data Analysis",
-  "Cloud Computing",
-  "Strategic Planning"
+  "Data Science",
+  "Digital Marketing", 
+  "Business Informatics",
+  "Process Automation",
+  "Risk Assessment",
+  "Team Leadership",
+  "Financial Analysis",
+  "Agricultural Management"
 ];
 
-const projects = [
+const education = [
   {
-    title: "Portfolio Optimization",
-    description: "Advanced quantitative models for risk-adjusted portfolio management",
-    tags: ["Python", "ML", "Finance"]
+    period: "Jan 2025 - May 2025",
+    institution: "The Hong Kong Polytechnic University",
+    degree: "Exchange Semester - BBA",
+    details: "Bachelor of Business Administration exchange program",
+    tags: ["International Business", "Asia Studies", "Exchange"]
   },
   {
-    title: "Analytics Platform", 
-    description: "Scalable data pipeline processing millions of events",
-    tags: ["Cloud", "Big Data", "Architecture"]
+    period: "2022 - 2025",
+    institution: "WU Vienna",
+    degree: "Business Informatics",
+    details: "Specialisation: Data Science & Digital Marketing | Top 10% Ranking (241/2700)",
+    tags: ["Data Science", "Digital Marketing", "Business"]
   },
   {
-    title: "Trading System",
-    description: "High-frequency trading with sub-millisecond latency",
-    tags: ["C++", "Algorithms", "Finance"]
+    period: "2016 - 2021", 
+    institution: "Technical School of Agriculture (OFL Auer)",
+    degree: "Matura",
+    details: "Agricultural and environmental studies",
+    tags: ["Agriculture", "Environment", "Management"]
+  },
+  {
+    period: "2013 - 2016",
+    institution: "Middle School Latsch",
+    degree: "High School Diploma",
+    details: "General education with focus on sciences",
+    tags: ["Sciences", "Mathematics", "Languages"]
   }
 ];
 
 const experience = [
-  { year: "2023", title: "Senior Quantitative Analyst", company: "Investment Firm", description: "Leading quantitative research" },
-  { year: "2021", title: "Software Architect", company: "Tech Startup", description: "Cloud-native architectures" },
-  { year: "2019", title: "Data Scientist", company: "Financial Services", description: "ML models for risk assessment" }
+  { year: "2017-today", title: "Junior CEO", company: "fasui.it", description: "Leading teams in cultivation, production & processing of apples and organic mountain herbs" },
+  { year: "2024", title: "Intern - Fund Services", company: "Erste Asset Management GmbH", description: "Data reconciliation, process analysis & automation tools implementation (Power Automate)" },
+  { year: "2022-23", title: "Summer Program Educator", company: "Kids Summer Program", description: "Teaching, team collaboration, safety and supervision" },
+  { year: "2022", title: "AGRIOS & GlobalGAP Supervisor", company: "Agricultural Sector", description: "Risk assessment, management strategies & stakeholder communication" }
 ];
 ---
 
@@ -44,8 +60,8 @@ const experience = [
 		<div class="hero-content">
 			<HolographicProfile src="/profile-placeholder.JPG" alt="Andreas Oberdörfer" />
 			<h1><TextScramble text="Andreas Oberdörfer" /></h1>
-			<p class="hero-subtitle"><TextScramble text="Quantitative Finance Expert & Software Architect" /></p>
-			<p class="hero-description">Bridging complex financial models with elegant software solutions</p>
+			<p class="hero-subtitle"><TextScramble text="Business Informatics Student & Junior CEO" /></p>
+			<p class="hero-description">Combining data science, digital marketing & agricultural innovation</p>
 			<div class="hero-cta">
 				<a href="#about" class="button primary">About Me</a>
 				<a href="#contact" class="button secondary">Get In Touch</a>
@@ -57,16 +73,16 @@ const experience = [
 		<section id="about" class="card reveal-on-scroll">
 			<h2>About Me</h2>
 			<p class="lead">
-				I'm passionate about innovative ideas and automation that makes life easier. 
-				With deep expertise in quantitative finance, I love exploring where numbers meet strategy.
+				I'm a 22-year-old Business Informatics student at WU Vienna, passionate about data science, digital marketing, 
+				and agricultural innovation. Currently leading our family business fasui.it while pursuing my degree.
 			</p>
 			<p>
-				Originally from South Tyrol, a picturesque region in Northern Italy known for its stunning Alpine landscapes, 
-				I bring a unique perspective shaped by diverse cultures and languages.
+				From Latsch in South Tyrol, Italy, I bring a unique blend of technical expertise and hands-on business experience. 
+				My multilingual background (German native, English C1, Italian B2) enhances my ability to work in diverse international environments.
 			</p>
 			<p>
-				What truly sets me apart is my talent for connecting with people. I excel in interpersonal communication 
-				and consider my social skills to be my greatest strength, allowing me to bridge technical complexity with human understanding.
+				Beyond academics and work, I'm passionate about sports including karate, boxing, marathon running, and calisthenics. 
+				I also play the drums and have been actively involved in community organizations, serving on committees for both SBJ Latsch and Bürgerkapelle Latsch.
 			</p>
 		</section>
 
@@ -81,15 +97,16 @@ const experience = [
 			</div>
 		</section>
 
-		<section id="projects" class="card reveal-on-scroll">
-			<h2>Featured Projects</h2>
+		<section id="education" class="card reveal-on-scroll">
+			<h2>Education</h2>
 			<div class="projects-grid">
-				{projects.map(project => (
+				{education.map(edu => (
 					<article class="project-card">
-						<h3>{project.title}</h3>
-						<p>{project.description}</p>
+						<h3>{edu.degree}</h3>
+						<p class="company">{edu.institution} | {edu.period}</p>
+						<p>{edu.details}</p>
 						<div class="project-tags">
-							{project.tags.map(tag => (
+							{edu.tags.map(tag => (
 								<span class="tag">{tag}</span>
 							))}
 						</div>
@@ -114,6 +131,45 @@ const experience = [
 			</div>
 		</section>
 
+		<section id="engagement" class="card reveal-on-scroll">
+			<h2>Community Engagement & Interests</h2>
+			<div class="engagement-grid">
+				<div class="engagement-item">
+					<h3>Committee Roles</h3>
+					<ul>
+						<li>SBJ Latsch Committee Member (2018-2024) - Designing & organizing events</li>
+						<li>Bürgerkapelle Latsch Committee (2018-2021) - Decision-making & strategic planning</li>
+					</ul>
+				</div>
+				<div class="engagement-item">
+					<h3>Languages</h3>
+					<ul>
+						<li>German (Native)</li>
+						<li>English (Fluent - C1, Cambridge Advanced)</li>
+						<li>Italian (B2)</li>
+					</ul>
+				</div>
+				<div class="engagement-item">
+					<h3>Sports & Hobbies</h3>
+					<ul>
+						<li>Martial Arts: Karate & Boxing</li>
+						<li>Endurance: Marathon running & Cycling</li>
+						<li>Fitness: Calisthenics</li>
+						<li>Music: Drumset</li>
+					</ul>
+				</div>
+				<div class="engagement-item">
+					<h3>Interests</h3>
+					<ul>
+						<li>Finance & Investment</li>
+						<li>Informatics & Technology</li>
+						<li>Culture & Travel</li>
+						<li>Sports & Music</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
 		<section id="contact" class="card reveal-on-scroll">
 			<h2>Let's Connect</h2>
 			<p>I'm always excited to discuss new opportunities and innovative projects.</p>
@@ -121,7 +177,7 @@ const experience = [
 				<a href="https://www.linkedin.com/in/andreas-oberdoerfer/" target="_blank" class="contact-link">
 					LinkedIn Profile
 				</a>
-				<a href="mailto:contact@andreas-oberdoerfer.com" class="contact-link">
+				<a href="mailto:oberdoerfer.andreas@gmail.com" class="contact-link">
 					Send Email
 				</a>
 			</div>
@@ -361,6 +417,50 @@ const experience = [
 		border-color: var(--color-gold);
 		transform: translateY(-2px);
 		color: var(--color-gold);
+	}
+
+	.engagement-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 1.5rem;
+		margin-top: 2rem;
+	}
+
+	.engagement-item {
+		background: var(--glass-bg);
+		border: 1px solid var(--glass-border);
+		border-radius: 12px;
+		padding: 1.5rem;
+		transition: all 0.3s ease;
+	}
+
+	.engagement-item:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+		border-color: var(--color-gold);
+		background: rgba(212, 175, 55, 0.05);
+	}
+
+	.engagement-item h3 {
+		color: var(--color-gold);
+		margin-bottom: 1rem;
+		font-size: 1.1rem;
+	}
+
+	.engagement-item ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.engagement-item li {
+		padding: 0.5rem 0;
+		border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+		color: var(--color-text-secondary);
+	}
+
+	.engagement-item li:last-child {
+		border-bottom: none;
 	}
 
 	@media (max-width: 768px) {
