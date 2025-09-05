@@ -48,7 +48,7 @@ const education = [
 ];
 
 const experience = [
-  { year: "2017-today", title: "Business Support", company: "fasui.it", description: "Supporting family business operations in apple cultivation and organic mountain herbs production (www.fasui.it)" },
+  { year: "2017-today", title: "Business Support", company: "fasui.it", description: "Supporting family business operations in apple cultivation and organic mountain herbs production", link: { text: "www.fasui.it", url: "https://www.fasui.it" } },
   { year: "2024", title: "Intern - Fund Services", company: "Erste Asset Management GmbH", description: "Data reconciliation, process analysis & automation tools implementation (Power Automate)" },
   { year: "2022-23", title: "Summer Program Educator", company: "Kids Summer Program", description: "Teaching, team collaboration, safety and supervision" },
   { year: "2022", title: "AGRIOS & GlobalGAP Supervisor", company: "Agricultural Sector", description: "Risk assessment, management strategies & stakeholder communication" }
@@ -124,7 +124,17 @@ const experience = [
 						<div class="timeline-content">
 							<h3>{item.title}</h3>
 							<p class="company">{item.company}</p>
-							<p>{item.description}</p>
+							<p>
+								{item.description}
+								{item.link && (
+									<>
+										{' '}
+										<a href={item.link.url} target="_blank" rel="noopener noreferrer" class="experience-link">
+											{item.link.text}
+										</a>
+									</>
+								)}
+							</p>
 						</div>
 					</div>
 				))}
@@ -443,6 +453,20 @@ const experience = [
 		color: var(--color-gold-light);
 		font-weight: 600;
 		margin-bottom: 0.5rem;
+	}
+
+	.experience-link {
+		color: var(--color-gold);
+		text-decoration: none;
+		border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+		transition: all 0.3s ease;
+		display: inline-block;
+	}
+
+	.experience-link:hover {
+		color: var(--color-gold-light);
+		border-bottom-color: var(--color-gold);
+		transform: translateY(-1px);
 	}
 
 	.contact-methods {
