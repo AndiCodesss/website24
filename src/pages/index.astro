@@ -88,6 +88,9 @@ const experience = [
 
 		<section id="skills" class="card reveal-on-scroll">
 			<h2>Skills & Expertise</h2>
+			<p style="color: var(--color-text-muted); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 1.5rem; font-style: italic;">
+				I would consider my knowledge in these sectors as well rounded. But there is always something new to learn.
+			</p>
 			<div class="skills-container">
 				<canvas id="skillsRadar"></canvas>
 				<div class="skills-legend">
@@ -1170,26 +1173,42 @@ const experience = [
 			
 			// Highlight hovered segment
 			if (this.hoveredIndex >= 0 && this.hoveredIndex < this.data.length) {
-				const skill = this.data[this.hoveredIndex];
+				const currentSkill = this.data[this.hoveredIndex];
+				const nextIndex = (this.hoveredIndex + 1) % this.data.length;
+				const nextSkill = this.data[nextIndex];
+				
 				ctx.fillStyle = 'rgba(212, 175, 55, 0.3)';
 				ctx.strokeStyle = '#D4AF37';
 				ctx.lineWidth = 3;
 				
 				ctx.beginPath();
-				const angle1 = this.hoveredIndex * this.angleStep - Math.PI / 2;
-				const angle2 = (this.hoveredIndex + 1) * this.angleStep - Math.PI / 2;
-				
 				ctx.moveTo(this.center.x, this.center.y);
-				const x1 = this.center.x + Math.cos(angle1) * this.radius * skill.level / 100 * this.animationProgress;
-				const y1 = this.center.y + Math.sin(angle1) * this.radius * skill.level / 100 * this.animationProgress;
+				
+				// First vertex of the triangle (current skill point)
+				const angle1 = this.hoveredIndex * this.angleStep - Math.PI / 2;
+				const x1 = this.center.x + Math.cos(angle1) * this.radius * currentSkill.level / 100 * this.animationProgress;
+				const y1 = this.center.y + Math.sin(angle1) * this.radius * currentSkill.level / 100 * this.animationProgress;
 				ctx.lineTo(x1, y1);
 				
-				const x2 = this.center.x + Math.cos(angle2) * this.radius * skill.level / 100 * this.animationProgress;
-				const y2 = this.center.y + Math.sin(angle2) * this.radius * skill.level / 100 * this.animationProgress;
+				// Second vertex of the triangle (next skill point)
+				const angle2 = nextIndex * this.angleStep - Math.PI / 2;
+				const x2 = this.center.x + Math.cos(angle2) * this.radius * nextSkill.level / 100 * this.animationProgress;
+				const y2 = this.center.y + Math.sin(angle2) * this.radius * nextSkill.level / 100 * this.animationProgress;
 				ctx.lineTo(x2, y2);
 				
 				ctx.closePath();
 				ctx.fill();
+				
+				// Highlight the edge between the two points
+				ctx.strokeStyle = '#D4AF37';
+				ctx.lineWidth = 4;
+				ctx.shadowColor = 'rgba(212, 175, 55, 0.8)';
+				ctx.shadowBlur = 10;
+				ctx.beginPath();
+				ctx.moveTo(x1, y1);
+				ctx.lineTo(x2, y2);
+				ctx.stroke();
+				ctx.shadowBlur = 0;
 			}
 		}
 	}
