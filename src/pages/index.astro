@@ -1149,25 +1149,60 @@ const experience = [
 					ctx.font = 'bold 14px Inter';
 					const metrics = ctx.measureText(text);
 					const padding = 6;
+					const boxWidth = metrics.width + padding * 2;
+					const boxHeight = 20;
 					
-					ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-					ctx.strokeStyle = '#D4AF37';
+					// Calculate position to keep tooltip inside canvas
+					const labelAngle = angle;
+					const labelDistance = distance + 30; // Position outside the point
+					let labelX = this.center.x + Math.cos(labelAngle) * labelDistance;
+					let labelY = this.center.y + Math.sin(labelAngle) * labelDistance;
+					
+					// Adjust position if near edges
+					const margin = 10;
+					if (labelX - boxWidth/2 < margin) {
+						labelX = margin + boxWidth/2;
+					} else if (labelX + boxWidth/2 > rect.width - margin) {
+						labelX = rect.width - margin - boxWidth/2;
+					}
+					
+					if (labelY - boxHeight < margin) {
+						labelY = margin + boxHeight;
+					} else if (labelY > rect.width - margin) {
+						labelY = rect.width - margin;
+					}
+					
+					// Draw connecting line
+					ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
 					ctx.lineWidth = 1;
+					ctx.setLineDash([2, 2]);
+					ctx.beginPath();
+					ctx.moveTo(x, y);
+					ctx.lineTo(labelX, labelY);
+					ctx.stroke();
+					ctx.setLineDash([]);
+					
+					// Draw background box
+					ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+					ctx.strokeStyle = '#D4AF37';
+					ctx.lineWidth = 1.5;
 					ctx.beginPath();
 					ctx.roundRect(
-						x - metrics.width / 2 - padding,
-						y - 25 - padding,
-						metrics.width + padding * 2,
-						20,
+						labelX - boxWidth / 2,
+						labelY - boxHeight / 2,
+						boxWidth,
+						boxHeight,
 						4
 					);
 					ctx.fill();
 					ctx.stroke();
 					
-					// Text
+					// Draw text
 					ctx.fillStyle = '#D4AF37';
 					ctx.textAlign = 'center';
-					ctx.fillText(text, x, y - 15);
+					ctx.textBaseline = 'middle';
+					ctx.fillText(text, labelX, labelY);
+					ctx.textBaseline = 'alphabetic';
 				}
 			});
 			
