@@ -6,14 +6,14 @@ import TextScramble from '../components/TextScramble.astro';
 const pageTitle = "Andreas Oberdörfer";
 
 const skills = [
+  "Quantitative Finance",
+  "Trading Strategies",
   "Data Science",
   "Digital Marketing", 
   "Business Informatics",
   "Process Automation",
   "Risk Assessment",
-  "Team Leadership",
-  "Financial Analysis",
-  "Agricultural Management"
+  "Financial Analysis"
 ];
 
 const education = [
@@ -48,7 +48,7 @@ const education = [
 ];
 
 const experience = [
-  { year: "2017-today", title: "Junior CEO", company: "fasui.it", description: "Leading teams in cultivation, production & processing of apples and organic mountain herbs" },
+  { year: "2017-today", title: "Business Support", company: "fasui.it", description: "Supporting family business operations in apple cultivation and organic mountain herbs production (www.fasui.it)" },
   { year: "2024", title: "Intern - Fund Services", company: "Erste Asset Management GmbH", description: "Data reconciliation, process analysis & automation tools implementation (Power Automate)" },
   { year: "2022-23", title: "Summer Program Educator", company: "Kids Summer Program", description: "Teaching, team collaboration, safety and supervision" },
   { year: "2022", title: "AGRIOS & GlobalGAP Supervisor", company: "Agricultural Sector", description: "Risk assessment, management strategies & stakeholder communication" }
@@ -60,8 +60,8 @@ const experience = [
 		<div class="hero-content">
 			<HolographicProfile src="/profile-placeholder.JPG" alt="Andreas Oberdörfer" />
 			<h1><TextScramble text="Andreas Oberdörfer" /></h1>
-			<p class="hero-subtitle"><TextScramble text="Business Informatics Student & Junior CEO" /></p>
-			<p class="hero-description">Combining data science, digital marketing & agricultural innovation</p>
+			<p class="hero-subtitle"><TextScramble text="Business Informatics Student" /></p>
+			<p class="hero-description">Combining quantitative finance, data science & business innovation</p>
 			<div class="hero-cta">
 				<a href="#about" class="button primary">About Me</a>
 				<a href="#contact" class="button secondary">Get In Touch</a>
@@ -74,7 +74,7 @@ const experience = [
 			<h2>About Me</h2>
 			<p class="lead">
 				I'm a 22-year-old Business Informatics student at WU Vienna, passionate about data science, digital marketing, 
-				and agricultural innovation. Currently leading our family business fasui.it while pursuing my degree.
+				and quantitative finance. I actively develop my own trading strategies and help support my family's agricultural business fasui.it.
 			</p>
 			<p>
 				From Latsch in South Tyrol, Italy, I bring a unique blend of technical expertise and hands-on business experience. 
@@ -135,37 +135,87 @@ const experience = [
 			<h2>Community Engagement & Interests</h2>
 			<div class="engagement-grid">
 				<div class="engagement-item">
-					<h3>Committee Roles</h3>
-					<ul>
-						<li>SBJ Latsch Committee Member (2018-2024) - Designing & organizing events</li>
-						<li>Bürgerkapelle Latsch Committee (2018-2021) - Decision-making & strategic planning</li>
-					</ul>
+					<div class="engagement-icon">🎯</div>
+					<h3>Leadership</h3>
+					<div class="engagement-content">
+						<div class="engagement-entry">
+							<span class="badge">2018-2024</span>
+							<strong>SBJ Latsch Committee</strong>
+							<p>Event design & organization</p>
+						</div>
+						<div class="engagement-entry">
+							<span class="badge">2018-2021</span>
+							<strong>Bürgerkapelle Latsch</strong>
+							<p>Strategic planning & decision-making</p>
+						</div>
+					</div>
 				</div>
 				<div class="engagement-item">
+					<div class="engagement-icon">🌍</div>
 					<h3>Languages</h3>
-					<ul>
-						<li>German (Native)</li>
-						<li>English (Fluent - C1, Cambridge Advanced)</li>
-						<li>Italian (B2)</li>
-					</ul>
+					<div class="language-bars">
+						<div class="language-item">
+							<div class="language-header">
+								<span>German</span>
+								<span class="language-level">Native</span>
+							</div>
+							<div class="progress-bar">
+								<div class="progress-fill" style="width: 100%"></div>
+							</div>
+						</div>
+						<div class="language-item">
+							<div class="language-header">
+								<span>English</span>
+								<span class="language-level">C1</span>
+							</div>
+							<div class="progress-bar">
+								<div class="progress-fill" style="width: 90%"></div>
+							</div>
+						</div>
+						<div class="language-item">
+							<div class="language-header">
+								<span>Italian</span>
+								<span class="language-level">B2</span>
+							</div>
+							<div class="progress-bar">
+								<div class="progress-fill" style="width: 70%"></div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="engagement-item">
-					<h3>Sports & Hobbies</h3>
-					<ul>
-						<li>Martial Arts: Karate & Boxing</li>
-						<li>Endurance: Marathon running & Cycling</li>
-						<li>Fitness: Calisthenics</li>
-						<li>Music: Drumset</li>
-					</ul>
+					<div class="engagement-icon">⚡</div>
+					<h3>Active Lifestyle</h3>
+					<div class="activity-tags">
+						<span class="activity-tag martial">🥋 Karate</span>
+						<span class="activity-tag martial">🥊 Boxing</span>
+						<span class="activity-tag endurance">🏃 Marathons</span>
+						<span class="activity-tag endurance">🚴 Cycling</span>
+						<span class="activity-tag fitness">💪 Calisthenics</span>
+						<span class="activity-tag music">🥁 Drums</span>
+					</div>
 				</div>
 				<div class="engagement-item">
-					<h3>Interests</h3>
-					<ul>
-						<li>Finance & Investment</li>
-						<li>Informatics & Technology</li>
-						<li>Culture & Travel</li>
-						<li>Sports & Music</li>
-					</ul>
+					<div class="engagement-icon">💡</div>
+					<h3>Passions</h3>
+					<div class="passion-grid">
+						<div class="passion-item">
+							<span class="passion-icon">📈</span>
+							<span>Quant Finance</span>
+						</div>
+						<div class="passion-item">
+							<span class="passion-icon">💻</span>
+							<span>Technology</span>
+						</div>
+						<div class="passion-item">
+							<span class="passion-icon">✈️</span>
+							<span>Travel</span>
+						</div>
+						<div class="passion-item">
+							<span class="passion-icon">🎭</span>
+							<span>Culture</span>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>
@@ -421,46 +471,236 @@ const experience = [
 
 	.engagement-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: 1.5rem;
-		margin-top: 2rem;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2rem;
+		margin-top: 2.5rem;
 	}
 
 	.engagement-item {
-		background: var(--glass-bg);
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.03) 0%, rgba(244, 229, 194, 0.02) 100%);
 		border: 1px solid var(--glass-border);
-		border-radius: 12px;
-		padding: 1.5rem;
-		transition: all 0.3s ease;
+		border-radius: 20px;
+		padding: 2rem;
+		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.engagement-item::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 3px;
+		background: var(--gradient-gold);
+		transform: scaleX(0);
+		transition: transform 0.4s ease;
+		transform-origin: left;
+	}
+
+	.engagement-item:hover::before {
+		transform: scaleX(1);
 	}
 
 	.engagement-item:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+		transform: translateY(-8px) scale(1.02);
+		box-shadow: 0 20px 40px rgba(212, 175, 55, 0.25);
 		border-color: var(--color-gold);
-		background: rgba(212, 175, 55, 0.05);
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(244, 229, 194, 0.05) 100%);
+	}
+
+	.engagement-icon {
+		width: 60px;
+		height: 60px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 2rem;
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(244, 229, 194, 0.1) 100%);
+		border-radius: 16px;
+		margin-bottom: 1.5rem;
+		transition: all 0.3s ease;
+	}
+
+	.engagement-item:hover .engagement-icon {
+		transform: rotate(5deg) scale(1.1);
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(244, 229, 194, 0.15) 100%);
 	}
 
 	.engagement-item h3 {
 		color: var(--color-gold);
-		margin-bottom: 1rem;
-		font-size: 1.1rem;
+		margin-bottom: 1.5rem;
+		font-size: 1.25rem;
+		font-weight: 600;
 	}
 
-	.engagement-item ul {
-		list-style: none;
-		padding: 0;
+	/* Leadership Section */
+	.engagement-entry {
+		margin-bottom: 1.5rem;
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+	}
+
+	.engagement-entry:last-child {
+		margin-bottom: 0;
+		padding-bottom: 0;
+		border-bottom: none;
+	}
+
+	.engagement-entry .badge {
+		display: inline-block;
+		padding: 0.25rem 0.75rem;
+		background: var(--gradient-gold);
+		color: var(--color-black);
+		border-radius: 20px;
+		font-size: 0.75rem;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+	}
+
+	.engagement-entry strong {
+		display: block;
+		color: var(--color-text-primary);
+		margin-bottom: 0.25rem;
+	}
+
+	.engagement-entry p {
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
 		margin: 0;
 	}
 
-	.engagement-item li {
-		padding: 0.5rem 0;
-		border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-		color: var(--color-text-secondary);
+	/* Language Bars */
+	.language-item {
+		margin-bottom: 1.25rem;
 	}
 
-	.engagement-item li:last-child {
-		border-bottom: none;
+	.language-item:last-child {
+		margin-bottom: 0;
+	}
+
+	.language-header {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+		color: var(--color-text-primary);
+	}
+
+	.language-level {
+		color: var(--color-gold);
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+
+	.progress-bar {
+		height: 8px;
+		background: rgba(212, 175, 55, 0.1);
+		border-radius: 10px;
+		overflow: hidden;
+		position: relative;
+	}
+
+	.progress-fill {
+		height: 100%;
+		background: var(--gradient-gold);
+		border-radius: 10px;
+		transition: width 1s ease;
+		position: relative;
+		animation: shimmer 2s infinite;
+	}
+
+	@keyframes shimmer {
+		0% { opacity: 0.8; }
+		50% { opacity: 1; }
+		100% { opacity: 0.8; }
+	}
+
+	/* Activity Tags */
+	.activity-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.activity-tag {
+		padding: 0.5rem 1rem;
+		border-radius: 25px;
+		font-size: 0.9rem;
+		font-weight: 500;
+		transition: all 0.3s ease;
+		cursor: default;
+		border: 1px solid transparent;
+	}
+
+	.activity-tag.martial {
+		background: linear-gradient(135deg, rgba(255, 87, 34, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+		color: #ff6b35;
+		border-color: rgba(255, 107, 53, 0.2);
+	}
+
+	.activity-tag.endurance {
+		background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.1) 100%);
+		color: #66bb6a;
+		border-color: rgba(102, 187, 106, 0.2);
+	}
+
+	.activity-tag.fitness {
+		background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(171, 71, 188, 0.1) 100%);
+		color: #ab47bc;
+		border-color: rgba(171, 71, 188, 0.2);
+	}
+
+	.activity-tag.music {
+		background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(3, 169, 244, 0.1) 100%);
+		color: #42a5f5;
+		border-color: rgba(66, 165, 245, 0.2);
+	}
+
+	.activity-tag:hover {
+		transform: translateY(-2px) scale(1.05);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	/* Passion Grid */
+	.passion-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1rem;
+	}
+
+	.passion-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.75rem;
+		background: rgba(212, 175, 55, 0.05);
+		border-radius: 12px;
+		transition: all 0.3s ease;
+		border: 1px solid transparent;
+	}
+
+	.passion-item:hover {
+		background: rgba(212, 175, 55, 0.1);
+		border-color: var(--color-gold);
+		transform: translateX(4px);
+	}
+
+	.passion-icon {
+		font-size: 1.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		background: rgba(212, 175, 55, 0.1);
+		border-radius: 10px;
+	}
+
+	.passion-item span:last-child {
+		color: var(--color-text-primary);
+		font-weight: 500;
+		font-size: 0.95rem;
 	}
 
 	@media (max-width: 768px) {
