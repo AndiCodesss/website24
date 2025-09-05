@@ -16,11 +16,24 @@
     overflow: hidden;
     z-index: -1;
     pointer-events: none;
+    background: linear-gradient(180deg, 
+      #000000 0%, 
+      #0A0A0A 25%, 
+      #050505 50%, 
+      #0A0A0A 75%, 
+      #000000 100%);
   }
   
   #particle-canvas {
     width: 100%;
     height: 100%;
+    display: block;
+  }
+  
+  @media (max-width: 768px) {
+    .particle-universe {
+      background: #000000;
+    }
   }
 </style>
 
@@ -31,15 +44,19 @@
     constructor() {
       this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      
+      // Check if mobile device
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+      
       this.renderer = new THREE.WebGLRenderer({ 
         canvas: document.getElementById('particle-canvas'),
-        alpha: true,
-        antialias: true,
-        powerPreference: "high-performance"
+        alpha: false,
+        antialias: !isMobile,
+        powerPreference: isMobile ? "low-power" : "high-performance"
       });
       
       this.particles = null;
-      this.particleCount = 150;
+      this.particleCount = isMobile ? 50 : 150;
       this.mouseX = 0;
       this.mouseY = 0;
       this.targetMouseX = 0;
@@ -47,6 +64,9 @@
       this.mouseMagnitude = 0;
       this.originalPositions = [];
       this.velocities = [];
+      
+      // Set black background for renderer
+      this.renderer.setClearColor(0x000000, 1);
       
       this.init();
       this.animate();
