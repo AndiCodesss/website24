@@ -14,18 +14,18 @@
     "dash": true
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.4",
     "@astrojs/cloudflare": "12.5.0",
     "@astrojs/mdx": "4.2.4",
     "@astrojs/rss": "4.0.11",
     "@astrojs/sitemap": "3.3.0",
-    
     "astro": "5.7.4",
     "gsap": "^3.13.0",
     "matter-js": "^0.20.0",
     "particles.js": "^2.0.0",
     "three": "^0.178.0",
     "typed.js": "^2.1.0",
-    "typescript": "5.8.3"
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
     "wrangler": "4.12.0"

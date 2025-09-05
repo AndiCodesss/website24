@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(grep:*)",
+      "Bash(rm:*)",
+      "Bash(npx astro:*)",
+      "Bash(npm i:*)",
+      "Bash(tsc --noEmit)",
+      "Bash(npx tsc:*)"
     ],
     "deny": []
   }
