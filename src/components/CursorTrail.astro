@@ -164,12 +164,12 @@
     
     animate() {
       // Smooth follow for dot
-      this.dotPos.x += (this.cursorPos.x - this.dotPos.x) * 0.3;
-      this.dotPos.y += (this.cursorPos.y - this.dotPos.y) * 0.3;
+      this.dotPos.x += (this.cursorPos.x - this.dotPos.x) * 0.5;
+      this.dotPos.y += (this.cursorPos.y - this.dotPos.y) * 0.5;
       
-      // Smoother follow for outline
-      this.outlinePos.x += (this.cursorPos.x - this.outlinePos.x) * 0.15;
-      this.outlinePos.y += (this.cursorPos.y - this.outlinePos.y) * 0.15;
+      // Faster follow for outline
+      this.outlinePos.x += (this.cursorPos.x - this.outlinePos.x) * 0.35;
+      this.outlinePos.y += (this.cursorPos.y - this.outlinePos.y) * 0.35;
       
       // Apply positions
       this.dot.style.left = this.dotPos.x + 'px';
