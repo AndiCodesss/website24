@@ -31,6 +31,13 @@
     </div>
     
     <div class="nav-actions">
+      <div class="language-switcher">
+        <a href="/" class="lang-link" data-lang="en">EN</a>
+        <span class="lang-divider">|</span>
+        <a href="/de" class="lang-link" data-lang="de">DE</a>
+        <span class="lang-divider">|</span>
+        <a href="/it" class="lang-link" data-lang="it">IT</a>
+      </div>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span>
         <span></span>
@@ -196,6 +203,55 @@
     gap: var(--space-md);
     align-items: center;
   }
+
+  .language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    transition: all var(--transition-speed) ease;
+  }
+
+  .lang-link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    position: relative;
+  }
+
+  .lang-link:hover {
+    color: var(--color-gold);
+    background: rgba(212, 175, 55, 0.1);
+  }
+
+  .lang-link.active {
+    color: var(--color-gold);
+    background: rgba(212, 175, 55, 0.15);
+  }
+
+  .lang-divider {
+    color: var(--glass-border);
+    font-size: 0.75rem;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 768px) {
+    .language-switcher {
+      padding: 0.4rem 0.8rem;
+    }
+    
+    .lang-link {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.4rem;
+    }
+  }
   
   .menu-toggle {
     display: none;
@@ -288,6 +344,40 @@
 </style>
 
 <script>
+  // Language detection and active state
+  document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname;
+    const langLinks = document.querySelectorAll('.lang-link');
+    
+    langLinks.forEach(link => {
+      link.classList.remove('active');
+      const lang = link.dataset.lang;
+      
+      if ((lang === 'en' && (currentPath === '/' || currentPath === '/contact')) ||
+          (lang === 'de' && currentPath.startsWith('/de')) ||
+          (lang === 'it' && currentPath.startsWith('/it'))) {
+        link.classList.add('active');
+      }
+      
+      // Update href based on current page
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        let newPath = '/';
+        const isContactPage = currentPath.includes('contact');
+        
+        if (lang === 'de') {
+          newPath = isContactPage ? '/de/contact' : '/de/';
+        } else if (lang === 'it') {
+          newPath = isContactPage ? '/it/contact' : '/it/';
+        } else if (lang === 'en') {
+          newPath = isContactPage ? '/contact' : '/';
+        }
+        
+        window.location.href = newPath;
+      });
+    });
+  });
+  
   // Scroll effect
   window.addEventListener('scroll', () => {
     const nav = document.getElementById('mainNav');

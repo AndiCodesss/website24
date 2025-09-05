@@ -1,0 +1,1268 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HolographicProfile from '../../components/HolographicProfile.astro';
+import TextScramble from '../../components/TextScramble.astro';
+
+const pageTitle = "Andreas Oberdörfer";
+
+const skillsData = [
+  { name: "Quantitative Finanzen", level: 85 },
+  { name: "Handelsstrategien", level: 80 },
+  { name: "Datenwissenschaft", level: 90 },
+  { name: "Digitales Marketing", level: 75 },
+  { name: "Prozessautomatisierung", level: 85 },
+  { name: "Risikobewertung", level: 80 },
+  { name: "Finanzanalyse", level: 88 },
+  { name: "Teamführung", level: 82 }
+];
+
+const education = [
+  {
+    period: "Jan 2025 - Mai 2025",
+    institution: "Hong Kong Polytechnic University",
+    degree: "Austauschsemester - BBA",
+    details: "Bachelor of Business Administration Austauschprogramm",
+    tags: ["Internationale Geschäfte", "Asienstudien", "Austausch"]
+  },
+  {
+    period: "2022 - 2025",
+    institution: "WU Wien",
+    degree: "Wirtschaftsinformatik",
+    details: "Spezialisierung: Data Science & Digital Marketing | Top 10% Ranking (241/2700)",
+    tags: ["Data Science", "Digital Marketing", "Business"]
+  },
+  {
+    period: "2016 - 2021", 
+    institution: "Landwirtschaftliche Fachschule (OFL Auer)",
+    degree: "Matura",
+    details: "Landwirtschafts- und Umweltstudien",
+    tags: ["Landwirtschaft", "Umwelt", "Management"]
+  },
+  {
+    period: "2013 - 2016",
+    institution: "Mittelschule Latsch",
+    degree: "Mittelschulabschluss",
+    details: "Allgemeinbildung mit Schwerpunkt Naturwissenschaften",
+    tags: ["Naturwissenschaften", "Mathematik", "Sprachen"]
+  }
+];
+
+const experience = [
+  { year: "2017-heute", title: "Business Support", company: "fasui.it", description: "Unterstützung des Familienbetriebs im Apfelanbau und in der Bio-Bergkräuterproduktion", link: { text: "www.fasui.it", url: "https://www.fasui.it" } },
+  { year: "2024", title: "Praktikant - Fund Services", company: "Erste Asset Management GmbH", description: "Datenabgleich, Prozessanalyse & Implementierung von Automatisierungstools (Power Automate)" },
+  { year: "2022-23", title: "Sommerprogramm-Betreuer", company: "Kinder-Sommerprogramm", description: "Unterricht, Teamzusammenarbeit, Sicherheit und Aufsicht" },
+  { year: "2022", title: "AGRIOS & GlobalGAP Supervisor", company: "Landwirtschaftssektor", description: "Risikobewertung, Managementstrategien & Stakeholder-Kommunikation" }
+];
+---
+
+<BaseLayout title={pageTitle} lang="de">
+	<section class="hero">
+		<div class="hero-content">
+			<HolographicProfile src="/profile-placeholder.JPG" alt="Andreas Oberdörfer" />
+			<h1><TextScramble text="Andreas Oberdörfer" /></h1>
+			<p class="hero-subtitle"><TextScramble text="Wirtschaftsinformatik Student" /></p>
+			<p class="hero-description">Verbindung von quantitativer Finanzierung, Datenwissenschaft & Business Innovation</p>
+			<div class="hero-cta">
+				<a href="#about" class="button primary">Über mich</a>
+				<a href="#contact" class="button secondary">Kontakt</a>
+			</div>
+		</div>
+	</section>
+
+	<div class="content-container">
+		<section id="about" class="card reveal-on-scroll">
+			<h2>Über mich</h2>
+			<p class="lead">
+				Ich bin ein 22-jähriger Wirtschaftsinformatik-Student an der WU Wien, leidenschaftlich für Data Science, Digital Marketing 
+				und Quantitative Finance. Ich entwickle aktiv eigene Handelsstrategien und unterstütze das landwirtschaftliche Familienunternehmen fasui.it.
+			</p>
+			<p>
+				Aus Latsch in Südtirol, Italien, bringe ich eine einzigartige Mischung aus technischem Fachwissen und praktischer Geschäftserfahrung mit. 
+				Mein mehrsprachiger Hintergrund (Deutsch Muttersprache, Englisch C1, Italienisch B2) verbessert meine Fähigkeit, in vielfältigen internationalen Umgebungen zu arbeiten.
+			</p>
+			<p>
+				Neben Studium und Arbeit bin ich leidenschaftlich für Sport, einschließlich Karate, Boxen, Marathonlauf und Calisthenics. 
+				Ich spiele auch Schlagzeug und war aktiv in Gemeindeorganisationen tätig, als Vorstandsmitglied sowohl bei SBJ Latsch als auch der Bürgerkapelle Latsch.
+			</p>
+		</section>
+
+		<section id="skills" class="card reveal-on-scroll">
+			<h2>Fähigkeiten & Expertise</h2>
+			<p style="color: var(--color-text-muted); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 1.5rem; font-style: italic;">
+				Ich würde mein Wissen in diesen Bereichen als umfassend betrachten. Aber es gibt immer etwas Neues zu lernen.
+			</p>
+			<div class="skills-container">
+				<canvas id="skillsRadar"></canvas>
+				<div class="skills-legend">
+					{skillsData.map((skill, index) => (
+						<div class="skill-item" data-index={index}>
+							<span class="skill-dot" style={`background: hsl(${index * 45}, 70%, 60%)`}></span>
+							<span class="skill-name">{skill.name}</span>
+							<span class="skill-level">{skill.level}%</span>
+						</div>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section id="education" class="card reveal-on-scroll">
+			<h2>Bildung</h2>
+			<div class="projects-grid">
+				{education.map(edu => (
+					<article class="project-card">
+						<h3>{edu.degree}</h3>
+						<p class="company">{edu.institution} | {edu.period}</p>
+						<p>{edu.details}</p>
+						<div class="project-tags">
+							{edu.tags.map(tag => (
+								<span class="tag">{tag}</span>
+							))}
+						</div>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section id="experience" class="card reveal-on-scroll">
+			<h2>Berufserfahrung</h2>
+			<div class="timeline">
+				{experience.map(item => (
+					<div class="timeline-item">
+						<span class="year">{item.year}</span>
+						<div class="timeline-content">
+							<h3>{item.title}</h3>
+							<p class="company">{item.company}</p>
+							<p>
+								{item.description}
+								{item.link && (
+									<>
+										{' '}
+										<a href={item.link.url} target="_blank" rel="noopener noreferrer" class="experience-link">
+											{item.link.text}
+										</a>
+									</>
+								)}
+							</p>
+						</div>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<section id="engagement" class="card reveal-on-scroll">
+			<h2>Gemeinschaftsengagement & Interessen</h2>
+			<div class="engagement-grid">
+				<div class="engagement-item">
+					<div class="engagement-icon">🎯</div>
+					<h3>Führung</h3>
+					<div class="engagement-content">
+						<div class="engagement-entry">
+							<span class="badge">2018-2024</span>
+							<strong>SBJ Latsch Vorstand</strong>
+							<p>Veranstaltungsdesign & Organisation</p>
+						</div>
+						<div class="engagement-entry">
+							<span class="badge">2018-2021</span>
+							<strong>Bürgerkapelle Latsch</strong>
+							<p>Strategische Planung & Entscheidungsfindung</p>
+						</div>
+					</div>
+				</div>
+				<div class="engagement-item">
+					<div class="engagement-icon">🌍</div>
+					<h3>Sprachen</h3>
+					<div class="language-bars">
+						<div class="language-item">
+							<div class="language-header">
+								<span>Deutsch</span>
+								<span class="language-level">Muttersprache</span>
+							</div>
+							<div class="progress-bar">
+								<div class="progress-fill" style="width: 100%"></div>
+							</div>
+						</div>
+						<div class="language-item">
+							<div class="language-header">
+								<span>Englisch</span>
+								<span class="language-level">C1</span>
+							</div>
+							<div class="progress-bar">
+								<div class="progress-fill" style="width: 90%"></div>
+							</div>
+						</div>
+						<div class="language-item">
+							<div class="language-header">
+								<span>Italienisch</span>
+								<span class="language-level">B2</span>
+							</div>
+							<div class="progress-bar">
+								<div class="progress-fill" style="width: 70%"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="engagement-item">
+					<div class="engagement-icon">⚡</div>
+					<h3>Aktiver Lebensstil</h3>
+					<div class="activity-tags">
+						<span class="activity-tag martial">🥋 Karate</span>
+						<span class="activity-tag martial">🥊 Boxen</span>
+						<span class="activity-tag endurance">🏃 Marathon</span>
+						<span class="activity-tag endurance">🚴 Radfahren</span>
+						<span class="activity-tag fitness">💪 Calisthenics</span>
+						<span class="activity-tag music">🥁 Schlagzeug</span>
+					</div>
+				</div>
+				<div class="engagement-item">
+					<div class="engagement-icon">💡</div>
+					<h3>Leidenschaften</h3>
+					<div class="passion-grid">
+						<div class="passion-item">
+							<span class="passion-icon">📈</span>
+							<span>Quant Finanzen</span>
+						</div>
+						<div class="passion-item">
+							<span class="passion-icon">💻</span>
+							<span>Technologie</span>
+						</div>
+						<div class="passion-item">
+							<span class="passion-icon">✈️</span>
+							<span>Reisen</span>
+						</div>
+						<div class="passion-item">
+							<span class="passion-icon">🎭</span>
+							<span>Kultur</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="contact" class="card reveal-on-scroll">
+			<h2>Kontaktieren Sie mich</h2>
+			<p>Ich bin immer gespannt auf neue Möglichkeiten und innovative Projekte.</p>
+			<div class="contact-methods">
+				<a href="https://www.linkedin.com/in/andreas-oberdoerfer/" target="_blank" class="contact-link">
+					LinkedIn Profil
+				</a>
+				<a href="mailto:oberdoerfer.andreas@gmail.com" class="contact-link">
+					E-Mail senden
+				</a>
+			</div>
+		</section>
+	</div>
+</BaseLayout>
+
+<style>
+	.hero {
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		overflow: hidden;
+		text-align: center;
+		padding: 2rem;
+	}
+
+	.hero-content {
+		position: relative;
+		z-index: 10;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.hero h1 {
+		font-size: clamp(2.5rem, 5vw, 4rem);
+		margin: 1.5rem 0 1rem;
+		color: var(--color-white);
+		white-space: nowrap;
+		overflow: visible;
+	}
+	
+	/* Override to use solid gold color for animated text */
+	.hero h1 .text-scramble .char.revealed {
+		color: #D4AF37 !important;
+		-webkit-text-fill-color: #D4AF37 !important;
+	}
+	
+	/* Apply gradient after animation completes */
+	.hero h1 .text-scramble.completed {
+		color: #D4AF37 !important;
+		background: linear-gradient(135deg, #D4AF37 0%, #F4E5C2 50%, #D4AF37 100%) !important;
+		-webkit-background-clip: text !important;
+		-webkit-text-fill-color: transparent !important;
+		background-clip: text !important;
+	}
+
+	.hero-subtitle {
+		font-size: 1.5rem;
+		color: var(--color-text-secondary);
+		margin-bottom: 1rem;
+	}
+
+	.hero-description {
+		color: var(--color-text-muted);
+		margin-bottom: 2rem;
+		font-size: 1.1rem;
+	}
+
+	.hero-cta {
+		display: flex;
+		gap: 1rem;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.button {
+		display: inline-block;
+		padding: 0.875rem 2rem;
+		border-radius: 50px;
+		text-decoration: none;
+		font-weight: 600;
+		transition: all 0.3s ease;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.button.primary {
+		background: var(--gradient-gold);
+		color: var(--color-black);
+		border: none;
+		font-weight: 700;
+	}
+
+	.button.secondary {
+		background: transparent;
+		color: var(--color-gold);
+		border: 2px solid var(--color-gold);
+	}
+
+	.button:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+	}
+	
+	.button.primary:hover {
+		background: linear-gradient(135deg, #F4E5C2 0%, #D4AF37 100%);
+		box-shadow: 0 10px 40px rgba(212, 175, 55, 0.5);
+	}
+	
+	.button.secondary:hover {
+		background: var(--color-gold);
+		color: var(--color-black);
+		border-color: var(--color-gold-light);
+	}
+
+	.lead {
+		font-size: 1.25rem;
+		line-height: 1.7;
+		color: var(--color-text-primary);
+		margin-bottom: 1.5rem;
+	}
+
+	.skills-container {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 3rem;
+		align-items: center;
+		margin-top: 2rem;
+		position: relative;
+	}
+
+	.skills-container::before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 500px;
+		height: 500px;
+		background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+		pointer-events: none;
+		animation: pulse 4s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.9); }
+		50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+	}
+
+	#skillsRadar {
+		width: 100%;
+		max-width: 400px;
+		height: auto;
+		aspect-ratio: 1;
+		margin: 0 auto;
+		filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.2));
+		transition: filter 0.3s ease;
+		position: relative;
+		z-index: 1;
+	}
+
+	#skillsRadar:hover {
+		filter: drop-shadow(0 0 50px rgba(212, 175, 55, 0.4));
+	}
+
+	.skills-legend {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		position: relative;
+		z-index: 1;
+	}
+
+	.skill-item {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding: 0.875rem 1.25rem;
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.03) 0%, rgba(244, 229, 194, 0.02) 100%);
+		border-radius: 12px;
+		transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		cursor: pointer;
+		border: 1px solid rgba(212, 175, 55, 0.1);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.skill-item::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+		transition: left 0.5s ease;
+	}
+
+	.skill-item:hover::before {
+		left: 100%;
+	}
+
+	.skill-item:hover {
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(244, 229, 194, 0.05) 100%);
+		border-color: var(--color-gold);
+		transform: translateX(8px) scale(1.02);
+		box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
+	}
+
+	.skill-item.active {
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(244, 229, 194, 0.08) 100%);
+		border-color: var(--color-gold);
+		box-shadow: 0 5px 25px rgba(212, 175, 55, 0.3);
+	}
+
+	.skill-dot {
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		flex-shrink: 0;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		position: relative;
+	}
+
+	.skill-item:hover .skill-dot {
+		animation: dotPulse 0.6s ease;
+	}
+
+	@keyframes dotPulse {
+		0%, 100% { transform: scale(1); }
+		50% { transform: scale(1.3); }
+	}
+
+	.skill-name {
+		flex: 1;
+		color: var(--color-text-primary);
+		font-weight: 500;
+		font-size: 0.95rem;
+		letter-spacing: 0.3px;
+	}
+
+	.skill-level {
+		color: var(--color-gold);
+		font-weight: 700;
+		font-size: 0.95rem;
+		padding: 0.25rem 0.75rem;
+		background: rgba(212, 175, 55, 0.1);
+		border-radius: 20px;
+		border: 1px solid rgba(212, 175, 55, 0.2);
+	}
+
+	.skill-item:hover .skill-level {
+		background: rgba(212, 175, 55, 0.2);
+		border-color: rgba(212, 175, 55, 0.4);
+	}
+
+	.projects-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 1.5rem;
+		margin-top: 2rem;
+	}
+
+	.project-card {
+		background: var(--glass-bg);
+		border: 1px solid var(--glass-border);
+		border-radius: 16px;
+		padding: 1.5rem;
+		transition: all 0.3s ease;
+	}
+
+	.project-card:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 12px 32px rgba(212, 175, 55, 0.2);
+		border-color: var(--color-gold);
+	}
+
+	.project-card h3 {
+		color: var(--color-gold);
+		margin-bottom: 0.75rem;
+		font-size: 1.25rem;
+	}
+
+	.project-tags {
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+		margin-top: 1rem;
+	}
+
+	.tag {
+		padding: 0.25rem 0.75rem;
+		background: rgba(212, 175, 55, 0.1);
+		border: 1px solid rgba(212, 175, 55, 0.3);
+		border-radius: 20px;
+		font-size: 0.875rem;
+		color: var(--color-gold);
+	}
+
+	.timeline {
+		margin-top: 2rem;
+	}
+
+	.timeline-item {
+		display: flex;
+		gap: 2rem;
+		margin-bottom: 2rem;
+		padding-bottom: 2rem;
+		border-bottom: 1px solid var(--glass-border);
+	}
+
+	.timeline-item:last-child {
+		border-bottom: none;
+	}
+
+	.year {
+		flex-shrink: 0;
+		width: 60px;
+		font-weight: 700;
+		color: var(--color-gold);
+	}
+
+	.timeline-content h3 {
+		margin-bottom: 0.5rem;
+		color: var(--color-text-primary);
+	}
+
+	.company {
+		color: var(--color-gold-light);
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+	}
+
+	.experience-link {
+		color: var(--color-gold);
+		text-decoration: none;
+		border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+		transition: all 0.3s ease;
+		display: inline-block;
+	}
+
+	.experience-link:hover {
+		color: var(--color-gold-light);
+		border-bottom-color: var(--color-gold);
+		transform: translateY(-1px);
+	}
+
+	.contact-methods {
+		display: flex;
+		gap: 1rem;
+		margin-top: 2rem;
+		flex-wrap: wrap;
+	}
+
+	.contact-link {
+		padding: 0.875rem 2rem;
+		background: var(--glass-bg);
+		border: 1px solid var(--glass-border);
+		border-radius: 12px;
+		color: var(--color-text-primary);
+		text-decoration: none;
+		transition: all 0.3s ease;
+	}
+
+	.contact-link:hover {
+		background: rgba(212, 175, 55, 0.1);
+		border-color: var(--color-gold);
+		transform: translateY(-2px);
+		color: var(--color-gold);
+	}
+
+	.engagement-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2rem;
+		margin-top: 2.5rem;
+	}
+
+	.engagement-item {
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.03) 0%, rgba(244, 229, 194, 0.02) 100%);
+		border: 1px solid var(--glass-border);
+		border-radius: 20px;
+		padding: 2rem;
+		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.engagement-item::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 3px;
+		background: var(--gradient-gold);
+		transform: scaleX(0);
+		transition: transform 0.4s ease;
+		transform-origin: left;
+	}
+
+	.engagement-item:hover::before {
+		transform: scaleX(1);
+	}
+
+	.engagement-item:hover {
+		transform: translateY(-8px) scale(1.02);
+		box-shadow: 0 20px 40px rgba(212, 175, 55, 0.25);
+		border-color: var(--color-gold);
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(244, 229, 194, 0.05) 100%);
+	}
+
+	.engagement-icon {
+		width: 60px;
+		height: 60px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 2rem;
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(244, 229, 194, 0.1) 100%);
+		border-radius: 16px;
+		margin-bottom: 1.5rem;
+		transition: all 0.3s ease;
+	}
+
+	.engagement-item:hover .engagement-icon {
+		transform: rotate(5deg) scale(1.1);
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(244, 229, 194, 0.15) 100%);
+	}
+
+	.engagement-item h3 {
+		color: var(--color-gold);
+		margin-bottom: 1.5rem;
+		font-size: 1.25rem;
+		font-weight: 600;
+	}
+
+	/* Leadership Section */
+	.engagement-entry {
+		margin-bottom: 1.5rem;
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+	}
+
+	.engagement-entry:last-child {
+		margin-bottom: 0;
+		padding-bottom: 0;
+		border-bottom: none;
+	}
+
+	.engagement-entry .badge {
+		display: inline-block;
+		padding: 0.25rem 0.75rem;
+		background: var(--gradient-gold);
+		color: var(--color-black);
+		border-radius: 20px;
+		font-size: 0.75rem;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+	}
+
+	.engagement-entry strong {
+		display: block;
+		color: var(--color-text-primary);
+		margin-bottom: 0.25rem;
+	}
+
+	.engagement-entry p {
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		margin: 0;
+	}
+
+	/* Language Bars */
+	.language-item {
+		margin-bottom: 1.25rem;
+	}
+
+	.language-item:last-child {
+		margin-bottom: 0;
+	}
+
+	.language-header {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 0.5rem;
+		color: var(--color-text-primary);
+	}
+
+	.language-level {
+		color: var(--color-gold);
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+
+	.progress-bar {
+		height: 8px;
+		background: rgba(212, 175, 55, 0.1);
+		border-radius: 10px;
+		overflow: hidden;
+		position: relative;
+	}
+
+	.progress-fill {
+		height: 100%;
+		background: var(--gradient-gold);
+		border-radius: 10px;
+		transition: width 1s ease;
+		position: relative;
+		animation: shimmer 2s infinite;
+	}
+
+	@keyframes shimmer {
+		0% { opacity: 0.8; }
+		50% { opacity: 1; }
+		100% { opacity: 0.8; }
+	}
+
+	/* Activity Tags */
+	.activity-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.activity-tag {
+		padding: 0.5rem 1rem;
+		border-radius: 25px;
+		font-size: 0.9rem;
+		font-weight: 500;
+		transition: all 0.3s ease;
+		cursor: default;
+		border: 1px solid transparent;
+	}
+
+	.activity-tag.martial {
+		background: linear-gradient(135deg, rgba(255, 87, 34, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+		color: #ff6b35;
+		border-color: rgba(255, 107, 53, 0.2);
+	}
+
+	.activity-tag.endurance {
+		background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.1) 100%);
+		color: #66bb6a;
+		border-color: rgba(102, 187, 106, 0.2);
+	}
+
+	.activity-tag.fitness {
+		background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(171, 71, 188, 0.1) 100%);
+		color: #ab47bc;
+		border-color: rgba(171, 71, 188, 0.2);
+	}
+
+	.activity-tag.music {
+		background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(3, 169, 244, 0.1) 100%);
+		color: #42a5f5;
+		border-color: rgba(66, 165, 245, 0.2);
+	}
+
+	.activity-tag:hover {
+		transform: translateY(-2px) scale(1.05);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	/* Passion Grid */
+	.passion-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0.75rem;
+	}
+
+	.passion-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.75rem 1rem;
+		background: rgba(212, 175, 55, 0.05);
+		border-radius: 12px;
+		transition: all 0.3s ease;
+		border: 1px solid transparent;
+	}
+
+	.passion-item:hover {
+		background: rgba(212, 175, 55, 0.1);
+		border-color: var(--color-gold);
+		transform: translateX(4px);
+	}
+
+	.passion-icon {
+		font-size: 1.25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		background: rgba(212, 175, 55, 0.1);
+		border-radius: 10px;
+		flex-shrink: 0;
+	}
+
+	.passion-item span:last-child {
+		color: var(--color-text-primary);
+		font-weight: 500;
+		font-size: 0.9rem;
+		flex: 1;
+		white-space: nowrap;
+	}
+
+	@media (max-width: 768px) {
+		.hero h1 {
+			font-size: 2rem;
+			white-space: normal;
+		}
+
+		.hero-subtitle {
+			font-size: 1.1rem;
+		}
+
+		.skills-container {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+		#skillsRadar {
+			max-width: 350px;
+		}
+
+		.projects-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.timeline-item {
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.engagement-grid {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		.engagement-item {
+			padding: 1.5rem;
+		}
+
+		.engagement-icon {
+			width: 50px;
+			height: 50px;
+			font-size: 1.5rem;
+		}
+
+		.activity-tags {
+			gap: 0.5rem;
+		}
+
+		.activity-tag {
+			padding: 0.4rem 0.8rem;
+			font-size: 0.85rem;
+		}
+
+		.passion-item {
+			padding: 0.6rem;
+			gap: 0.5rem;
+		}
+
+		.passion-icon {
+			width: 32px;
+			height: 32px;
+			font-size: 1rem;
+		}
+
+		.passion-item span:last-child {
+			font-size: 0.85rem;
+		}
+	}
+</style>
+
+<script>
+	// Skills Radar Chart
+	const skillsData = [
+		{ name: "Quantitative Finanzen", level: 85 },
+		{ name: "Handelsstrategien", level: 80 },
+		{ name: "Datenwissenschaft", level: 90 },
+		{ name: "Digitales Marketing", level: 75 },
+		{ name: "Prozessautomatisierung", level: 85 },
+		{ name: "Risikobewertung", level: 80 },
+		{ name: "Finanzanalyse", level: 88 },
+		{ name: "Teamführung", level: 82 }
+	];
+
+	class RadarChart {
+		constructor(canvas, data) {
+			this.canvas = canvas;
+			this.ctx = canvas.getContext('2d');
+			this.data = data;
+			this.center = { x: 0, y: 0 };
+			this.radius = 0;
+			this.angleStep = 0;
+			this.animationProgress = 0;
+			this.hoveredIndex = -1;
+			
+			this.init();
+		}
+
+		init() {
+			// Set canvas size
+			const rect = this.canvas.getBoundingClientRect();
+			this.canvas.width = rect.width * window.devicePixelRatio;
+			this.canvas.height = rect.width * window.devicePixelRatio; // Square
+			this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+			
+			// Calculate dimensions
+			this.center = { x: rect.width / 2, y: rect.width / 2 };
+			this.radius = Math.min(rect.width, rect.width) / 2 - 40;
+			this.angleStep = (Math.PI * 2) / this.data.length;
+			
+			// Add event listeners
+			this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
+			this.canvas.addEventListener('mouseleave', () => {
+				this.hoveredIndex = -1;
+				this.draw();
+			});
+			
+			// Add legend interaction
+			document.querySelectorAll('.skill-item').forEach((item, index) => {
+				item.addEventListener('mouseenter', () => {
+					this.hoveredIndex = index;
+					item.classList.add('active');
+					this.draw();
+				});
+				item.addEventListener('mouseleave', () => {
+					this.hoveredIndex = -1;
+					item.classList.remove('active');
+					this.draw();
+				});
+			});
+			
+			// Start animation
+			this.animate();
+		}
+
+		animate() {
+			const duration = 1500;
+			const startTime = Date.now();
+			
+			const animateFrame = () => {
+				const elapsed = Date.now() - startTime;
+				this.animationProgress = Math.min(elapsed / duration, 1);
+				
+				// Easing function
+				this.animationProgress = this.easeOutElastic(this.animationProgress);
+				
+				this.draw();
+				
+				if (this.animationProgress < 1) {
+					requestAnimationFrame(animateFrame);
+				}
+			};
+			
+			animateFrame();
+		}
+
+		easeOutElastic(x) {
+			const c4 = (2 * Math.PI) / 3;
+			return x === 0 ? 0 : x === 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1;
+		}
+
+		onMouseMove(e) {
+			const rect = this.canvas.getBoundingClientRect();
+			const x = e.clientX - rect.left;
+			const y = e.clientY - rect.top;
+			
+			// Check which segment is hovered
+			const dx = x - this.center.x;
+			const dy = y - this.center.y;
+			const distance = Math.sqrt(dx * dx + dy * dy);
+			
+			if (distance <= this.radius) {
+				let angle = Math.atan2(dy, dx);
+				if (angle < 0) angle += Math.PI * 2;
+				angle += Math.PI / 2; // Adjust for starting position
+				if (angle > Math.PI * 2) angle -= Math.PI * 2;
+				
+				this.hoveredIndex = Math.floor(angle / this.angleStep);
+				if (this.hoveredIndex >= this.data.length) this.hoveredIndex = 0;
+			} else {
+				this.hoveredIndex = -1;
+			}
+			
+			this.draw();
+		}
+
+		draw() {
+			const ctx = this.ctx;
+			const rect = this.canvas.getBoundingClientRect();
+			
+			// Clear canvas
+			ctx.clearRect(0, 0, rect.width, rect.width);
+			
+			// Draw glowing background circles with gradient
+			for (let i = 5; i >= 1; i--) {
+				const gradient = ctx.createRadialGradient(this.center.x, this.center.y, 0, this.center.x, this.center.y, (this.radius / 5) * i);
+				gradient.addColorStop(0, 'rgba(212, 175, 55, 0.01)');
+				gradient.addColorStop(1, 'rgba(212, 175, 55, 0.03)');
+				
+				ctx.fillStyle = gradient;
+				ctx.beginPath();
+				ctx.arc(this.center.x, this.center.y, (this.radius / 5) * i, 0, Math.PI * 2);
+				ctx.fill();
+				
+				// Draw circle borders
+				ctx.strokeStyle = `rgba(212, 175, 55, ${0.1 - i * 0.015})`;
+				ctx.lineWidth = 1;
+				ctx.setLineDash([5, 5]);
+				ctx.stroke();
+				ctx.setLineDash([]);
+			}
+			
+			// Draw axes with gradient
+			this.data.forEach((_, index) => {
+				const angle = index * this.angleStep - Math.PI / 2;
+				const x = this.center.x + Math.cos(angle) * this.radius;
+				const y = this.center.y + Math.sin(angle) * this.radius;
+				
+				const gradient = ctx.createLinearGradient(this.center.x, this.center.y, x, y);
+				gradient.addColorStop(0, 'rgba(212, 175, 55, 0.1)');
+				gradient.addColorStop(1, 'rgba(212, 175, 55, 0.3)');
+				
+				ctx.strokeStyle = gradient;
+				ctx.lineWidth = 1;
+				ctx.beginPath();
+				ctx.moveTo(this.center.x, this.center.y);
+				ctx.lineTo(x, y);
+				ctx.stroke();
+			});
+			
+			// Draw data polygon with gradient fill
+			const polygonGradient = ctx.createRadialGradient(this.center.x, this.center.y, 0, this.center.x, this.center.y, this.radius);
+			polygonGradient.addColorStop(0, 'rgba(212, 175, 55, 0.3)');
+			polygonGradient.addColorStop(0.5, 'rgba(244, 229, 194, 0.2)');
+			polygonGradient.addColorStop(1, 'rgba(212, 175, 55, 0.1)');
+			
+			ctx.fillStyle = polygonGradient;
+			ctx.strokeStyle = '#D4AF37';
+			ctx.lineWidth = 2.5;
+			ctx.shadowColor = 'rgba(212, 175, 55, 0.5)';
+			ctx.shadowBlur = 10;
+			
+			ctx.beginPath();
+			this.data.forEach((skill, index) => {
+				const angle = index * this.angleStep - Math.PI / 2;
+				const distance = (this.radius * skill.level / 100) * this.animationProgress;
+				const x = this.center.x + Math.cos(angle) * distance;
+				const y = this.center.y + Math.sin(angle) * distance;
+				
+				if (index === 0) {
+					ctx.moveTo(x, y);
+				} else {
+					ctx.lineTo(x, y);
+				}
+			});
+			ctx.closePath();
+			ctx.fill();
+			ctx.stroke();
+			ctx.shadowBlur = 0;
+			
+			// Draw points and labels
+			this.data.forEach((skill, index) => {
+				const angle = index * this.angleStep - Math.PI / 2;
+				const distance = (this.radius * skill.level / 100) * this.animationProgress;
+				const x = this.center.x + Math.cos(angle) * distance;
+				const y = this.center.y + Math.sin(angle) * distance;
+				
+				// Draw outer glow for points
+				if (this.hoveredIndex === index) {
+					const glowGradient = ctx.createRadialGradient(x, y, 0, x, y, 15);
+					glowGradient.addColorStop(0, `hsla(${index * 45}, 70%, 60%, 0.4)`);
+					glowGradient.addColorStop(1, `hsla(${index * 45}, 70%, 60%, 0)`);
+					ctx.fillStyle = glowGradient;
+					ctx.beginPath();
+					ctx.arc(x, y, 15, 0, Math.PI * 2);
+					ctx.fill();
+				}
+				
+				// Draw point with gradient
+				const pointGradient = ctx.createRadialGradient(x, y, 0, x, y, this.hoveredIndex === index ? 8 : 5);
+				pointGradient.addColorStop(0, `hsl(${index * 45}, 80%, 70%)`);
+				pointGradient.addColorStop(1, `hsl(${index * 45}, 70%, 50%)`);
+				
+				ctx.fillStyle = pointGradient;
+				ctx.strokeStyle = `hsl(${index * 45}, 70%, 40%)`;
+				ctx.lineWidth = 2;
+				ctx.beginPath();
+				ctx.arc(x, y, this.hoveredIndex === index ? 8 : 5, 0, Math.PI * 2);
+				ctx.fill();
+				ctx.stroke();
+				
+				// Draw inner highlight
+				ctx.fillStyle = `hsla(${index * 45}, 100%, 90%, 0.5)`;
+				ctx.beginPath();
+				ctx.arc(x - 1, y - 1, (this.hoveredIndex === index ? 8 : 5) * 0.3, 0, Math.PI * 2);
+				ctx.fill();
+				
+				// Draw value on hover with background
+				if (this.hoveredIndex === index) {
+					// Background box
+					const text = `${skill.level}%`;
+					ctx.font = 'bold 14px Inter';
+					const metrics = ctx.measureText(text);
+					const padding = 6;
+					const boxWidth = metrics.width + padding * 2;
+					const boxHeight = 20;
+					
+					// Calculate position to keep tooltip inside canvas
+					const labelAngle = angle;
+					const labelDistance = distance + 30; // Position outside the point
+					let labelX = this.center.x + Math.cos(labelAngle) * labelDistance;
+					let labelY = this.center.y + Math.sin(labelAngle) * labelDistance;
+					
+					// Adjust position if near edges
+					const margin = 10;
+					if (labelX - boxWidth/2 < margin) {
+						labelX = margin + boxWidth/2;
+					} else if (labelX + boxWidth/2 > rect.width - margin) {
+						labelX = rect.width - margin - boxWidth/2;
+					}
+					
+					if (labelY - boxHeight < margin) {
+						labelY = margin + boxHeight;
+					} else if (labelY > rect.width - margin) {
+						labelY = rect.width - margin;
+					}
+					
+					// Draw connecting line
+					ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
+					ctx.lineWidth = 1;
+					ctx.setLineDash([2, 2]);
+					ctx.beginPath();
+					ctx.moveTo(x, y);
+					ctx.lineTo(labelX, labelY);
+					ctx.stroke();
+					ctx.setLineDash([]);
+					
+					// Draw background box
+					ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+					ctx.strokeStyle = '#D4AF37';
+					ctx.lineWidth = 1.5;
+					ctx.beginPath();
+					ctx.roundRect(
+						labelX - boxWidth / 2,
+						labelY - boxHeight / 2,
+						boxWidth,
+						boxHeight,
+						4
+					);
+					ctx.fill();
+					ctx.stroke();
+					
+					// Draw text
+					ctx.fillStyle = '#D4AF37';
+					ctx.textAlign = 'center';
+					ctx.textBaseline = 'middle';
+					ctx.fillText(text, labelX, labelY);
+					ctx.textBaseline = 'alphabetic';
+				}
+			});
+			
+			// Highlight hovered segment
+			if (this.hoveredIndex >= 0 && this.hoveredIndex < this.data.length) {
+				const currentSkill = this.data[this.hoveredIndex];
+				const nextIndex = (this.hoveredIndex + 1) % this.data.length;
+				const nextSkill = this.data[nextIndex];
+				
+				ctx.fillStyle = 'rgba(212, 175, 55, 0.3)';
+				ctx.strokeStyle = '#D4AF37';
+				ctx.lineWidth = 3;
+				
+				ctx.beginPath();
+				ctx.moveTo(this.center.x, this.center.y);
+				
+				// First vertex of the triangle (current skill point)
+				const angle1 = this.hoveredIndex * this.angleStep - Math.PI / 2;
+				const x1 = this.center.x + Math.cos(angle1) * this.radius * currentSkill.level / 100 * this.animationProgress;
+				const y1 = this.center.y + Math.sin(angle1) * this.radius * currentSkill.level / 100 * this.animationProgress;
+				ctx.lineTo(x1, y1);
+				
+				// Second vertex of the triangle (next skill point)
+				const angle2 = nextIndex * this.angleStep - Math.PI / 2;
+				const x2 = this.center.x + Math.cos(angle2) * this.radius * nextSkill.level / 100 * this.animationProgress;
+				const y2 = this.center.y + Math.sin(angle2) * this.radius * nextSkill.level / 100 * this.animationProgress;
+				ctx.lineTo(x2, y2);
+				
+				ctx.closePath();
+				ctx.fill();
+				
+				// Highlight the edge between the two points
+				ctx.strokeStyle = '#D4AF37';
+				ctx.lineWidth = 4;
+				ctx.shadowColor = 'rgba(212, 175, 55, 0.8)';
+				ctx.shadowBlur = 10;
+				ctx.beginPath();
+				ctx.moveTo(x1, y1);
+				ctx.lineTo(x2, y2);
+				ctx.stroke();
+				ctx.shadowBlur = 0;
+			}
+		}
+	}
+
+	// Initialize radar chart when DOM is loaded
+	document.addEventListener('DOMContentLoaded', () => {
+		const canvas = document.getElementById('skillsRadar');
+		if (canvas) {
+			// Wait for the element to be visible
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						new RadarChart(canvas, skillsData);
+						observer.disconnect();
+					}
+				});
+			}, { threshold: 0.1 });
+			
+			observer.observe(canvas.closest('.card'));
+		}
+	});
+</script>

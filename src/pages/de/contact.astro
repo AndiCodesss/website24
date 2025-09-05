@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const pageTitle = "Kontakt";
+---
+<BaseLayout title={pageTitle} lang="de">
+  <section class="hero hero-compact">
+    <h1>Kontaktieren Sie mich</h1>
+  </section>
+  
+  <div class="content-container">
+    <div class="card animate-fade-in contact-card reveal-on-scroll">
+      <div class="contact-methods">
+        <div class="contact-method">
+          <span class="contact-icon">✉️</span>
+          <div class="email-container">
+            <a href="mailto:oberdoerfer.andreas@gmail.com" class="contact-email">oberdoerfer.andreas@gmail.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .hero-compact {
+    min-height: 20vh;
+    padding: 2rem;
+  }
+  
+  .contact-card {
+    margin-top: -1rem;
+  }
+
+  .contact-methods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+  
+  .contact-method {
+    flex: 1;
+    min-width: 250px;
+    text-align: center;
+  }
+  
+  .contact-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+  
+  .email-container {
+    width: 100%;
+    overflow-x: auto;
+    margin: 0 auto;
+    text-align: center;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .contact-email {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--accent);
+    display: inline-block;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+  }
+
+  @media (max-width: 480px) {
+    .contact-email {
+      font-size: 1rem;
+    }
+    
+    .contact-card {
+      padding: 1.5rem 1rem;
+    }
+  }
+</style>
