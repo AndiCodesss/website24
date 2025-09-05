@@ -89,11 +89,16 @@ const { title } = Astro.props;
 
             if (pressedKey === requiredKey) {
                 konamiIndex++;
+                console.log(`Konami progress: ${konamiIndex}/${konamiCode.length}`);
                 if (konamiIndex === konamiCode.length) {
+                    console.log('Konami code activated!');
                     activateKonami();
                     konamiIndex = 0;
                 }
             } else {
+                if (konamiIndex > 0) {
+                    console.log('Konami code reset');
+                }
                 konamiIndex = 0;
             }
         });
@@ -102,13 +107,25 @@ const { title } = Astro.props;
             const img = document.getElementById('konamiImage');
             const audio = document.getElementById('konamiAudio');
             
+            console.log('Activating Konami easter egg...');
+            
             if (img) {
                 img.style.display = 'block';
-                setTimeout(() => img.style.display = 'none', 10000);
+                console.log('Image displayed');
+                setTimeout(() => {
+                    img.style.display = 'none';
+                    console.log('Image hidden');
+                }, 10000);
+            } else {
+                console.error('Konami image element not found');
             }
 
             if (audio) {
-                audio.play().catch(e => console.log("Audio play failed:", e));
+                audio.play().then(() => {
+                    console.log('Audio playing');
+                }).catch(e => console.error("Audio play failed:", e));
+            } else {
+                console.error('Konami audio element not found');
             }
         }
     </script>
