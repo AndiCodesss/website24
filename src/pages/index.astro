@@ -5,15 +5,15 @@ import TextScramble from '../components/TextScramble.astro';
 
 const pageTitle = "Andreas Oberdörfer";
 
-const skills = [
-  "Quantitative Finance",
-  "Trading Strategies",
-  "Data Science",
-  "Digital Marketing", 
-  "Business Informatics",
-  "Process Automation",
-  "Risk Assessment",
-  "Financial Analysis"
+const skillsData = [
+  { name: "Quantitative Finance", level: 85 },
+  { name: "Trading Strategies", level: 80 },
+  { name: "Data Science", level: 90 },
+  { name: "Digital Marketing", level: 75 },
+  { name: "Process Automation", level: 85 },
+  { name: "Risk Assessment", level: 80 },
+  { name: "Financial Analysis", level: 88 },
+  { name: "Team Leadership", level: 82 }
 ];
 
 const education = [
@@ -88,12 +88,17 @@ const experience = [
 
 		<section id="skills" class="card reveal-on-scroll">
 			<h2>Skills & Expertise</h2>
-			<div class="skills-grid">
-				{skills.map(skill => (
-					<div class="skill-card">
-						<span class="skill-name">{skill}</span>
-					</div>
-				))}
+			<div class="skills-container">
+				<canvas id="skillsRadar"></canvas>
+				<div class="skills-legend">
+					{skillsData.map((skill, index) => (
+						<div class="skill-item" data-index={index}>
+							<span class="skill-dot" style={`background: hsl(${index * 45}, 70%, 60%)`}></span>
+							<span class="skill-name">{skill.name}</span>
+							<span class="skill-level">{skill.level}%</span>
+						</div>
+					))}
+				</div>
 			</div>
 		</section>
 
@@ -353,29 +358,63 @@ const experience = [
 		margin-bottom: 1.5rem;
 	}
 
-	.skills-grid {
+	.skills-container {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		gap: 1rem;
+		grid-template-columns: 1fr 1fr;
+		gap: 3rem;
+		align-items: center;
 		margin-top: 2rem;
 	}
 
-	.skill-card {
-		background: rgba(212, 175, 55, 0.05);
-		padding: 1.25rem;
-		border-radius: 12px;
-		border: 1px solid var(--glass-border);
-		text-align: center;
+	#skillsRadar {
+		width: 100%;
+		max-width: 400px;
+		height: auto;
+		aspect-ratio: 1;
+		margin: 0 auto;
+	}
+
+	.skills-legend {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.skill-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.75rem 1rem;
+		background: rgba(212, 175, 55, 0.03);
+		border-radius: 10px;
 		transition: all 0.3s ease;
-		color: var(--color-gold-light);
+		cursor: pointer;
+		border: 1px solid transparent;
+	}
+
+	.skill-item:hover {
+		background: rgba(212, 175, 55, 0.08);
+		border-color: var(--color-gold);
+		transform: translateX(5px);
+	}
+
+	.skill-dot {
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		flex-shrink: 0;
+	}
+
+	.skill-name {
+		flex: 1;
+		color: var(--color-text-primary);
 		font-weight: 500;
 	}
 
-	.skill-card:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
-		border-color: var(--color-gold);
-		background: rgba(212, 175, 55, 0.1);
+	.skill-level {
+		color: var(--color-gold);
+		font-weight: 600;
+		font-size: 0.9rem;
 	}
 
 	.projects-grid {
@@ -740,8 +779,13 @@ const experience = [
 			font-size: 1.1rem;
 		}
 
-		.skills-grid {
+		.skills-container {
 			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+		#skillsRadar {
+			max-width: 350px;
 		}
 
 		.projects-grid {
@@ -793,3 +837,234 @@ const experience = [
 		}
 	}
 </style>
+
+<script>
+	// Skills Radar Chart
+	const skillsData = [
+		{ name: "Quantitative Finance", level: 85 },
+		{ name: "Trading Strategies", level: 80 },
+		{ name: "Data Science", level: 90 },
+		{ name: "Digital Marketing", level: 75 },
+		{ name: "Process Automation", level: 85 },
+		{ name: "Risk Assessment", level: 80 },
+		{ name: "Financial Analysis", level: 88 },
+		{ name: "Team Leadership", level: 82 }
+	];
+
+	class RadarChart {
+		constructor(canvas, data) {
+			this.canvas = canvas;
+			this.ctx = canvas.getContext('2d');
+			this.data = data;
+			this.center = { x: 0, y: 0 };
+			this.radius = 0;
+			this.angleStep = 0;
+			this.animationProgress = 0;
+			this.hoveredIndex = -1;
+			
+			this.init();
+		}
+
+		init() {
+			// Set canvas size
+			const rect = this.canvas.getBoundingClientRect();
+			this.canvas.width = rect.width * window.devicePixelRatio;
+			this.canvas.height = rect.width * window.devicePixelRatio; // Square
+			this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+			
+			// Calculate dimensions
+			this.center = { x: rect.width / 2, y: rect.width / 2 };
+			this.radius = Math.min(rect.width, rect.width) / 2 - 40;
+			this.angleStep = (Math.PI * 2) / this.data.length;
+			
+			// Add event listeners
+			this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
+			this.canvas.addEventListener('mouseleave', () => {
+				this.hoveredIndex = -1;
+				this.draw();
+			});
+			
+			// Add legend interaction
+			document.querySelectorAll('.skill-item').forEach((item, index) => {
+				item.addEventListener('mouseenter', () => {
+					this.hoveredIndex = index;
+					this.draw();
+				});
+				item.addEventListener('mouseleave', () => {
+					this.hoveredIndex = -1;
+					this.draw();
+				});
+			});
+			
+			// Start animation
+			this.animate();
+		}
+
+		animate() {
+			const duration = 1500;
+			const startTime = Date.now();
+			
+			const animateFrame = () => {
+				const elapsed = Date.now() - startTime;
+				this.animationProgress = Math.min(elapsed / duration, 1);
+				
+				// Easing function
+				this.animationProgress = this.easeOutElastic(this.animationProgress);
+				
+				this.draw();
+				
+				if (this.animationProgress < 1) {
+					requestAnimationFrame(animateFrame);
+				}
+			};
+			
+			animateFrame();
+		}
+
+		easeOutElastic(x) {
+			const c4 = (2 * Math.PI) / 3;
+			return x === 0 ? 0 : x === 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1;
+		}
+
+		onMouseMove(e) {
+			const rect = this.canvas.getBoundingClientRect();
+			const x = e.clientX - rect.left;
+			const y = e.clientY - rect.top;
+			
+			// Check which segment is hovered
+			const dx = x - this.center.x;
+			const dy = y - this.center.y;
+			const distance = Math.sqrt(dx * dx + dy * dy);
+			
+			if (distance <= this.radius) {
+				let angle = Math.atan2(dy, dx);
+				if (angle < 0) angle += Math.PI * 2;
+				angle += Math.PI / 2; // Adjust for starting position
+				if (angle > Math.PI * 2) angle -= Math.PI * 2;
+				
+				this.hoveredIndex = Math.floor(angle / this.angleStep);
+				if (this.hoveredIndex >= this.data.length) this.hoveredIndex = 0;
+			} else {
+				this.hoveredIndex = -1;
+			}
+			
+			this.draw();
+		}
+
+		draw() {
+			const ctx = this.ctx;
+			const rect = this.canvas.getBoundingClientRect();
+			
+			// Clear canvas
+			ctx.clearRect(0, 0, rect.width, rect.width);
+			
+			// Draw background circles
+			ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
+			ctx.lineWidth = 1;
+			for (let i = 1; i <= 5; i++) {
+				ctx.beginPath();
+				ctx.arc(this.center.x, this.center.y, (this.radius / 5) * i, 0, Math.PI * 2);
+				ctx.stroke();
+			}
+			
+			// Draw axes
+			ctx.strokeStyle = 'rgba(212, 175, 55, 0.2)';
+			this.data.forEach((_, index) => {
+				const angle = index * this.angleStep - Math.PI / 2;
+				const x = this.center.x + Math.cos(angle) * this.radius;
+				const y = this.center.y + Math.sin(angle) * this.radius;
+				
+				ctx.beginPath();
+				ctx.moveTo(this.center.x, this.center.y);
+				ctx.lineTo(x, y);
+				ctx.stroke();
+			});
+			
+			// Draw data polygon
+			ctx.fillStyle = 'rgba(212, 175, 55, 0.2)';
+			ctx.strokeStyle = '#D4AF37';
+			ctx.lineWidth = 2;
+			
+			ctx.beginPath();
+			this.data.forEach((skill, index) => {
+				const angle = index * this.angleStep - Math.PI / 2;
+				const distance = (this.radius * skill.level / 100) * this.animationProgress;
+				const x = this.center.x + Math.cos(angle) * distance;
+				const y = this.center.y + Math.sin(angle) * distance;
+				
+				if (index === 0) {
+					ctx.moveTo(x, y);
+				} else {
+					ctx.lineTo(x, y);
+				}
+			});
+			ctx.closePath();
+			ctx.fill();
+			ctx.stroke();
+			
+			// Draw points and labels
+			this.data.forEach((skill, index) => {
+				const angle = index * this.angleStep - Math.PI / 2;
+				const distance = (this.radius * skill.level / 100) * this.animationProgress;
+				const x = this.center.x + Math.cos(angle) * distance;
+				const y = this.center.y + Math.sin(angle) * distance;
+				
+				// Draw point
+				ctx.fillStyle = `hsl(${index * 45}, 70%, 60%)`;
+				ctx.beginPath();
+				ctx.arc(x, y, this.hoveredIndex === index ? 8 : 5, 0, Math.PI * 2);
+				ctx.fill();
+				
+				// Draw value on hover
+				if (this.hoveredIndex === index) {
+					ctx.fillStyle = '#D4AF37';
+					ctx.font = 'bold 14px Inter';
+					ctx.textAlign = 'center';
+					ctx.fillText(`${skill.level}%`, x, y - 15);
+				}
+			});
+			
+			// Highlight hovered segment
+			if (this.hoveredIndex >= 0 && this.hoveredIndex < this.data.length) {
+				const skill = this.data[this.hoveredIndex];
+				ctx.fillStyle = 'rgba(212, 175, 55, 0.3)';
+				ctx.strokeStyle = '#D4AF37';
+				ctx.lineWidth = 3;
+				
+				ctx.beginPath();
+				const angle1 = this.hoveredIndex * this.angleStep - Math.PI / 2;
+				const angle2 = (this.hoveredIndex + 1) * this.angleStep - Math.PI / 2;
+				
+				ctx.moveTo(this.center.x, this.center.y);
+				const x1 = this.center.x + Math.cos(angle1) * this.radius * skill.level / 100 * this.animationProgress;
+				const y1 = this.center.y + Math.sin(angle1) * this.radius * skill.level / 100 * this.animationProgress;
+				ctx.lineTo(x1, y1);
+				
+				const x2 = this.center.x + Math.cos(angle2) * this.radius * skill.level / 100 * this.animationProgress;
+				const y2 = this.center.y + Math.sin(angle2) * this.radius * skill.level / 100 * this.animationProgress;
+				ctx.lineTo(x2, y2);
+				
+				ctx.closePath();
+				ctx.fill();
+			}
+		}
+	}
+
+	// Initialize radar chart when DOM is loaded
+	document.addEventListener('DOMContentLoaded', () => {
+		const canvas = document.getElementById('skillsRadar');
+		if (canvas) {
+			// Wait for the element to be visible
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						new RadarChart(canvas, skillsData);
+						observer.disconnect();
+					}
+				});
+			}, { threshold: 0.1 });
+			
+			observer.observe(canvas.closest('.card'));
+		}
+	});
+</script>
