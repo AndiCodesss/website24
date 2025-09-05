@@ -665,15 +665,15 @@ const experience = [
 	/* Passion Grid */
 	.passion-grid {
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 1rem;
+		grid-template-columns: 1fr;
+		gap: 0.75rem;
 	}
 
 	.passion-item {
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
-		padding: 0.75rem;
+		padding: 0.75rem 1rem;
 		background: rgba(212, 175, 55, 0.05);
 		border-radius: 12px;
 		transition: all 0.3s ease;
@@ -687,20 +687,23 @@ const experience = [
 	}
 
 	.passion-icon {
-		font-size: 1.5rem;
+		font-size: 1.25rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 40px;
-		height: 40px;
+		width: 36px;
+		height: 36px;
 		background: rgba(212, 175, 55, 0.1);
 		border-radius: 10px;
+		flex-shrink: 0;
 	}
 
 	.passion-item span:last-child {
 		color: var(--color-text-primary);
 		font-weight: 500;
-		font-size: 0.95rem;
+		font-size: 0.9rem;
+		flex: 1;
+		white-space: nowrap;
 	}
 
 	@media (max-width: 768px) {
@@ -724,6 +727,45 @@ const experience = [
 		.timeline-item {
 			flex-direction: column;
 			gap: 0.5rem;
+		}
+
+		.engagement-grid {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		.engagement-item {
+			padding: 1.5rem;
+		}
+
+		.engagement-icon {
+			width: 50px;
+			height: 50px;
+			font-size: 1.5rem;
+		}
+
+		.activity-tags {
+			gap: 0.5rem;
+		}
+
+		.activity-tag {
+			padding: 0.4rem 0.8rem;
+			font-size: 0.85rem;
+		}
+
+		.passion-item {
+			padding: 0.6rem;
+			gap: 0.5rem;
+		}
+
+		.passion-icon {
+			width: 32px;
+			height: 32px;
+			font-size: 1rem;
+		}
+
+		.passion-item span:last-child {
+			font-size: 0.85rem;
 		}
 	}
 </style>
