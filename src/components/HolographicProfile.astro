@@ -102,24 +102,60 @@ const { src, alt } = Astro.props;
 </style>
 
 <script>
-  // Add interactive 3D tilt effect
+  // Add interactive 3D tilt effect that follows cursor across entire screen
   const container = document.querySelector('.holographic-container');
   const wrapper = document.querySelector('.holographic-wrapper');
   
   if (container && wrapper) {
-    container.addEventListener('mousemove', (e) => {
+    // Track mouse movement across entire document
+    document.addEventListener('mousemove', (e) => {
       const rect = container.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
+      const containerCenterX = rect.left + rect.width / 2;
+      const containerCenterY = rect.top + rect.height / 2;
       
-      const rotateX = -y / 5;
-      const rotateY = x / 5;
+      // Calculate distance from cursor to container center
+      const x = e.clientX - containerCenterX;
+      const y = e.clientY - containerCenterY;
       
-      wrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      // Scale the rotation based on distance (max rotation at screen edges)
+      const maxRotation = 30; // Maximum rotation in degrees
+      const rotateX = -(y / window.innerHeight) * maxRotation;
+      const rotateY = (x / window.innerWidth) * maxRotation;
+      
+      // Apply smooth transition
+      wrapper.style.transition = 'transform 0.1s ease-out';
+      wrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
     });
     
-    container.addEventListener('mouseleave', () => {
-      wrapper.style.transform = '';
+    // Optional: Reset on mouse leave window
+    document.addEventListener('mouseleave', () => {
+      wrapper.style.transition = 'transform 0.5s ease-out';
+      wrapper.style.transform = 'rotateX(0) rotateY(0) translateZ(0)';
+    });
+    
+    // Touch support for mobile devices
+    document.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const rect = container.getBoundingClientRect();
+        const containerCenterX = rect.left + rect.width / 2;
+        const containerCenterY = rect.top + rect.height / 2;
+        
+        const x = touch.clientX - containerCenterX;
+        const y = touch.clientY - containerCenterY;
+        
+        const maxRotation = 20; // Slightly less rotation on mobile
+        const rotateX = -(y / window.innerHeight) * maxRotation;
+        const rotateY = (x / window.innerWidth) * maxRotation;
+        
+        wrapper.style.transition = 'transform 0.1s ease-out';
+        wrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(5px)`;
+      }
+    });
+    
+    document.addEventListener('touchend', () => {
+      wrapper.style.transition = 'transform 0.5s ease-out';
+      wrapper.style.transform = 'rotateX(0) rotateY(0) translateZ(0)';
     });
   }
 </script>
