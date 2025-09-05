@@ -190,9 +190,10 @@
       particle.style.left = x + 'px';
       particle.style.top = y + 'px';
       
-      // Random color variation
-      const hue = 250 + Math.random() * 30;
-      particle.style.background = `radial-gradient(circle, hsla(${hue}, 70%, 60%, 0.8), transparent)`;
+      // Gold color variation
+      const goldColors = ['rgba(212, 175, 55, 0.8)', 'rgba(244, 229, 194, 0.8)', 'rgba(184, 148, 31, 0.8)'];
+      const randomGold = goldColors[Math.floor(Math.random() * goldColors.length)];
+      particle.style.background = `radial-gradient(circle, ${randomGold}, transparent)`;
       
       document.body.appendChild(particle);
       
@@ -210,7 +211,7 @@
           position: fixed;
           width: 6px;
           height: 6px;
-          background: #667eea;
+          background: #D4AF37;
           border-radius: 50%;
           left: ${x}px;
           top: ${y}px;

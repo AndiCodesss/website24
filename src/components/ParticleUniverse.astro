@@ -16,7 +16,7 @@
     overflow: hidden;
     z-index: -1;
     opacity: 0.6;
-    pointer-events: auto;
+    pointer-events: none;
   }
   
   #particle-canvas {
@@ -139,11 +139,6 @@
         this.targetMouseY = -(e.clientY / window.innerHeight) * 2 + 1;
       });
       
-      // Click interaction - create gold particle burst
-      document.addEventListener('click', (e) => {
-        this.createBurst(e.clientX, e.clientY);
-      });
-      
       // Resize handler
       window.addEventListener('resize', () => {
         this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -152,69 +147,6 @@
       });
     }
     
-    
-    createBurst(x, y) {
-      // Convert screen coordinates to Three.js coordinates
-      const vector = new THREE.Vector3(
-        (x / window.innerWidth) * 2 - 1,
-        -(y / window.innerHeight) * 2 + 1,
-        0.5
-      );
-      
-      vector.unproject(this.camera);
-      
-      // Create burst particles
-      const burstCount = 20;
-      const burstGeometry = new THREE.BufferGeometry();
-      const burstPositions = [];
-      const burstColors = [];
-      const burstSizes = [];
-      
-      for (let i = 0; i < burstCount; i++) {
-        burstPositions.push(
-          vector.x + (Math.random() - 0.5) * 5,
-          vector.y + (Math.random() - 0.5) * 5,
-          vector.z + (Math.random() - 0.5) * 5
-        );
-        
-        // Gold color only
-        const goldColor = new THREE.Color(0xD4AF37);
-        burstColors.push(goldColor.r, goldColor.g, goldColor.b);
-        burstSizes.push(Math.random() * 2 + 1);
-      }
-      
-      burstGeometry.setAttribute('position', new THREE.Float32BufferAttribute(burstPositions, 3));
-      burstGeometry.setAttribute('color', new THREE.Float32BufferAttribute(burstColors, 3));
-      burstGeometry.setAttribute('size', new THREE.Float32BufferAttribute(burstSizes, 1));
-      
-      const burstMaterial = new THREE.PointsMaterial({
-        size: 3,
-        vertexColors: true,
-        transparent: true,
-        opacity: 1,
-        blending: THREE.AdditiveBlending
-      });
-      
-      const burstParticles = new THREE.Points(burstGeometry, burstMaterial);
-      this.scene.add(burstParticles);
-      
-      // Animate burst and remove after animation
-      gsap.to(burstParticles.position, {
-        y: burstParticles.position.y - 10,
-        duration: 1.5,
-        ease: "power2.out"
-      });
-      
-      gsap.to(burstMaterial, {
-        opacity: 0,
-        duration: 1.5,
-        onComplete: () => {
-          this.scene.remove(burstParticles);
-          burstGeometry.dispose();
-          burstMaterial.dispose();
-        }
-      });
-    }
     
     animate() {
       requestAnimationFrame(() => this.animate());
