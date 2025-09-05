@@ -155,6 +155,21 @@ const experience = [
 		margin: 1.5rem 0 1rem;
 		color: var(--color-white);
 	}
+	
+	/* Override to use solid gold color for animated text */
+	.hero h1 .text-scramble .char.revealed {
+		color: #D4AF37 !important;
+		-webkit-text-fill-color: #D4AF37 !important;
+	}
+	
+	/* Apply gradient after animation completes */
+	.hero h1 .text-scramble.completed {
+		color: #D4AF37 !important;
+		background: linear-gradient(135deg, #D4AF37 0%, #F4E5C2 50%, #D4AF37 100%) !important;
+		-webkit-background-clip: text !important;
+		-webkit-text-fill-color: transparent !important;
+		background-clip: text !important;
+	}
 
 	.hero-subtitle {
 		font-size: 1.5rem;

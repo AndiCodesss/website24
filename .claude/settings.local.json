@@ -9,7 +9,9 @@
       "Bash(npm i:*)",
       "Bash(tsc --noEmit)",
       "Bash(npx tsc:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Read(//mnt/c/Users/**)",
+      "Bash(cd:*)"
     ],
     "deny": []
   }

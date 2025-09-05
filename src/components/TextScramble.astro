@@ -54,6 +54,13 @@ const { text, className = '', delay = 0 } = Astro.props;
     text-shadow: none;
   }
   
+  /* Fix for h1 elements - make characters visible with solid color */
+  h1 .text-scramble .char.revealed {
+    color: #D4AF37 !important;
+    -webkit-text-fill-color: #D4AF37 !important;
+    background: none !important;
+  }
+  
   .text-scramble .char.glitch {
     animation: glitchChar 0.2s infinite;
   }
@@ -82,8 +89,29 @@ const { text, className = '', delay = 0 } = Astro.props;
   }
   
   .text-scramble.completed {
-    color: var(--color-white);
     text-shadow: none;
+  }
+  
+  /* Apply gradient to the whole completed element */
+  h1 .text-scramble.completed {
+    background: var(--gradient-gold) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    display: inline-block !important;
+  }
+  
+  /* But make sure the characters inside are visible */
+  h1 .text-scramble.completed .char {
+    background: none !important;
+    -webkit-text-fill-color: inherit !important;
+  }
+  
+  /* Keep gold for subtitle */
+  p.hero-subtitle .text-scramble .char.revealed {
+    color: var(--color-text-secondary) !important;
+    -webkit-text-fill-color: var(--color-text-secondary) !important;
+    background: none !important;
   }
 </style>
 
@@ -115,6 +143,7 @@ const { text, className = '', delay = 0 } = Astro.props;
     }
     
     scramble() {
+      console.log('Starting scramble for:', this.text, 'Element is in h1:', !!this.element.closest('h1'));
       this.element.classList.add('scrambling');
       this.revealed = true;
       
@@ -154,6 +183,11 @@ const { text, className = '', delay = 0 } = Astro.props;
             // Reveal original character and keep it
             charEl.textContent = originalChar;
             charEl.classList.add('revealed');
+            // Force gold color for h1 elements
+            if (this.element.closest('h1')) {
+              charEl.style.color = '#D4AF37';
+              charEl.style.webkitTextFillColor = '#D4AF37';
+            }
             completedCount++;
             
             // When all characters are revealed, clean up
@@ -161,8 +195,18 @@ const { text, className = '', delay = 0 } = Astro.props;
               setTimeout(() => {
                 this.element.classList.remove('scrambling');
                 this.element.classList.add('completed');
-                // Restore the original text to ensure it stays visible
-                this.element.textContent = this.text;
+                // For h1 elements, restore the text to enable gradient
+                const h1Parent = this.element.closest('h1');
+                if (h1Parent) {
+                  console.log('Restoring h1 text with gradient');
+                  this.element.textContent = this.text;
+                  // Force the gradient styles
+                  this.element.style.background = 'linear-gradient(135deg, #D4AF37 0%, #F4E5C2 50%, #D4AF37 100%)';
+                  this.element.style.webkitBackgroundClip = 'text';
+                  this.element.style.webkitTextFillColor = 'transparent';
+                  this.element.style.backgroundClip = 'text';
+                  this.element.style.display = 'inline-block';
+                }
               }, 300);
             }
           }
