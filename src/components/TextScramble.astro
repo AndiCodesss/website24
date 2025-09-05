@@ -154,8 +154,10 @@ const { text, className = '', delay = 0 } = Astro.props;
       ).join('');
       
       const charElements = this.element.querySelectorAll('.char');
-      const scrambleDuration = 1000;
-      const charDelay = 30;
+      // Increase duration for h1 elements (name), keep shorter for others
+      const isName = !!this.element.closest('h1');
+      const scrambleDuration = isName ? 2500 : 1500;  // 2.5 seconds for name, 1.5 for subtitle
+      const charDelay = isName ? 50 : 30;  // Slower reveal for name
       let completedCount = 0;
       
       charElements.forEach((charEl, index) => {
@@ -192,6 +194,8 @@ const { text, className = '', delay = 0 } = Astro.props;
             
             // When all characters are revealed, clean up
             if (completedCount === charElements.length) {
+              // Longer delay for h1 to enjoy the gold color before gradient
+              const finalDelay = isName ? 500 : 300;
               setTimeout(() => {
                 this.element.classList.remove('scrambling');
                 this.element.classList.add('completed');
@@ -207,7 +211,7 @@ const { text, className = '', delay = 0 } = Astro.props;
                   this.element.style.backgroundClip = 'text';
                   this.element.style.display = 'inline-block';
                 }
-              }, 300);
+              }, finalDelay);
             }
           }
         };
