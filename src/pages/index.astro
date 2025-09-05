@@ -364,6 +364,25 @@ const experience = [
 		gap: 3rem;
 		align-items: center;
 		margin-top: 2rem;
+		position: relative;
+	}
+
+	.skills-container::before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 500px;
+		height: 500px;
+		background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+		pointer-events: none;
+		animation: pulse 4s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.9); }
+		50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
 	}
 
 	#skillsRadar {
@@ -372,49 +391,105 @@ const experience = [
 		height: auto;
 		aspect-ratio: 1;
 		margin: 0 auto;
+		filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.2));
+		transition: filter 0.3s ease;
+		position: relative;
+		z-index: 1;
+	}
+
+	#skillsRadar:hover {
+		filter: drop-shadow(0 0 50px rgba(212, 175, 55, 0.4));
 	}
 
 	.skills-legend {
 		display: flex;
 		flex-direction: column;
-		gap: 0.75rem;
+		gap: 0.5rem;
+		position: relative;
+		z-index: 1;
 	}
 
 	.skill-item {
 		display: flex;
 		align-items: center;
-		gap: 0.75rem;
-		padding: 0.75rem 1rem;
-		background: rgba(212, 175, 55, 0.03);
-		border-radius: 10px;
-		transition: all 0.3s ease;
+		gap: 1rem;
+		padding: 0.875rem 1.25rem;
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.03) 0%, rgba(244, 229, 194, 0.02) 100%);
+		border-radius: 12px;
+		transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 		cursor: pointer;
-		border: 1px solid transparent;
+		border: 1px solid rgba(212, 175, 55, 0.1);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.skill-item::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+		transition: left 0.5s ease;
+	}
+
+	.skill-item:hover::before {
+		left: 100%;
 	}
 
 	.skill-item:hover {
-		background: rgba(212, 175, 55, 0.08);
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(244, 229, 194, 0.05) 100%);
 		border-color: var(--color-gold);
-		transform: translateX(5px);
+		transform: translateX(8px) scale(1.02);
+		box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
+	}
+
+	.skill-item.active {
+		background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(244, 229, 194, 0.08) 100%);
+		border-color: var(--color-gold);
+		box-shadow: 0 5px 25px rgba(212, 175, 55, 0.3);
 	}
 
 	.skill-dot {
-		width: 12px;
-		height: 12px;
+		width: 14px;
+		height: 14px;
 		border-radius: 50%;
 		flex-shrink: 0;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		position: relative;
+	}
+
+	.skill-item:hover .skill-dot {
+		animation: dotPulse 0.6s ease;
+	}
+
+	@keyframes dotPulse {
+		0%, 100% { transform: scale(1); }
+		50% { transform: scale(1.3); }
 	}
 
 	.skill-name {
 		flex: 1;
 		color: var(--color-text-primary);
 		font-weight: 500;
+		font-size: 0.95rem;
+		letter-spacing: 0.3px;
 	}
 
 	.skill-level {
 		color: var(--color-gold);
-		font-weight: 600;
-		font-size: 0.9rem;
+		font-weight: 700;
+		font-size: 0.95rem;
+		padding: 0.25rem 0.75rem;
+		background: rgba(212, 175, 55, 0.1);
+		border-radius: 20px;
+		border: 1px solid rgba(212, 175, 55, 0.2);
+	}
+
+	.skill-item:hover .skill-level {
+		background: rgba(212, 175, 55, 0.2);
+		border-color: rgba(212, 175, 55, 0.4);
 	}
 
 	.projects-grid {
@@ -888,10 +963,12 @@ const experience = [
 			document.querySelectorAll('.skill-item').forEach((item, index) => {
 				item.addEventListener('mouseenter', () => {
 					this.hoveredIndex = index;
+					item.classList.add('active');
 					this.draw();
 				});
 				item.addEventListener('mouseleave', () => {
 					this.hoveredIndex = -1;
+					item.classList.remove('active');
 					this.draw();
 				});
 			});
@@ -958,32 +1035,54 @@ const experience = [
 			// Clear canvas
 			ctx.clearRect(0, 0, rect.width, rect.width);
 			
-			// Draw background circles
-			ctx.strokeStyle = 'rgba(212, 175, 55, 0.1)';
-			ctx.lineWidth = 1;
-			for (let i = 1; i <= 5; i++) {
+			// Draw glowing background circles with gradient
+			for (let i = 5; i >= 1; i--) {
+				const gradient = ctx.createRadialGradient(this.center.x, this.center.y, 0, this.center.x, this.center.y, (this.radius / 5) * i);
+				gradient.addColorStop(0, 'rgba(212, 175, 55, 0.01)');
+				gradient.addColorStop(1, 'rgba(212, 175, 55, 0.03)');
+				
+				ctx.fillStyle = gradient;
 				ctx.beginPath();
 				ctx.arc(this.center.x, this.center.y, (this.radius / 5) * i, 0, Math.PI * 2);
+				ctx.fill();
+				
+				// Draw circle borders
+				ctx.strokeStyle = `rgba(212, 175, 55, ${0.1 - i * 0.015})`;
+				ctx.lineWidth = 1;
+				ctx.setLineDash([5, 5]);
 				ctx.stroke();
+				ctx.setLineDash([]);
 			}
 			
-			// Draw axes
-			ctx.strokeStyle = 'rgba(212, 175, 55, 0.2)';
+			// Draw axes with gradient
 			this.data.forEach((_, index) => {
 				const angle = index * this.angleStep - Math.PI / 2;
 				const x = this.center.x + Math.cos(angle) * this.radius;
 				const y = this.center.y + Math.sin(angle) * this.radius;
 				
+				const gradient = ctx.createLinearGradient(this.center.x, this.center.y, x, y);
+				gradient.addColorStop(0, 'rgba(212, 175, 55, 0.1)');
+				gradient.addColorStop(1, 'rgba(212, 175, 55, 0.3)');
+				
+				ctx.strokeStyle = gradient;
+				ctx.lineWidth = 1;
 				ctx.beginPath();
 				ctx.moveTo(this.center.x, this.center.y);
 				ctx.lineTo(x, y);
 				ctx.stroke();
 			});
 			
-			// Draw data polygon
-			ctx.fillStyle = 'rgba(212, 175, 55, 0.2)';
+			// Draw data polygon with gradient fill
+			const polygonGradient = ctx.createRadialGradient(this.center.x, this.center.y, 0, this.center.x, this.center.y, this.radius);
+			polygonGradient.addColorStop(0, 'rgba(212, 175, 55, 0.3)');
+			polygonGradient.addColorStop(0.5, 'rgba(244, 229, 194, 0.2)');
+			polygonGradient.addColorStop(1, 'rgba(212, 175, 55, 0.1)');
+			
+			ctx.fillStyle = polygonGradient;
 			ctx.strokeStyle = '#D4AF37';
-			ctx.lineWidth = 2;
+			ctx.lineWidth = 2.5;
+			ctx.shadowColor = 'rgba(212, 175, 55, 0.5)';
+			ctx.shadowBlur = 10;
 			
 			ctx.beginPath();
 			this.data.forEach((skill, index) => {
@@ -1001,6 +1100,7 @@ const experience = [
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
+			ctx.shadowBlur = 0;
 			
 			// Draw points and labels
 			this.data.forEach((skill, index) => {
@@ -1009,18 +1109,62 @@ const experience = [
 				const x = this.center.x + Math.cos(angle) * distance;
 				const y = this.center.y + Math.sin(angle) * distance;
 				
-				// Draw point
-				ctx.fillStyle = `hsl(${index * 45}, 70%, 60%)`;
+				// Draw outer glow for points
+				if (this.hoveredIndex === index) {
+					const glowGradient = ctx.createRadialGradient(x, y, 0, x, y, 15);
+					glowGradient.addColorStop(0, `hsla(${index * 45}, 70%, 60%, 0.4)`);
+					glowGradient.addColorStop(1, `hsla(${index * 45}, 70%, 60%, 0)`);
+					ctx.fillStyle = glowGradient;
+					ctx.beginPath();
+					ctx.arc(x, y, 15, 0, Math.PI * 2);
+					ctx.fill();
+				}
+				
+				// Draw point with gradient
+				const pointGradient = ctx.createRadialGradient(x, y, 0, x, y, this.hoveredIndex === index ? 8 : 5);
+				pointGradient.addColorStop(0, `hsl(${index * 45}, 80%, 70%)`);
+				pointGradient.addColorStop(1, `hsl(${index * 45}, 70%, 50%)`);
+				
+				ctx.fillStyle = pointGradient;
+				ctx.strokeStyle = `hsl(${index * 45}, 70%, 40%)`;
+				ctx.lineWidth = 2;
 				ctx.beginPath();
 				ctx.arc(x, y, this.hoveredIndex === index ? 8 : 5, 0, Math.PI * 2);
 				ctx.fill();
+				ctx.stroke();
 				
-				// Draw value on hover
+				// Draw inner highlight
+				ctx.fillStyle = `hsla(${index * 45}, 100%, 90%, 0.5)`;
+				ctx.beginPath();
+				ctx.arc(x - 1, y - 1, (this.hoveredIndex === index ? 8 : 5) * 0.3, 0, Math.PI * 2);
+				ctx.fill();
+				
+				// Draw value on hover with background
 				if (this.hoveredIndex === index) {
-					ctx.fillStyle = '#D4AF37';
+					// Background box
+					const text = `${skill.level}%`;
 					ctx.font = 'bold 14px Inter';
+					const metrics = ctx.measureText(text);
+					const padding = 6;
+					
+					ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+					ctx.strokeStyle = '#D4AF37';
+					ctx.lineWidth = 1;
+					ctx.beginPath();
+					ctx.roundRect(
+						x - metrics.width / 2 - padding,
+						y - 25 - padding,
+						metrics.width + padding * 2,
+						20,
+						4
+					);
+					ctx.fill();
+					ctx.stroke();
+					
+					// Text
+					ctx.fillStyle = '#D4AF37';
 					ctx.textAlign = 'center';
-					ctx.fillText(`${skill.level}%`, x, y - 15);
+					ctx.fillText(text, x, y - 15);
 				}
 			});
 			
