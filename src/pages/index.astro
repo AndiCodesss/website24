@@ -2,6 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HolographicProfile from '../components/HolographicProfile.astro';
 import TextScramble from '../components/TextScramble.astro';
+import ExplodingText from '../components/ExplodingText.astro';
+import SkillOrbs from '../components/SkillOrbs.astro';
 
 const pageTitle = "Andreas Oberdörfer";
 
@@ -43,7 +45,7 @@ const experience = [
 	<section class="hero">
 		<div class="hero-content">
 			<HolographicProfile src="/profile-placeholder.JPG" alt="Andreas Oberdörfer" />
-			<h1><TextScramble text="Andreas Oberdörfer" /></h1>
+			<ExplodingText text="Andreas Oberdörfer" />
 			<p class="hero-subtitle"><TextScramble text="Quantitative Finance Expert & Software Architect" /></p>
 			<p class="hero-description">Bridging complex financial models with elegant software solutions</p>
 			<div class="hero-cta">
@@ -72,7 +74,8 @@ const experience = [
 
 		<section id="skills" class="card reveal-on-scroll">
 			<h2>Skills & Expertise</h2>
-			<div class="skills-grid">
+			<SkillOrbs skills={skills} />
+			<div class="skills-grid" style="display: none;">
 				{skills.map(skill => (
 					<div class="skill-card">
 						<span class="skill-name">{skill}</span>

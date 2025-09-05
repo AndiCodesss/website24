@@ -1,0 +1,312 @@
+---
+const { skills } = Astro.props;
+---
+
+<div class="skill-orbs-container">
+  <canvas id="skill-canvas"></canvas>
+  <div class="skill-info">
+    <h3>Interactive Skills</h3>
+    <p>Click and drag the orbs!</p>
+  </div>
+</div>
+
+<style>
+  .skill-orbs-container {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    margin: 3rem 0;
+    border-radius: 20px;
+    background: linear-gradient(135deg, 
+      rgba(0, 0, 0, 0.8) 0%, 
+      rgba(10, 10, 10, 0.9) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    overflow: hidden;
+  }
+  
+  #skill-canvas {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+  }
+  
+  #skill-canvas:active {
+    cursor: grabbing;
+  }
+  
+  .skill-info {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--color-gold);
+    pointer-events: none;
+    z-index: 10;
+  }
+  
+  .skill-info h3 {
+    font-size: 1.2rem;
+    margin: 0;
+    background: linear-gradient(135deg, #D4AF37 0%, #F4E5C2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .skill-info p {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    color: #F4E5C2;
+  }
+  
+  @media (max-width: 768px) {
+    .skill-orbs-container {
+      height: 400px;
+    }
+  }
+</style>
+
+<script define:vars={{ skills }}>
+  import Matter from 'matter-js';
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.skill-orbs-container');
+    const canvas = document.getElementById('skill-canvas');
+    
+    if (!canvas) return;
+    
+    // Matter.js setup
+    const Engine = Matter.Engine,
+          Render = Matter.Render,
+          World = Matter.World,
+          Bodies = Matter.Bodies,
+          Mouse = Matter.Mouse,
+          MouseConstraint = Matter.MouseConstraint,
+          Events = Matter.Events,
+          Body = Matter.Body;
+    
+    const engine = Engine.create();
+    engine.gravity.y = 0.5; // Reduced gravity for floaty effect
+    
+    const render = Render.create({
+      canvas: canvas,
+      engine: engine,
+      options: {
+        width: container.clientWidth,
+        height: container.clientHeight,
+        wireframes: false,
+        background: 'transparent',
+        pixelRatio: window.devicePixelRatio
+      }
+    });
+    
+    // Create boundaries
+    const walls = [
+      Bodies.rectangle(container.clientWidth / 2, -10, container.clientWidth, 20, { 
+        isStatic: true,
+        render: { fillStyle: 'transparent' }
+      }),
+      Bodies.rectangle(container.clientWidth / 2, container.clientHeight + 10, container.clientWidth, 20, { 
+        isStatic: true,
+        render: { fillStyle: 'transparent' }
+      }),
+      Bodies.rectangle(-10, container.clientHeight / 2, 20, container.clientHeight, { 
+        isStatic: true,
+        render: { fillStyle: 'transparent' }
+      }),
+      Bodies.rectangle(container.clientWidth + 10, container.clientHeight / 2, 20, container.clientHeight, { 
+        isStatic: true,
+        render: { fillStyle: 'transparent' }
+      })
+    ];
+    
+    World.add(engine.world, walls);
+    
+    // Gold color palette for orbs
+    const goldColors = [
+      '#D4AF37',
+      '#F4E5C2', 
+      '#B8941F',
+      '#FFD700',
+      '#DAA520'
+    ];
+    
+    // Create skill orbs
+    const orbs = skills.map((skill, index) => {
+      const x = Math.random() * (container.clientWidth - 100) + 50;
+      const y = Math.random() * (container.clientHeight - 300) + 50;
+      const radius = Math.random() * 20 + 40; // Random sizes between 40-60
+      const color = goldColors[index % goldColors.length];
+      
+      const orb = Bodies.circle(x, y, radius, {
+        restitution: 0.8,
+        friction: 0.001,
+        density: 0.001,
+        label: skill,
+        render: {
+          fillStyle: color,
+          strokeStyle: color,
+          lineWidth: 2
+        }
+      });
+      
+      // Add some initial velocity for movement
+      Body.setVelocity(orb, {
+        x: (Math.random() - 0.5) * 5,
+        y: (Math.random() - 0.5) * 5
+      });
+      
+      return orb;
+    });
+    
+    World.add(engine.world, orbs);
+    
+    // Add mouse control
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse: mouse,
+      constraint: {
+        stiffness: 0.2,
+        render: {
+          visible: false
+        }
+      }
+    });
+    
+    World.add(engine.world, mouseConstraint);
+    render.mouse = mouse;
+    
+    // Custom rendering for orbs with text
+    Events.on(render, 'afterRender', function() {
+      const context = render.canvas.getContext('2d');
+      
+      orbs.forEach((orb) => {
+        const pos = orb.position;
+        const radius = orb.circleRadius;
+        
+        // Draw glow effect
+        const gradient = context.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, radius * 2);
+        gradient.addColorStop(0, orb.render.fillStyle + '40');
+        gradient.addColorStop(0.5, orb.render.fillStyle + '20');
+        gradient.addColorStop(1, 'transparent');
+        
+        context.fillStyle = gradient;
+        context.beginPath();
+        context.arc(pos.x, pos.y, radius * 2, 0, Math.PI * 2);
+        context.fill();
+        
+        // Draw orb outline
+        context.strokeStyle = orb.render.fillStyle;
+        context.lineWidth = 2;
+        context.beginPath();
+        context.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+        context.stroke();
+        
+        // Draw inner glow
+        const innerGradient = context.createRadialGradient(
+          pos.x - radius/3, pos.y - radius/3, 0,
+          pos.x, pos.y, radius
+        );
+        innerGradient.addColorStop(0, '#FFFFFF20');
+        innerGradient.addColorStop(0.5, orb.render.fillStyle + '60');
+        innerGradient.addColorStop(1, orb.render.fillStyle);
+        
+        context.fillStyle = innerGradient;
+        context.beginPath();
+        context.arc(pos.x, pos.y, radius - 2, 0, Math.PI * 2);
+        context.fill();
+        
+        // Draw skill text
+        context.save();
+        context.translate(pos.x, pos.y);
+        context.rotate(orb.angle);
+        
+        context.fillStyle = '#000000';
+        context.font = `bold ${Math.min(radius / 3, 14)}px Inter`;
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        
+        // Text shadow for better readability
+        context.shadowColor = '#FFFFFF';
+        context.shadowBlur = 10;
+        
+        // Wrap text if too long
+        const text = orb.label;
+        const maxWidth = radius * 1.5;
+        const words = text.split(' ');
+        let line = '';
+        let y = 0;
+        const lineHeight = radius / 3;
+        
+        if (words.length > 1 && context.measureText(text).width > maxWidth) {
+          for (let n = 0; n < words.length; n++) {
+            const testLine = line + words[n] + ' ';
+            const metrics = context.measureText(testLine);
+            const testWidth = metrics.width;
+            if (testWidth > maxWidth && n > 0) {
+              context.fillText(line, 0, y);
+              line = words[n] + ' ';
+              y += lineHeight;
+            } else {
+              line = testLine;
+            }
+          }
+          context.fillText(line, 0, y);
+        } else {
+          context.fillText(text, 0, 0);
+        }
+        
+        context.restore();
+      });
+    });
+    
+    // Add floating effect
+    Events.on(engine, 'beforeUpdate', function() {
+      orbs.forEach(orb => {
+        // Apply gentle upward force occasionally
+        if (Math.random() > 0.99) {
+          Body.applyForce(orb, orb.position, {
+            x: (Math.random() - 0.5) * 0.002,
+            y: -Math.random() * 0.003
+          });
+        }
+        
+        // Gentle rotation
+        Body.setAngularVelocity(orb, orb.angularVelocity * 0.98 + (Math.random() - 0.5) * 0.01);
+      });
+    });
+    
+    // Handle mouse hover effects
+    Events.on(mouseConstraint, 'mousemove', function(event) {
+      const mousePos = event.mouse.position;
+      
+      orbs.forEach(orb => {
+        const distance = Math.sqrt(
+          Math.pow(mousePos.x - orb.position.x, 2) + 
+          Math.pow(mousePos.y - orb.position.y, 2)
+        );
+        
+        if (distance < 100) {
+          // Repel orbs slightly from mouse
+          const force = {
+            x: (orb.position.x - mousePos.x) * 0.00001,
+            y: (orb.position.y - mousePos.y) * 0.00001
+          };
+          Body.applyForce(orb, orb.position, force);
+        }
+      });
+    });
+    
+    // Run the engine
+    Matter.Runner.run(engine);
+    Render.run(render);
+    
+    // Handle resize
+    window.addEventListener('resize', () => {
+      render.canvas.width = container.clientWidth;
+      render.canvas.height = container.clientHeight;
+      Render.setPixelRatio(render, window.devicePixelRatio);
+    });
+  });
+</script>
